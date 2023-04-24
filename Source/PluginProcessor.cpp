@@ -1,13 +1,3 @@
-/*******************************************************************************
-* Plugex - PLUGin EXamples
-*
-* Plugex est une série de plugiciels auto-documentés permettant une étude 
-* autonome du développement de plugiciels avec JUCE ainsi que des bases du
-* traitement de signal audio avec le langage C++.
-*
-* © Olivier Bélanger 2020
-*
-*******************************************************************************/
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
@@ -144,7 +134,7 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
 }
 
 //==============================================================================
-Plugex_38_waveformMidiSynthAudioProcessor::Plugex_38_waveformMidiSynthAudioProcessor()
+waylosynth2::waylosynth2()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -172,17 +162,17 @@ Plugex_38_waveformMidiSynthAudioProcessor::Plugex_38_waveformMidiSynthAudioProce
     gainParameter = parameters.getRawParameterValue("gain");
 }
 
-Plugex_38_waveformMidiSynthAudioProcessor::~Plugex_38_waveformMidiSynthAudioProcessor()
+waylosynth2::~waylosynth2()
 {
 }
 
 //==============================================================================
-const String Plugex_38_waveformMidiSynthAudioProcessor::getName() const
+const String waylosynth2::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool Plugex_38_waveformMidiSynthAudioProcessor::acceptsMidi() const
+bool waylosynth2::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -191,7 +181,7 @@ bool Plugex_38_waveformMidiSynthAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool Plugex_38_waveformMidiSynthAudioProcessor::producesMidi() const
+bool waylosynth2::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -200,7 +190,7 @@ bool Plugex_38_waveformMidiSynthAudioProcessor::producesMidi() const
    #endif
 }
 
-bool Plugex_38_waveformMidiSynthAudioProcessor::isMidiEffect() const
+bool waylosynth2::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -209,37 +199,37 @@ bool Plugex_38_waveformMidiSynthAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double Plugex_38_waveformMidiSynthAudioProcessor::getTailLengthSeconds() const
+double waylosynth2::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int Plugex_38_waveformMidiSynthAudioProcessor::getNumPrograms()
+int waylosynth2::getNumPrograms()
 {
 return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int Plugex_38_waveformMidiSynthAudioProcessor::getCurrentProgram()
+int waylosynth2::getCurrentProgram()
 {
     return 0;
 }
 
-void Plugex_38_waveformMidiSynthAudioProcessor::setCurrentProgram (int index)
+void waylosynth2::setCurrentProgram (int index)
 {
 }
 
-const String Plugex_38_waveformMidiSynthAudioProcessor::getProgramName (int index)
+const String waylosynth2::getProgramName (int index)
 {
     return {};
 }
 
-void Plugex_38_waveformMidiSynthAudioProcessor::changeProgramName (int index, const String& newName)
+void waylosynth2::changeProgramName (int index, const String& newName)
 {
 }
 
 //==============================================================================
-void Plugex_38_waveformMidiSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void waylosynth2::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
@@ -247,7 +237,7 @@ void Plugex_38_waveformMidiSynthAudioProcessor::prepareToPlay (double sampleRate
     synthesiser.setCurrentPlaybackSampleRate(sampleRate);
 }
 
-void Plugex_38_waveformMidiSynthAudioProcessor::releaseResources()
+void waylosynth2::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
@@ -255,7 +245,7 @@ void Plugex_38_waveformMidiSynthAudioProcessor::releaseResources()
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool Plugex_38_waveformMidiSynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool waylosynth2::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     ignoreUnused (layouts);
@@ -278,7 +268,7 @@ bool Plugex_38_waveformMidiSynthAudioProcessor::isBusesLayoutSupported (const Bu
 }
 #endif
 
-void Plugex_38_waveformMidiSynthAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -299,25 +289,25 @@ void Plugex_38_waveformMidiSynthAudioProcessor::processBlock (AudioBuffer<float>
 }
 
 //==============================================================================
-bool Plugex_38_waveformMidiSynthAudioProcessor::hasEditor() const
+bool waylosynth2::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* Plugex_38_waveformMidiSynthAudioProcessor::createEditor()
+AudioProcessorEditor* waylosynth2::createEditor()
 {
-    return new Plugex_38_waveformMidiSynthAudioProcessorEditor (*this, parameters);
+    return new waylosynth2AudioProcessorEditor (*this, parameters);
 }
 
 //==============================================================================
-void Plugex_38_waveformMidiSynthAudioProcessor::getStateInformation (MemoryBlock& destData)
+void waylosynth2::getStateInformation (MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void Plugex_38_waveformMidiSynthAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void waylosynth2::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -327,5 +317,5 @@ void Plugex_38_waveformMidiSynthAudioProcessor::setStateInformation (const void*
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new Plugex_38_waveformMidiSynthAudioProcessor();
+    return new waylosynth2();
 }

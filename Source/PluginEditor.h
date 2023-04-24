@@ -1,33 +1,23 @@
-/*******************************************************************************
-* Plugex - PLUGin EXamples
-*
-* Plugex est une série de plugiciels auto-documentés permettant une étude 
-* autonome du développement de plugiciels avec JUCE ainsi que des bases du
-* traitement de signal audio avec le langage C++.
-*
-* © Olivier Bélanger 2020
-*
-*******************************************************************************/
 
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-#include "PlugexLookAndFeel.h"
+#include "waylo_look_and_feel.h"
 
-class Plugex_38_waveformMidiSynthAudioProcessorEditor  : public AudioProcessorEditor
+class waylosynth2AudioProcessorEditor  : public AudioProcessorEditor
 {
 public:
-    Plugex_38_waveformMidiSynthAudioProcessorEditor (Plugex_38_waveformMidiSynthAudioProcessor&, AudioProcessorValueTreeState& vts);
-    ~Plugex_38_waveformMidiSynthAudioProcessorEditor();
+    waylosynth2AudioProcessorEditor (waylosynth2&, AudioProcessorValueTreeState& vts);
+    ~waylosynth2AudioProcessorEditor();
 
     void paint (Graphics&) override;
     void resized() override;
 
 private:
-    Plugex_38_waveformMidiSynthAudioProcessor& processor;
+    waylosynth2& processor;
 
-    PlugexLookAndFeel plugexLookAndFeel;
+    waylo_look_and_feel plugexLookAndFeel;
 
     AudioProcessorValueTreeState& valueTreeState;
 
@@ -63,5 +53,5 @@ private:
 
     MidiKeyboardComponent keyboardComponent;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugex_38_waveformMidiSynthAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (waylosynth2AudioProcessorEditor)
 };

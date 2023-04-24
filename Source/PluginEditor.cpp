@@ -1,19 +1,9 @@
-/*******************************************************************************
-* Plugex - PLUGin EXamples
-*
-* Plugex est une série de plugiciels auto-documentés permettant une étude 
-* autonome du développement de plugiciels avec JUCE ainsi que des bases du
-* traitement de signal audio avec le langage C++.
-*
-* © Olivier Bélanger 2020
-*
-*******************************************************************************/
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 //==============================================================================
-Plugex_38_waveformMidiSynthAudioProcessorEditor::Plugex_38_waveformMidiSynthAudioProcessorEditor (Plugex_38_waveformMidiSynthAudioProcessor& p,
+waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p,
                                                                                                   AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), processor (p), valueTreeState (vts),
       keyboardComponent (p.keyboardState, MidiKeyboardComponent::horizontalKeyboard)
@@ -108,7 +98,7 @@ Plugex_38_waveformMidiSynthAudioProcessorEditor::Plugex_38_waveformMidiSynthAudi
     addAndMakeVisible(keyboardComponent);
 }
 
-Plugex_38_waveformMidiSynthAudioProcessorEditor::~Plugex_38_waveformMidiSynthAudioProcessorEditor()
+waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
 {
     attackKnob.setLookAndFeel(nullptr);
     decayKnob.setLookAndFeel(nullptr);
@@ -120,12 +110,12 @@ Plugex_38_waveformMidiSynthAudioProcessorEditor::~Plugex_38_waveformMidiSynthAud
 }
 
 //==============================================================================
-void Plugex_38_waveformMidiSynthAudioProcessorEditor::paint (Graphics& g)
+void waylosynth2AudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 }
 
-void Plugex_38_waveformMidiSynthAudioProcessorEditor::resized()
+void waylosynth2AudioProcessorEditor::resized()
 {
     auto area = getLocalBounds().reduced(12, 12);
     float width = area.getWidth();

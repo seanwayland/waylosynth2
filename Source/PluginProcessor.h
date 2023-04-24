@@ -1,18 +1,9 @@
-/*******************************************************************************
-* Plugex - PLUGin EXamples
-*
-* Plugex est une série de plugiciels auto-documentés permettant une étude 
-* autonome du développement de plugiciels avec JUCE ainsi que des bases du
-* traitement de signal audio avec le langage C++.
-*
-* © Olivier Bélanger 2020
-*
-*******************************************************************************/
+
 
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "BandLimitedOsc.h"
+#include "Oscillator.h"
 
 //==============================================================================
 struct MySynthesiserSound   : public SynthesiserSound
@@ -43,7 +34,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setSharpParameter(float sharp);
 
 private:
-    BandLimitedOsc oscillator;
+    Oscillator oscillator;
     ADSR envelope;
     double level = 0.0;
 };
@@ -58,12 +49,12 @@ public:
 };
 
 //==============================================================================
-class Plugex_38_waveformMidiSynthAudioProcessor  : public AudioProcessor
+class waylosynth2  : public AudioProcessor
 {
 public:
     //==============================================================================
-    Plugex_38_waveformMidiSynthAudioProcessor();
-    ~Plugex_38_waveformMidiSynthAudioProcessor();
+    waylosynth2();
+    ~waylosynth2();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -117,5 +108,5 @@ private:
     std::atomic<float> *gainParameter = nullptr;
     float lastGain = 0.f;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugex_38_waveformMidiSynthAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (waylosynth2)
 };
