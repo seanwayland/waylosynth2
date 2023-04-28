@@ -30,6 +30,7 @@ void Oscillator::setup(float sampleRate) {
     m_srOverEight = m_sampleRate / 8.f;
     m_pointer_pos = m_sah_pointer_pos = 0.f;
     SmoothData = 0.f;
+    fixed_pulse_counter = 0;
 }
 
 Oscillator::~Oscillator() {}
@@ -72,7 +73,7 @@ float Oscillator::process() {
     
 
     switch (m_wavetype) {
-        // Sine
+        // Sine with feedback attenuated with pitch
         case 0:
             //m_feedback = 0.93 - (0.0004*m_freq);
  
@@ -137,18 +138,29 @@ float Oscillator::process() {
             break;
 
         // Ramp
+        // attempt at saw like "fixed pulse"
+            // oscillator called P2 on page 21 https://mirm.ru/upload/iblock/cd0/Nord%20Lead%20A1,%20A1R%20(EN).pdf
+            
         case 4:
-            maxHarms = m_srOverFour / m_freq;
-            numh = m_sharp * 46.f + 4.f;
-            if (numh > maxHarms)
-                numh = maxHarms;
-            pos = m_pointer_pos + 0.f;
-            if (pos >= 1.f)
-                pos -= 1.f;
-            pos = pos * 2.f - 1.f;
-            value = pos - tanhf(numh * pos) / tanhf(numh);
+            
+            if (fixed_pulse_counter < 0.1f){
+                    value = 10.f * fixed_pulse_counter;
+                }
+            else{
+                    value = 2.0f + (-10.f * fixed_pulse_counter);
+                }
+            
+            if (value < 0){
+                value = 0;
+            }
+            
+            if (m_pointer_pos > 0.0f)
+                {
+                fixed_pulse_counter = 0.0f;
+                }
+
             break;
-        // Pulse
+        // sin with feedback
         case 5:
             //m_feedback = 0.93 - (0.0004*m_freq);
  
@@ -161,9 +173,8 @@ float Oscillator::process() {
             old_value = value;
 
             break;
-        // Bi-Pulse
+        // 2 op fm with feedback
         case 6:
-            
             
             
         {
@@ -183,12 +194,11 @@ float Oscillator::process() {
             value = (value + prev_value)/2;
             break;}
 
-        // SAH
+        // waylo tan function with low pass
         case 7:
             
-
             
-            float pw = 3.5;
+            float pw = 3.8;
             
             value = tanhf(m_twopi*sin(pw*M_PI*m_pointer_pos));
             if (m_pointer_pos>(1/pw)){
@@ -196,24 +206,20 @@ float Oscillator::process() {
             }
             
             // low pass filter
-            float LPF_Beta = 0.01;
+            float LPF_Beta = 0.015;
             value1 = value;
             SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
             value = SmoothData;
 
-            
 
             break;
-
-
-
-        
 
     }
 
     if (m_wavetype < 8) {
         m_pointer_pos += m_freq * m_oneOverSr;
         m_pointer_pos = _clip(m_pointer_pos);
+        fixed_pulse_counter += 0.0001f;
     }
 
     return value;

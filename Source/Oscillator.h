@@ -62,6 +62,8 @@ class Oscillator {
         float sharp_scale;
         float SmoothData = 0.f;
         float prev_value;
+        float fixed_pulse_counter;
+     
         // private methods
         float _clip(float x);
 };
