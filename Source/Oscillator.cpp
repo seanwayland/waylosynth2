@@ -29,6 +29,7 @@ void Oscillator::setup(float sampleRate) {
     m_srOverFour = m_sampleRate / 4.f;
     m_srOverEight = m_sampleRate / 8.f;
     m_pointer_pos = m_sah_pointer_pos = 0.f;
+    SmoothData = 0.f;
 }
 
 Oscillator::~Oscillator() {}
@@ -184,30 +185,33 @@ float Oscillator::process() {
 
         // SAH
         case 7:
-            numh = 1.f - m_sharp;
-            inc2 = 1.f / (1.f / (m_freq * m_oneOverSr) * numh);
-            if (m_pointer_pos >= 1.f) {
-                m_pointer_pos -= 1.f;
-                m_sah_pointer_pos = 0.f;
-                m_sah_last_value = m_sah_current_value;
-                m_sah_current_value = (rand() / (float)RAND_MAX) * 2.f - 1.f;
+            
+
+            
+            float pw = 3.5;
+            
+            value = tanhf(m_twopi*sin(pw*M_PI*m_pointer_pos));
+            if (m_pointer_pos>(1/pw)){
+                value = 0;
             }
-            if (m_sah_pointer_pos < 1.f) {
-                fade = 0.5f * sinf(M_PI * (m_sah_pointer_pos + 0.5f)) + 0.5f;
-                value = m_sah_current_value + (m_sah_last_value - m_sah_current_value) * fade;
-                m_sah_pointer_pos += inc2;
-            }
-            else {
-                value = m_sah_current_value;
-            }
-            m_pointer_pos += m_freq * m_oneOverSr;
+            
+            // low pass filter
+            float LPF_Beta = 0.01;
+            value1 = value;
+            SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
+            value = SmoothData;
+
+            
+
             break;
-        default:
-            value = 0.f;
-            break;
+
+
+
+        
+
     }
 
-    if (m_wavetype < 7) {
+    if (m_wavetype < 8) {
         m_pointer_pos += m_freq * m_oneOverSr;
         m_pointer_pos = _clip(m_pointer_pos);
     }

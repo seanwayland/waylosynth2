@@ -60,7 +60,8 @@ class Oscillator {
         float m_phase;
         float key_adjust;
         float sharp_scale;
-    float prev_value;
+        float SmoothData = 0.f;
+        float prev_value;
         // private methods
         float _clip(float x);
 };
