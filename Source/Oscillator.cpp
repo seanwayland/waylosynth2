@@ -76,8 +76,10 @@ float Oscillator::process() {
         // Sine with feedback attenuated with pitch
         case 0:
             //m_feedback = 0.93 - (0.0004*m_freq);
- 
-            m_feedback = 0.9 - (0.0004*m_freq);
+            if(m_sharp<0.25){
+                m_sharp = 0.25;
+            }
+            m_feedback = (m_sharp) - (0.0004*m_freq);
             if (m_feedback > 1.0 || m_feedback < 0.1){
                 m_feedback = 0.6;
             }
@@ -120,7 +122,7 @@ float Oscillator::process() {
         {float x = m_twopi * m_pointer_pos;
             float A1 = 1.0;
             float f1 = 1.0;
-            float A2 = 3.5;
+            float A2 = m_sharp*10;
             float f2 = 1.0;
             value = A1 * sin(f1*x + A2 * sin(f2*x));
             break;}
@@ -143,21 +145,31 @@ float Oscillator::process() {
             
         case 4:
             
-            if (fixed_pulse_counter < 0.1f){
-                    value = 10.f * fixed_pulse_counter;
-                }
-            else{
-                    value = 2.0f + (-10.f * fixed_pulse_counter);
-                }
+        {if (fixed_pulse_counter < 0.1f){
+            value = 10.f * fixed_pulse_counter;
+        }
+        else{
+            value = 2.0f + (-10.f * fixed_pulse_counter);
+        }
             
             if (value < 0){
                 value = 0;
             }
             
-            if (m_pointer_pos > 0.0f)
-                {
+            if (m_pointer_pos < 0.1)
+            {
                 fixed_pulse_counter = 0.0f;
-                }
+            }
+            // low pass filter
+            float LPF_Beta = m_sharp*0.1;
+            value1 = value;
+            SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
+            value = SmoothData;
+            value *=4.f;
+            
+        }
+            
+
 
             break;
         // sin with feedback
@@ -178,7 +190,10 @@ float Oscillator::process() {
             
             
         {
-            m_feedback = 0.4 - (0.0006*m_freq);
+            if(m_sharp<0.3){
+                m_sharp = 0.3;
+            }
+            m_feedback = m_sharp - (0.0006*m_freq);
             if (m_feedback > 1.0 || m_feedback < 0.1){
                 m_feedback = 0.3;
             }
@@ -206,10 +221,11 @@ float Oscillator::process() {
             }
             
             // low pass filter
-            float LPF_Beta = 0.015;
+            float LPF_Beta = m_sharp*0.1;
             value1 = value;
             SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
             value = SmoothData;
+            value *=4.f;
 
 
             break;
@@ -219,7 +235,9 @@ float Oscillator::process() {
     if (m_wavetype < 8) {
         m_pointer_pos += m_freq * m_oneOverSr;
         m_pointer_pos = _clip(m_pointer_pos);
-        fixed_pulse_counter += 0.0001f;
+        fixed_pulse_counter += 11000 * m_oneOverSr;
+        //fixed_pulse_counter = _clip(fixed_pulse_counter);
+        
     }
 
     return value;
