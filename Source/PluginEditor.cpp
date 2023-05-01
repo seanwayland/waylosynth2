@@ -8,7 +8,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     : AudioProcessorEditor (&p), processor (p), valueTreeState (vts),
       keyboardComponent (p.keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
-    setSize (500, 400);
+    setSize (800, 400);
 
     setLookAndFeel(&plugexLookAndFeel);
     plugexLookAndFeel.setTheme("lightgreen");
@@ -83,6 +83,17 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&sharpKnob);
 
     sharpAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "sharp", sharpKnob));
+    
+    modLabel.setText("Mod", NotificationType::dontSendNotification);
+    modLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(& modLabel);
+
+    modKnob.setLookAndFeel(&plugexLookAndFeel);
+    modKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    modKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(& modKnob);
+
+    modAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "mod",  modKnob));
 
     gainLabel.setText("Gain", NotificationType::dontSendNotification);
     gainLabel.setJustificationType(Justification::horizontallyCentred);
@@ -106,6 +117,7 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     releaseKnob.setLookAndFeel(nullptr);
     typeCombo.setLookAndFeel(nullptr);
     sharpKnob.setLookAndFeel(nullptr);
+    modKnob.setLookAndFeel(nullptr);
     gainKnob.setLookAndFeel(nullptr);
 }
 
@@ -143,13 +155,17 @@ void waylosynth2AudioProcessorEditor::resized()
 
     auto area2 = area.removeFromTop(140);
 
-    auto typeArea = area2.removeFromLeft(width/2.0f).withSizeKeepingCentre(80, 100);
+    auto typeArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
     typeLabel.setBounds(typeArea.removeFromTop(20));
-    typeCombo.setBounds(typeArea.removeFromTop(60).withSizeKeepingCentre(200, 24));
+    typeCombo.setBounds(typeArea.removeFromTop(20).withSizeKeepingCentre(200, 24));
 
     auto sharpArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
     sharpLabel.setBounds(sharpArea.removeFromTop(20));
     sharpKnob.setBounds(sharpArea);
+    
+    auto ModArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    modLabel.setBounds(ModArea.removeFromTop(20));
+    modKnob.setBounds(ModArea);
 
     auto gainArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
     gainLabel.setBounds(gainArea.removeFromTop(20));

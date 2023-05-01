@@ -54,6 +54,10 @@ void MySynthesiserVoice::setSharpParameter(float sharp) {
     oscillator.setSharp(sharp);
 }
 
+void MySynthesiserVoice::setModParameter(float mod) {
+    oscillator.setMod(mod);
+}
+
 //==============================================================================
 void MySynthesiser::setEnvelopeParameters(ADSR::Parameters params) {
     for (int i = 0; i < getNumVoices(); i++)
@@ -70,6 +74,11 @@ void MySynthesiser::setSharpParameter(float sharp) {
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setSharpParameter(sharp);
 }
 
+void MySynthesiser::setModParameter(float mod) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setModParameter(mod);
+}
+
 //==============================================================================
 static String secondSliderValueToText(float value) {
     return String(value, 3) + String(" sec");
@@ -84,6 +93,10 @@ static String sharpSliderValueToText(float value) {
 }
 
 static float sharpSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+static float modSliderTextToValue(const String& text) {
     return text.getFloatValue();
 }
 
@@ -125,6 +138,10 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("sharp"), String("Sharp"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
                                                      0.5f, sharpSliderValueToText, sharpSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("mod"), String("Mod"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
+                                                     0.5f, sharpSliderValueToText, sharpSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(String("gain"), String("Gain"), String(),
                                                      NormalisableRange<float>(0.001f, 7.94f, 0.001f, 0.3f),
@@ -159,6 +176,7 @@ waylosynth2::waylosynth2()
     releaseParameter = parameters.getRawParameterValue("release");
     typeParameter = parameters.getRawParameterValue("type");
     sharpParameter = parameters.getRawParameterValue("sharp");
+    modParameter = parameters.getRawParameterValue("mod");
     gainParameter = parameters.getRawParameterValue("gain");
 }
 
@@ -282,6 +300,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setEnvelopeParameters(ADSR::Parameters {*attackParameter, *decayParameter, *sustainParameter, *releaseParameter});
     synthesiser.setWavetypeParameter((int)*typeParameter);
     synthesiser.setSharpParameter(*sharpParameter);
+    synthesiser.setModParameter(*modParameter);
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
     buffer.applyGainRamp(0, buffer.getNumSamples(), lastGain, *gainParameter);

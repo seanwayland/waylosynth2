@@ -32,7 +32,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setEnvelopeParameters(ADSR::Parameters params);
     void setWavetypeParameter(int type);
     void setSharpParameter(float sharp);
-
+    void setModParameter(float mod);
 private:
     Oscillator oscillator;
     ADSR envelope;
@@ -46,6 +46,7 @@ public:
     void setEnvelopeParameters(ADSR::Parameters params);
     void setWavetypeParameter(int type);
     void setSharpParameter(float sharp);
+    void setModParameter(float mod);
 };
 
 //==============================================================================
@@ -104,7 +105,7 @@ private:
 
     std::atomic<float> *typeParameter = nullptr;
     std::atomic<float> *sharpParameter = nullptr;
-
+    std::atomic<float> *modParameter = nullptr;
     std::atomic<float> *gainParameter = nullptr;
     float lastGain = 0.f;
 

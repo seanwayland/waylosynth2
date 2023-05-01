@@ -46,6 +46,10 @@ private:
     Label  sharpLabel;
     Slider sharpKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> sharpAttachment;
+    
+    Label  modLabel;
+    Slider modKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> modAttachment;
 
     Label  gainLabel;
     Slider gainKnob;

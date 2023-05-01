@@ -13,11 +13,13 @@ class Oscillator {
         float patrice_blep(float x, float a);
         float patrice_rr(float x, float w);
         float patrice_rrr(float x, float w, float a);
+        float hipass(float input);
         void setSharp(float sharp);
+        void setMod(float mod);
         void setPhase(float phase);
         void reset();
         float process();
-    double poly_blep(double t);
+        double poly_blep(double t);
 
 
         
@@ -38,6 +40,7 @@ class Oscillator {
         int m_wavetype;
         float m_freq;
         float m_sharp;
+        float m_mod;
         float m_pointer_pos;
         float fm_m_pointer_pos;
         float m_sah_pointer_pos;
@@ -52,9 +55,17 @@ class Oscillator {
         float pulse_width;
         float value1;
         float value2;
+        float hi_pass_output;
+        float oldval;
+        float low_cutoff;
+    
     
         float old_value;
+        float old_x_value;
+        float old_y_value;
         float m_feedback;
+        float m_feedback_x;
+        float m_feedback_y; 
         float m_runningPhase;
         float m_increment;
         float m_phase;
@@ -63,6 +74,8 @@ class Oscillator {
         float SmoothData = 0.f;
         float prev_value;
         float fixed_pulse_counter;
+        float state;
+        float gain;
      
         // private methods
         float _clip(float x);
