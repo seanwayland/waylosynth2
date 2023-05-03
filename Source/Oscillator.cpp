@@ -37,7 +37,26 @@ void Oscillator::setup(float sampleRate) {
     oldval = hi_pass_output = 0.f;
     //low_cutoff = 40.0f;
     state = 0;
-    gain = 30.0f / (m_twopi * m_sampleRate);
+    gain = 200.0f / (m_twopi * m_sampleRate);
+    
+    
+    
+    // obxd filter
+    selfOscPush = false;
+    bandPassSw = false;
+    mm=0;
+    s1=s2=s3=s4=0;
+    R=1;
+    R24=0;
+    SampleRate = m_sampleRate;
+    sampleRateInv = 1/SampleRate;
+    float rcrate =sqrt((44000/SampleRate));
+    rcor = (500.0 / 44000)*rcrate;
+    rcor24 = (970.0 / 44000)*rcrate;
+    rcorInv = 1 / rcor;
+    rcor24Inv = 1 / rcor24;
+    
+    
 }
 
 Oscillator::~Oscillator() {}
@@ -45,6 +64,87 @@ Oscillator::~Oscillator() {}
 void Oscillator::reset() {
     m_pointer_pos = m_sah_pointer_pos = 0.f;
 }
+
+
+// obxd filter
+
+
+float Oscillator::tptpc(float& state,float inp,float cutoff)
+{
+    double v = (inp - state) * cutoff / (1 + cutoff);
+    double res = v + state;
+    state = res + v;
+    return res;
+}
+
+void Oscillator::setResonance(float res)
+{
+    R = 1-res;
+    R24 =( 3.5 * res);
+}
+
+
+float Oscillator::NR24(float sample,float g,float lpc)
+{
+    float ml = 1 / (1+g);
+    float S = (lpc*(lpc*(lpc*s1 + s2) + s3) +s4)*ml;
+    float G = lpc*lpc*lpc*lpc;
+    float y = (sample - R24 * S) / (1 + R24*G);
+    return y;
+}
+
+float Oscillator::Apply4Pole(float sample,float g)
+    {
+            float g1 = (float)tan(g *sampleRateInv * M_PI);
+            g = g1;
+
+
+            
+            float lpc = g / (1 + g);
+            float y0 = NR24(sample,g,lpc);
+            //first low pass in cascade
+            double v = (y0 - s1) * lpc;
+            double res = v + s1;
+            s1 = res + v;
+            //damping
+            s1 =atan(s1*rcor24)*rcor24Inv;
+
+            float y1= res;
+            float y2 = tptpc(s2,y1,g);
+            float y3 = tptpc(s3,y2,g);
+            float y4 = tptpc(s4,y3,g);
+            float mc;
+            switch(mmch)
+            {
+            case 0:
+                mc = ((1 - mmt) * y4 + (mmt) * y3);
+                break;
+            case 1:
+                mc = ((1 - mmt) * y3 + (mmt) * y2);
+                break;
+            case 2:
+                mc = ((1 - mmt) * y2 + (mmt) * y1);
+                break;
+            case 3:
+                mc = y1;
+                break;
+            default:
+                mc=0;
+                break;
+            }
+            //half volume comp
+            return mc * (1 + R24 * 0.45);
+    }
+
+void Oscillator::setMultimode(float m)
+{
+    mm = m;
+    mmch = (int)(mm * 3);
+    mmt = mm*3-mmch;
+}
+
+
+
 
 float Oscillator::_clip(float x) {
     if (x < 0.f) {
@@ -107,7 +207,7 @@ float Oscillator::process() {
             
             value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
             old_value = value;
-            value = hipass(value);
+//value = hipass(value);
             
             break;
 
@@ -115,12 +215,13 @@ float Oscillator::process() {
         // band limited pulse width waylo belangeo
         case 1:
             
+            
             pulse_width = m_mod;
             phase1 = m_pointer_pos + 0.5 * pulse_width;
             phase2 = m_pointer_pos - 0.5 * pulse_width;
             
-            maxHarms = m_srOverFour / m_freq;
-            numh = m_sharp * 46.f + 4.f;
+            maxHarms = 3*(m_srOverFour / m_freq);
+            numh = m_sharp * 80.f + 4.f;
             
             if (numh > maxHarms)
                 numh = maxHarms;
@@ -137,7 +238,12 @@ float Oscillator::process() {
             value2 = -(pos - tanhf(numh * pos) / tanhf(numh));
             
             value = value1 - value2;
-            value = hipass(value);
+            //value = hipass(value);
+
+
+            
+            
+
 
             break;
         // dx7 2 op
@@ -157,13 +263,13 @@ float Oscillator::process() {
             value = sin(y + A2 * sin(x + m_feedback*old_x_value) + old_y_value);
             old_x_value = sin(x);
             old_y_value = sin(y);
-            value = hipass(value);
+            //value = hipass(value);
             break;}
         // Saw
             
         case 3:
-            maxHarms = m_srOverFour / m_freq;
-            numh = m_sharp * 46.f + 4.f;
+            maxHarms = 4*m_srOverFour / m_freq;
+            numh = m_sharp * 100.f + 4.f;
             if (numh > maxHarms)
                 numh = maxHarms;
             pos = m_pointer_pos + 0.5f;
@@ -172,7 +278,7 @@ float Oscillator::process() {
             pos = pos * 2.f - 1.f;
             value = -(pos - tanhf(numh * pos) / tanhf(numh));
             
-            value = hipass(value);
+            //value = hipass(value);
             
 
             
@@ -185,11 +291,13 @@ float Oscillator::process() {
             
         case 4:
             
+        
+            
         {if (fixed_pulse_counter < 0.1f){
-            value = 10.f * fixed_pulse_counter;
+            value = m_mod*30.f * fixed_pulse_counter;
         }
         else{
-            value = 2.0f + (-10.f * fixed_pulse_counter);
+            value = 2.0f + (-30.f * fixed_pulse_counter*m_mod);
         }
             
             if (value < 0){
@@ -200,14 +308,22 @@ float Oscillator::process() {
             {
                 fixed_pulse_counter = 0.0f;
             }
-            // low pass filter
-            float LPF_Beta = m_sharp*0.1;
-            value1 = value;
-            SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
-           
-            value = SmoothData;
-            value *=4.f;
-            value = hipass(value);
+            
+            
+            float filter_cutoff = m_sharp*5000;
+            float filter_resonance = 0.05f;
+            setMultimode(1.0f);
+            setResonance(filter_resonance);
+            value = Apply4Pole(value,filter_cutoff);
+            
+
+//            float LPF_Beta = m_sharp*0.1;
+//            value1 = value;
+//            SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
+//
+//            value = SmoothData;
+//            value *=4.f;
+//            value = hipass(value);
             
         }
             
@@ -228,7 +344,7 @@ float Oscillator::process() {
             
             value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
             old_value = value;
-            value = hipass(value);
+            //value = hipass(value);
 
             break;
         // 2 op fm with feedback
@@ -236,13 +352,7 @@ float Oscillator::process() {
             
             
         {
-            if(m_sharp<0.3){
-                m_sharp = 0.3;
-            }
-            m_feedback = m_sharp - (0.0006*m_freq);
-            if (m_feedback > 1.0 || m_feedback < 0.1){
-                m_feedback = 0.3;
-            }
+
             
             float x = m_twopi * m_pointer_pos;
             float A1 = 1.0;
@@ -253,7 +363,7 @@ float Oscillator::process() {
             old_value = value;
             prev_value = value;
             value = (value + prev_value)/2;
-            value = hipass(value);
+            //value = hipass(value);
             break;}
 
         // waylo tan function with low pass
@@ -266,13 +376,15 @@ float Oscillator::process() {
             if (m_pointer_pos>(1/pw)){
                 value = 0;
             }
+            value = (value + old_value) / 2;
+            old_value = value;
             
             // low pass filter
-            float LPF_Beta = m_sharp*0.1;
-            value1 = value;
-            SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
-            value = SmoothData;
-            value *=4.f;
+//            float LPF_Beta = 1*m_sharp;
+//            value1 = value;
+//            SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
+//            value = SmoothData;
+//            value *=2.f;
             //value = hipass(value);
 
 

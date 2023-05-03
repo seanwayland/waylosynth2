@@ -20,11 +20,47 @@ class Oscillator {
         void reset();
         float process();
         double poly_blep(double t);
+    
+        //obxd filter
+    void setResonance(float res);
+    float diodePairResistanceApprox(float x);
+    float NR(float sample, float g);
+    float NR24(float sample,float g,float lpc);
+    float Apply4Pole(float sample,float g);
+    void setMultimode(float m);
+    float tptpc(float& state,float inp,float cutoff);
+    
+    
+    // obxd filter
+            bool bandPassSw;
+            float mm;
+            bool selfOscPush;
+    
+    
 
 
         
     private:
-        // globals
+    
+    
+      // obxd filter
+        
+    float s1,s2,s3,s4;
+    float R;
+    float R24;
+    float rcor,rcorInv;
+    float rcor24,rcor24Inv;
+    float SampleRate;
+    float sampleRateInv;
+
+    //24 db multimode
+    float mmt;
+    int mmch;
+    
+    
+    
+    
+         // globals
         float m_sampleRate;
         float m_oneOverSr;
         float m_twopi;
