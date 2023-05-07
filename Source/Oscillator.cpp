@@ -38,6 +38,7 @@ void Oscillator::setup(float sampleRate) {
     //low_cutoff = 40.0f;
     state = 0;
     gain = 200.0f / (m_twopi * m_sampleRate);
+    modulator = 0;
     
     
     
@@ -192,22 +193,61 @@ float Oscillator::process() {
     float key_adjust = 0.0f;
     m_feedback = 0.0f;
     
+    
+    
+    //value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback))
+    
+    
+    
+    
 
     switch (m_wavetype) {
         // Sine with feedback attenuated with pitch
         case 0:
-            //m_feedback = 0.93 - (0.0004*m_freq);
-            if(m_sharp<0.25){
-                m_sharp = 0.25;
-            }
-            m_feedback = (m_sharp) - (0.0004*m_freq);
-            if (m_feedback > 1.0 || m_feedback < 0.1){
-                m_feedback = 0.6;
-            }
             
-            value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
+            
+            //m_feedback = 0.93 - (0.0004*m_freq);
+            
+//            if (m_sharp > 0.68){m_sharp = 0.68;}
+//            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
+            m_feedback = m_sharp - (0.0005*m_freq);
+            
+            
+//            if (m_feedback > 1.0 || m_feedback < 0.1){
+//                m_feedback = 0.6;
+//            }
+            
+      
+            
+            
+            modulator = sinf(m_twopi * m_pointer_pos + (prev_value*m_feedback*0.8));
+            prev_value = modulator;
+
+            value = sinf(m_mod*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
             old_value = value;
-//value = hipass(value);
+           
+            
+            
+            
+
+            
+            
+//            //m_feedback = 0.93 - (0.0004*m_freq);
+//            if(m_sharp<0.25){
+//                m_sharp = 0.25;
+//            }
+//            m_feedback = (m_sharp) - (0.0004*m_freq);
+//            if (m_feedback > 1.0 || m_feedback < 0.1){
+//                m_feedback = 0.6;
+//            }
+//
+//            value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
+//            old_value = value;
+////value = hipass(value);
+            
+            
+            
+            
             
             break;
 
@@ -258,7 +298,7 @@ float Oscillator::process() {
             float y = m_twopi * m_pointer_pos;
             float A1 = 1.0;
             float f1 = 1.0;
-            float A2 = m_sharp*10;
+            float A2 = m_mod*10;
             float f2 = 1.0;
             value = sin(y + A2 * sin(x + m_feedback*old_x_value) + old_y_value);
             old_x_value = sin(x);
@@ -291,6 +331,9 @@ float Oscillator::process() {
             
         case 4:
             
+            
+
+            
         
             
         {if (fixed_pulse_counter < 0.1f){
@@ -315,6 +358,10 @@ float Oscillator::process() {
             setMultimode(1.0f);
             setResonance(filter_resonance);
             value = Apply4Pole(value,filter_cutoff);
+            
+        
+            
+
             
 
 //            float LPF_Beta = m_sharp*0.1;
@@ -359,7 +406,7 @@ float Oscillator::process() {
             float f1 = 1.0;
             float A2 = 3.5;
             float f2 = 1.0;
-            value = A1 * sin(f1*x + A2 * sin(f2*x) + (old_value*m_feedback))  ;
+            value = A1 * sin(f1*x + A2 * sin(f2*x) + (old_value*m_sharp))  ;
             old_value = value;
             prev_value = value;
             value = (value + prev_value)/2;
@@ -376,16 +423,16 @@ float Oscillator::process() {
             if (m_pointer_pos>(1/pw)){
                 value = 0;
             }
-            value = (value + old_value) / 2;
-            old_value = value;
+
             
-            // low pass filter
-//            float LPF_Beta = 1*m_sharp;
-//            value1 = value;
-//            SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
-//            value = SmoothData;
-//            value *=2.f;
-            //value = hipass(value);
+            
+            float filter_cutoff = m_sharp*5000;
+            float filter_resonance = 0.05f;
+            setMultimode(1.0f);
+            setResonance(filter_resonance);
+            value = Apply4Pole(value,filter_cutoff);
+            
+
 
 
             break;

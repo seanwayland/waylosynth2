@@ -112,6 +112,7 @@ class Oscillator {
         float fixed_pulse_counter;
         float state;
         float gain;
+    float modulator;
      
         // private methods
         float _clip(float x);
