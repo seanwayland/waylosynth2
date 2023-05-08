@@ -10,16 +10,21 @@ class Oscillator {
         void setup(float sampleRate);
         void setWavetype(int type);
         void setFreq(float freq);
-        float patrice_blep(float x, float a);
-        float patrice_rr(float x, float w);
-        float patrice_rrr(float x, float w, float a);
         float hipass(float input);
         void setSharp(float sharp);
         void setMod(float mod);
         void setPhase(float phase);
         void reset();
         float process();
-        double poly_blep(double t);
+    
+       // patrice functions
+        
+       float s(float input);
+       float r0(float input, float w);
+       float r1(float input, float a, float w);
+       float b(float x, float a);
+    
+    
     
         //obxd filter
     void setResonance(float res);
@@ -52,6 +57,11 @@ class Oscillator {
     float rcor24,rcor24Inv;
     float SampleRate;
     float sampleRateInv;
+    
+    float patrice_a;
+    float patrice_w;
+    float b_s_x;
+    float b_s_x_minus_w;
 
     //24 db multimode
     float mmt;
@@ -112,7 +122,7 @@ class Oscillator {
         float fixed_pulse_counter;
         float state;
         float gain;
-    float modulator;
+        float modulator;
      
         // private methods
         float _clip(float x);

@@ -67,6 +67,47 @@ void Oscillator::reset() {
 }
 
 
+// patrice functions
+
+float Oscillator::b(float x, float a){
+    if (x < a){
+        float x_over_a_minus_1 = (x/a) -1.0;
+        float x_over_a_minus_1_squared = x_over_a_minus_1 * x_over_a_minus_1 ;
+        return  -1.0* x_over_a_minus_1_squared;
+    }
+    else if (x > ( 1.0 -a )){
+        float x_minus_1_over_a = (x-1.0)/a;
+        float root_val = 1.0 + x_minus_1_over_a;
+        return root_val*root_val;
+    }
+    else{
+        return 0.0;
+    }
+    
+}
+
+float Oscillator::s(float input){
+    return fmod(input, 1.0);
+}
+
+
+float Oscillator::r0(float input, float w){
+    if (s(input)< w){
+        return 1.0;}
+    else{
+        return -1.0;
+        }
+        
+    }
+
+// r1(x) = r0(x) + b(s(x)) - b(s(x-w))
+float Oscillator::r1(float input, float a, float w){
+    b_s_x = b(s(input),a);
+    b_s_x_minus_w = b(s(input-w),a);
+    return r0(input,w) + b_s_x - b_s_x_minus_w;
+}
+   
+
 // obxd filter
 
 
@@ -401,13 +442,16 @@ float Oscillator::process() {
         case 8:
             
             
-            
-        {value = sinf(m_twopi * m_pointer_pos);
+        {
+            if (m_sharp > 0.8){m_sharp = 0.8f;}
+            float a = (m_mod / 10.0) + 0.001;
+            float w = m_sharp;
+            value = r1(m_pointer_pos, a,  w);
             break;}
             
     }
     
-    
+
 
     if (m_wavetype < 9) {
         m_pointer_pos += m_freq * m_oneOverSr;
