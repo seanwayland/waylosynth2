@@ -438,7 +438,8 @@ float Oscillator::process() {
             
             break;}
             
-            // waylo tan function with low pass
+            // patrice's blep
+            // https://www.desmos.com/calculator/blegmoqkhc
         case 8:
             
             
