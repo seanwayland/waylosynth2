@@ -444,6 +444,7 @@ float Oscillator::process() {
             
         {
             if (m_sharp > 0.8){m_sharp = 0.8f;}
+            if (m_sharp < 0.2){m_sharp = 0.2f;}
             float a = (m_mod / 10.0) + 0.001;
             float w = m_sharp;
             value = r1(m_pointer_pos, a,  w);
