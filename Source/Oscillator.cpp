@@ -168,7 +168,7 @@ float Oscillator::hipass(float input) {
 
 void Oscillator::setWavetype(int type) {
     if (type != m_wavetype) {
-        type = type < 0 ? 0 : type > 7 ? 7 : type;
+        type = type < 0 ? 0 : type > 8 ? 8 : type;
         m_wavetype = type;
     }
 }
@@ -202,60 +202,38 @@ float Oscillator::process() {
     
 
     switch (m_wavetype) {
-        // Sine with feedback attenuated with pitch
+            // Sine with feedback attenuated with pitch
         case 0:
             
             
             //m_feedback = 0.93 - (0.0004*m_freq);
             
-//            if (m_sharp > 0.68){m_sharp = 0.68;}
-//            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
+            //            if (m_sharp > 0.68){m_sharp = 0.68;}
+            //            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
             m_feedback = m_sharp - (0.0005*m_freq);
             
             
-//            if (m_feedback > 1.0 || m_feedback < 0.1){
-//                m_feedback = 0.6;
-//            }
-            
-      
+            //            if (m_feedback > 1.0 || m_feedback < 0.1){
+            //                m_feedback = 0.6;
+            //            }
             
             
-            modulator = sinf(m_twopi * m_pointer_pos + (prev_value*m_feedback*0.8));
+            
+            
+        {modulator = sinf(m_twopi * m_pointer_pos + (prev_value*m_feedback*0.8));
             prev_value = modulator;
-
+            
             value = sinf(m_mod*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
             old_value = value;
-           
             
             
-            
-
-            
-            
-//            //m_feedback = 0.93 - (0.0004*m_freq);
-//            if(m_sharp<0.25){
-//                m_sharp = 0.25;
-//            }
-//            m_feedback = (m_sharp) - (0.0004*m_freq);
-//            if (m_feedback > 1.0 || m_feedback < 0.1){
-//                m_feedback = 0.6;
-//            }
-//
-//            value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
-//            old_value = value;
-////value = hipass(value);
+            break;}
             
             
-            
-            
-            
-            break;
-
-
-        // band limited pulse width waylo belangeo
+            // band limited pulse width waylo belangeo
         case 1:
             
-            
+        {
             pulse_width = m_mod;
             phase1 = m_pointer_pos + 0.5 * pulse_width;
             phase2 = m_pointer_pos - 0.5 * pulse_width;
@@ -279,14 +257,13 @@ float Oscillator::process() {
             
             value = value1 - value2;
             //value = hipass(value);
-
-
             
             
-
-
-            break;
-        // dx7 2 op
+            
+            
+            
+            break;}
+            // dx7 2 op
             
         case 2:
             
@@ -305,10 +282,11 @@ float Oscillator::process() {
             old_y_value = sin(y);
             //value = hipass(value);
             break;}
-        // Saw
+            // Saw
             
         case 3:
-            maxHarms = 4*m_srOverFour / m_freq;
+            
+        {maxHarms = 4*m_srOverFour / m_freq;
             numh = m_sharp * 100.f + 4.f;
             if (numh > maxHarms)
                 numh = maxHarms;
@@ -320,22 +298,17 @@ float Oscillator::process() {
             
             //value = hipass(value);
             
-
             
             
-            break;
-
-        // Ramp
-        // attempt at saw like "fixed pulse"
+            break;}
+            
+            // Ramp
+            // attempt at saw like "fixed pulse"
             // oscillator called P2 on page 21 https://mirm.ru/upload/iblock/cd0/Nord%20Lead%20A1,%20A1R%20(EN).pdf
             
         case 4:
             
-            
-
-            
         
-            
         {if (fixed_pulse_counter < 0.1f){
             value = m_mod*30.f * fixed_pulse_counter;
         }
@@ -359,31 +332,18 @@ float Oscillator::process() {
             setResonance(filter_resonance);
             value = Apply4Pole(value,filter_cutoff);
             
-        
             
-
-            
-
-//            float LPF_Beta = m_sharp*0.1;
-//            value1 = value;
-//            SmoothData = SmoothData - (LPF_Beta * (SmoothData - value1));
-//
-//            value = SmoothData;
-//            value *=4.f;
-//            value = hipass(value);
-            
-        }
-            
-
-
-            break;
-        // sin with feedback
+        break;}
+            // sin with feedback
         case 5:
+            
+        {
+            
             //m_feedback = 0.93 - (0.0004*m_freq);
             if(m_sharp<0.3){
                 m_sharp = 0.3;
             }
- 
+            
             m_feedback = m_sharp*0.95 - (0.0004*m_freq);
             if (m_feedback > 1.0 || m_feedback < 0.1){
                 m_feedback = 0.6;
@@ -392,14 +352,15 @@ float Oscillator::process() {
             value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
             old_value = value;
             //value = hipass(value);
-
-            break;
-        // 2 op fm with feedback
+            
+            break;}
+            
+            // 2 op fm with feedback
         case 6:
             
             
         {
-
+            
             
             float x = m_twopi * m_pointer_pos;
             float A1 = 1.0;
@@ -412,18 +373,18 @@ float Oscillator::process() {
             value = (value + prev_value)/2;
             //value = hipass(value);
             break;}
-
-        // waylo tan function with low pass
+            
+            // waylo tan function with low pass
         case 7:
             
             
-            float pw = 3*(m_mod+ 0.3f);
+        {float pw = 3*(m_mod+ 0.3f);
             
             value = tanhf(m_twopi*sin(pw*M_PI*m_pointer_pos));
             if (m_pointer_pos>(1/pw)){
                 value = 0;
             }
-
+            
             
             
             float filter_cutoff = m_sharp*5000;
@@ -432,14 +393,23 @@ float Oscillator::process() {
             setResonance(filter_resonance);
             value = Apply4Pole(value,filter_cutoff);
             
-
-
-
-            break;
-
+        
+            
+            break;}
+            
+            // waylo tan function with low pass
+        case 8:
+            
+            
+            
+        {value = sinf(m_twopi * m_pointer_pos);
+            break;}
+            
     }
+    
+    
 
-    if (m_wavetype < 8) {
+    if (m_wavetype < 9) {
         m_pointer_pos += m_freq * m_oneOverSr;
         m_pointer_pos = _clip(m_pointer_pos);
         fixed_pulse_counter += 11000 * m_oneOverSr;
