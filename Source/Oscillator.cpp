@@ -87,7 +87,7 @@ float Oscillator::b(float x, float a){
 }
 
 float Oscillator::s(float input){
-    return fmod(input, 1.0);
+    return abs(fmod(input, 1.0));
 }
 
 
@@ -280,7 +280,9 @@ float Oscillator::process() {
             phase2 = m_pointer_pos - 0.5 * pulse_width;
             
             maxHarms = 3*(m_srOverFour / m_freq);
-            numh = m_sharp * 80.f + 4.f;
+            // modified to allow m_sharp to change wave shape 
+            //numh = m_sharp * 80.f + 4.f;
+            numh =  80.f + 4.f;
             
             if (numh > maxHarms)
                 numh = maxHarms;
@@ -296,7 +298,7 @@ float Oscillator::process() {
             pos = pos * 2.f - 1.f;
             value2 = -(pos - tanhf(numh * pos) / tanhf(numh));
             
-            value = value1 - value2;
+            value = value1 - (m_sharp*value2);
             //value = hipass(value);
             
             
@@ -349,12 +351,13 @@ float Oscillator::process() {
             
         case 4:
             
+            if(m_mod < 0.001){m_mod = 0.001;}
         
         {if (fixed_pulse_counter < 0.1f){
-            value = m_mod*30.f * fixed_pulse_counter;
+            value = m_mod*10.f * fixed_pulse_counter;
         }
         else{
-            value = 2.0f + (-30.f * fixed_pulse_counter*m_mod);
+            value = 2.0f + (-10.f * fixed_pulse_counter*m_mod);
         }
             
             if (value < 0){
@@ -435,25 +438,31 @@ float Oscillator::process() {
             value = Apply4Pole(value,filter_cutoff);
             
         
-            
             break;}
             
-            // patrice's blep
-            // https://www.desmos.com/calculator/blegmoqkhc
+            // waylo tan function with low pass
         case 8:
             
             
         {
-            if (m_sharp > 0.8){m_sharp = 0.8f;}
-            if (m_sharp < 0.2){m_sharp = 0.2f;}
-            float a = (m_mod / 10.0) + 0.001;
-            float w = m_sharp;
+            if (m_mod > 0.8){m_mod = 0.8f;}
+            if (m_mod < 0.2){m_mod = 0.2f;}
+            float a = 0.15- (m_sharp / 10.0);
+            float w = m_mod;
             value = r1(m_pointer_pos, a,  w);
             break;}
             
+//            if (m_sharp > 0.8){m_sharp = 0.8f;}
+//            if (m_sharp < 0.2){m_sharp = 0.2f;}
+//            float a = (m_mod / 10.0) + 0.001;
+//            float w = m_sharp;
+//            value = r1(m_pointer_pos, a,  w);
+//            break;}
+            
+            
+            
     }
     
-
 
     if (m_wavetype < 9) {
         m_pointer_pos += m_freq * m_oneOverSr;
