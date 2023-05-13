@@ -1,6 +1,7 @@
 
 #pragma once
 //#include "PolyBLEP.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 
 
 class Oscillator {
@@ -46,6 +47,11 @@ class Oscillator {
 
         
     private:
+    
+
+    
+    
+    
     
     
       // obxd filter

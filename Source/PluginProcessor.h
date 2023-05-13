@@ -37,6 +37,10 @@ private:
     Oscillator oscillator;
     ADSR envelope;
     double level = 0.0;
+    
+
+    
+    
 };
 
 //==============================================================================
@@ -108,6 +112,9 @@ private:
     std::atomic<float> *modParameter = nullptr;
     std::atomic<float> *gainParameter = nullptr;
     float lastGain = 0.f;
+    
+    
+    juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (waylosynth2)
 };

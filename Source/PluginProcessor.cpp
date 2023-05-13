@@ -253,6 +253,18 @@ void waylosynth2::prepareToPlay (double sampleRate, int samplesPerBlock)
     // initialisation that you need..
     keyboardState.reset();
     synthesiser.setCurrentPlaybackSampleRate(sampleRate);
+    
+    
+    // vadimFilter
+    juce::dsp::ProcessSpec spec;
+    spec.maximumBlockSize = 512;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = 1;
+    
+    vadimFilter.prepare(spec);
+    vadimFilter.reset();
+    vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    vadimFilter.setCutoffFrequency(1500.0f);
 }
 
 void waylosynth2::releaseResources()
@@ -304,6 +316,10 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
     buffer.applyGainRamp(0, buffer.getNumSamples(), lastGain, *gainParameter);
+    
+    auto audioBlock = juce::dsp::AudioBlock<float>(buffer);
+    auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
+    vadimFilter.process(context);
     lastGain = *gainParameter;
 }
 
