@@ -57,6 +57,16 @@ void Oscillator::setup(float sampleRate) {
     rcorInv = 1 / rcor;
     rcor24Inv = 1 / rcor24;
     
+    
+    // vadim filter
+        // vadimFilter
+        juce::dsp::ProcessSpec spec;
+        spec.maximumBlockSize = 512;
+        spec.sampleRate = sampleRate;
+        spec.numChannels = 1;
+        vadimFilter.prepare(spec);
+        vadimFilter.reset();
+        vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
 
     
 }
@@ -107,7 +117,11 @@ float Oscillator::r1(float input, float a, float w){
     b_s_x_minus_w = b(s(input-w),a);
     return r0(input,w) + b_s_x - b_s_x_minus_w;
 }
-   
+
+
+
+// juce vadim filter
+
 
 // obxd filter
 
@@ -241,7 +255,6 @@ float Oscillator::process() {
     
     
     
-    
 
     switch (m_wavetype) {
             // Sine with feedback attenuated with pitch
@@ -254,6 +267,9 @@ float Oscillator::process() {
             //            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
             m_feedback = m_sharp - (0.0005*m_freq);
             
+            //m_feedback = 0.5;
+            //vadimFilter.setResonance(m_mod*2);
+            
             
             //            if (m_feedback > 1.0 || m_feedback < 0.1){
             //                m_feedback = 0.6;
@@ -265,7 +281,10 @@ float Oscillator::process() {
         {modulator = sinf(m_twopi * m_pointer_pos + (prev_value*m_feedback*0.8));
             prev_value = modulator;
             
+            //value = sinf(0.25*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
             value = sinf(m_mod*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
+            vadimFilter.setCutoffFrequency(3000*m_sharp + value*1000*m_sharp);
+            value = vadimFilter.processSample(1, value);
             old_value = value;
             
             

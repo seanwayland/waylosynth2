@@ -8,6 +8,8 @@ static const int numberOfVoices = 10;
 MySynthesiserVoice::MySynthesiserVoice() {
     oscillator.setup(getSampleRate());
     envelope.setSampleRate(getSampleRate());
+
+    
 }
 
 bool MySynthesiserVoice::canPlaySound(SynthesiserSound *sound) {
@@ -28,12 +30,38 @@ void MySynthesiserVoice::stopNote(float /*velocity*/, bool allowTailOff) {
 void MySynthesiserVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) {
     while (--numSamples >= 0) {
         auto envAmp = envelope.getNextSample();
-        auto currentSample = oscillator.process() * level * envAmp;
+        auto thisSample = oscillator.process();
+        auto currentSample = thisSample * level * envAmp;
+        //vadimFilter.setCutoffFrequency(500);
+        //vadimFilter.setCutoffFrequency(2000 + currentSample*1000);
+        //currentSample = vadimFilter.processSample(1, currentSample);
 
         for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
             outputBuffer.addSample(i, startSample, currentSample);
 
         ++startSample;
+        
+        
+        
+            // vadimFilter
+//            juce::dsp::ProcessSpec spec;
+//            spec.maximumBlockSize = 512;
+//            spec.sampleRate = 96000;
+//            spec.numChannels = 1;
+        
+//        auto audioBlock = juce::dsp::AudioBlock<float>(buffer);
+//        auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
+//        vadimFilter.process(context);
+
+           
+            
+            
+        
+            
+        
+        
+        
+
 
         if (envAmp <= 0.0) {
             clearCurrentNote();
@@ -255,16 +283,16 @@ void waylosynth2::prepareToPlay (double sampleRate, int samplesPerBlock)
     synthesiser.setCurrentPlaybackSampleRate(sampleRate);
     
     
-    // vadimFilter
-    juce::dsp::ProcessSpec spec;
-    spec.maximumBlockSize = 512;
-    spec.sampleRate = sampleRate;
-    spec.numChannels = 1;
-    
-    vadimFilter.prepare(spec);
-    vadimFilter.reset();
-    vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
-    vadimFilter.setCutoffFrequency(1500.0f);
+//    // vadimFilter
+//    juce::dsp::ProcessSpec spec;
+//    spec.maximumBlockSize = 512;
+//    spec.sampleRate = sampleRate;
+//    spec.numChannels = 1;
+//
+//    vadimFilter.prepare(spec);
+//    vadimFilter.reset();
+//    vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+//    vadimFilter.setCutoffFrequency(1500.0f);
 }
 
 void waylosynth2::releaseResources()
@@ -317,9 +345,9 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
 
     buffer.applyGainRamp(0, buffer.getNumSamples(), lastGain, *gainParameter);
     
-    auto audioBlock = juce::dsp::AudioBlock<float>(buffer);
-    auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
-    vadimFilter.process(context);
+    
+    
+
     lastGain = *gainParameter;
 }
 

@@ -33,12 +33,14 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setWavetypeParameter(int type);
     void setSharpParameter(float sharp);
     void setModParameter(float mod);
+    
+   
+    
+    
 private:
     Oscillator oscillator;
     ADSR envelope;
     double level = 0.0;
-    
-
     
     
 };
@@ -93,6 +95,10 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
+    
+    
 
     MidiKeyboardState keyboardState;
 
@@ -113,8 +119,7 @@ private:
     std::atomic<float> *gainParameter = nullptr;
     float lastGain = 0.f;
     
-    
-    juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (waylosynth2)
 };

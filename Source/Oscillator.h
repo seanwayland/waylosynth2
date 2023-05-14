@@ -37,21 +37,17 @@ class Oscillator {
     float tptpc(float& state,float inp,float cutoff);
     
     
+    juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
+    
+    
     // obxd filter
             bool bandPassSw;
             float mm;
             bool selfOscPush;
     
     
-
-
         
     private:
-    
-
-    
-    
-    
     
     
       // obxd filter
