@@ -18,7 +18,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
 {
     MySynthesiserVoice();
 
-    void pitchWheelMoved (int) override      {}
+    void pitchWheelMoved (int value) override;
     void controllerMoved (int, int) override {}
 
     bool canPlaySound (SynthesiserSound *sound) override;

@@ -19,6 +19,7 @@ Oscillator::Oscillator() {
     srand((unsigned int)time(0));
     m_sah_last_value = 0.f;
     m_sah_current_value = (rand() / (float)RAND_MAX) * 2.f - 1.f;
+    m_pitchbend = 1;
     
 }
 
@@ -39,6 +40,7 @@ void Oscillator::setup(float sampleRate) {
     state = 0;
     gain = 200.0f / (m_twopi * m_sampleRate);
     modulator = 0;
+    m_pitchbend = 1;
     
     
     
@@ -75,6 +77,7 @@ Oscillator::~Oscillator() {}
 
 void Oscillator::reset() {
     m_pointer_pos = m_sah_pointer_pos = 0.f;
+    m_pitchbend = 1;
 }
 
 
@@ -241,6 +244,35 @@ void Oscillator::setSharp(float sharp) {
 void Oscillator::setMod(float mod) {
     m_mod = mod < 0.f ? 0.f : mod > 1.f ? 1.f : mod;
 }
+
+
+void Oscillator::setPitchBend(float pitchWheelPos){
+    
+
+    if (pitchWheelPos > 8192){
+        auto val = pitchWheelPos - 8192;
+        m_pitchbend = 1 + (val/10000);
+    }
+    else {
+        auto val = 8192 - pitchWheelPos;
+        m_pitchbend = 1 - val/8192;
+
+    }
+    
+    if (m_pitchbend < 0.5){
+        m_pitchbend = 0.5;
+    }
+    
+    if (m_pitchbend > 1.5){
+        m_pitchbend = 1.5;
+    }
+
+      
+}
+   
+
+
+    
 
 float Oscillator::process() {
     float v1 = 0.f, v2 = 0.f, pointer = 0.f, numh = 0.f, pos = 0.f;
@@ -485,7 +517,7 @@ float Oscillator::process() {
     
 
     if (m_wavetype < 9) {
-        m_pointer_pos += m_freq * m_oneOverSr;
+        m_pointer_pos += m_pitchbend* m_freq * m_oneOverSr;
         m_pointer_pos = _clip(m_pointer_pos);
         fixed_pulse_counter += 11000 * m_oneOverSr;
         //fixed_pulse_counter = _clip(fixed_pulse_counter);

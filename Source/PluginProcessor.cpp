@@ -17,18 +17,33 @@ bool MySynthesiserVoice::canPlaySound(SynthesiserSound *sound) {
 }
 
 void MySynthesiserVoice::startNote(int midiNoteNumber, float velocity,
-                              SynthesiserSound *, int /*currentPitchWheelPosition*/) {
+                                   SynthesiserSound *, int currentPitchWheelPosition) {
     level = velocity * 0.15;
     envelope.noteOn();
-    oscillator.setFreq(MidiMessage::getMidiNoteInHertz (midiNoteNumber));
+    auto m_freq = (MidiMessage::getMidiNoteInHertz (midiNoteNumber));
+    
+    //m_freq = m_freq*currentPitchWheelPosition;
+    
+    oscillator.setFreq(m_freq);
+    
+    
 }
 
 void MySynthesiserVoice::stopNote(float /*velocity*/, bool allowTailOff) {
     envelope.noteOff();
 }
 
+
+void MySynthesiserVoice::pitchWheelMoved(int value){
+    oscillator.setPitchBend(value);
+
+}
+
 void MySynthesiserVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) {
     while (--numSamples >= 0) {
+        
+        
+        //oscillator.setPitchBend(MidiMessage::getPitchWheelValue());
         auto envAmp = envelope.getNextSample();
         auto thisSample = oscillator.process();
         auto currentSample = thisSample * level * envAmp;
@@ -41,27 +56,7 @@ void MySynthesiserVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int st
 
         ++startSample;
         
-        
-        
-            // vadimFilter
-//            juce::dsp::ProcessSpec spec;
-//            spec.maximumBlockSize = 512;
-//            spec.sampleRate = 96000;
-//            spec.numChannels = 1;
-        
-//        auto audioBlock = juce::dsp::AudioBlock<float>(buffer);
-//        auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
-//        vadimFilter.process(context);
-
-           
-            
-            
-        
-            
-        
-        
-        
-
+    
 
         if (envAmp <= 0.0) {
             clearCurrentNote();
@@ -281,18 +276,7 @@ void waylosynth2::prepareToPlay (double sampleRate, int samplesPerBlock)
     // initialisation that you need..
     keyboardState.reset();
     synthesiser.setCurrentPlaybackSampleRate(sampleRate);
-    
-    
-//    // vadimFilter
-//    juce::dsp::ProcessSpec spec;
-//    spec.maximumBlockSize = 512;
-//    spec.sampleRate = sampleRate;
-//    spec.numChannels = 1;
-//
-//    vadimFilter.prepare(spec);
-//    vadimFilter.reset();
-//    vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
-//    vadimFilter.setCutoffFrequency(1500.0f);
+
 }
 
 void waylosynth2::releaseResources()
@@ -333,6 +317,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
+    
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
@@ -344,8 +329,6 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
     buffer.applyGainRamp(0, buffer.getNumSamples(), lastGain, *gainParameter);
-    
-    
     
 
     lastGain = *gainParameter;

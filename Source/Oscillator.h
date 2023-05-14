@@ -15,6 +15,7 @@ class Oscillator {
         void setSharp(float sharp);
         void setMod(float mod);
         void setPhase(float phase);
+        void setPitchBend(float pitchbend);
         void reset();
         float process();
     
@@ -87,6 +88,7 @@ class Oscillator {
         // 4 = Ramp, 5 = pulse, 6 = bi-pulse, 7 = SAH
         int m_wavetype;
         float m_freq;
+        float m_pitchbend;
         float m_sharp;
         float m_mod;
         float m_pointer_pos;
