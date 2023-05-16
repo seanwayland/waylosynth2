@@ -18,6 +18,10 @@ class Oscillator {
         void setPitchBend(float pitchbend);
         void reset();
         float process();
+        void set_midi_note_number(int midi_note);
+        void set_note_velocity(float note_velocity);
+
+    
     
        // patrice functions
         
@@ -127,6 +131,10 @@ class Oscillator {
         float state;
         float gain;
         float modulator;
+        float m_note_velocity;
+        int m_mod_wheel_value = 0;
+        int midi_note_number = 0;
+        int pedal_steel = 1;
      
         // private methods
         float _clip(float x);

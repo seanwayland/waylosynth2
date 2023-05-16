@@ -15,6 +15,7 @@
 Oscillator::Oscillator() {
     m_wavetype = 2;
     m_freq = 1.f;
+    midi_note_number = 0;
     m_sharp = 0.f;
     srand((unsigned int)time(0));
     m_sah_last_value = 0.f;
@@ -41,6 +42,9 @@ void Oscillator::setup(float sampleRate) {
     gain = 200.0f / (m_twopi * m_sampleRate);
     modulator = 0;
     m_pitchbend = 1;
+    
+
+
     
     
     
@@ -78,6 +82,12 @@ Oscillator::~Oscillator() {}
 void Oscillator::reset() {
     m_pointer_pos = m_sah_pointer_pos = 0.f;
     m_pitchbend = 1;
+
+}
+
+
+void Oscillator::set_midi_note_number(int midi_note){
+    midi_note_number = midi_note;
 }
 
 
@@ -121,9 +131,6 @@ float Oscillator::r1(float input, float a, float w){
     return r0(input,w) + b_s_x - b_s_x_minus_w;
 }
 
-
-
-// juce vadim filter
 
 
 // obxd filter
@@ -205,7 +212,6 @@ void Oscillator::setMultimode(float m)
 
 
 
-
 float Oscillator::_clip(float x) {
     if (x < 0.f) {
         x += 1.f;
@@ -246,34 +252,38 @@ void Oscillator::setMod(float mod) {
 }
 
 
+void Oscillator::set_note_velocity(float note_velocity){
+    m_note_velocity = note_velocity;
+}
+
+
 void Oscillator::setPitchBend(float pitchWheelPos){
     
-
-    if (pitchWheelPos > 8192){
-        auto val = pitchWheelPos - 8192;
-        m_pitchbend = 1 + (val/10000);
-    }
-    else {
-        auto val = 8192 - pitchWheelPos;
-        m_pitchbend = 1 - val/8192;
-
-    }
     
-    if (m_pitchbend < 0.5){
-        m_pitchbend = 0.5;
-    }
     
-    if (m_pitchbend > 1.5){
-        m_pitchbend = 1.5;
-    }
+    if( (m_note_velocity > 0.5 && (pedal_steel == 1) ) || (pedal_steel == 0) ){
+        if (pitchWheelPos > 8192){
+            auto val = pitchWheelPos - 8192;
+            m_pitchbend = 1 + (val/10000);
+        }
+        else {
+            auto val = 8192 - pitchWheelPos;
+            m_pitchbend = 1 - val/8192;
+            
+        }
+        
+        if (m_pitchbend < 0.5){
+            m_pitchbend = 0.5;
+        }
+        
+        if (m_pitchbend > 1.5){
+            m_pitchbend = 1.5;
+        }}
+    else{ m_pitchbend = 1.0;}
 
       
 }
    
-
-
-    
-
 float Oscillator::process() {
     float v1 = 0.f, v2 = 0.f, pointer = 0.f, numh = 0.f, pos = 0.f;
     float inc2 = 0.f, fade = 0.f, value = 0.f, maxHarms = 0.f;
@@ -283,10 +293,7 @@ float Oscillator::process() {
     
     
     
-    //value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback))
-    
-    
-    
+
 
     switch (m_wavetype) {
             // Sine with feedback attenuated with pitch
@@ -297,7 +304,7 @@ float Oscillator::process() {
             
             //            if (m_sharp > 0.68){m_sharp = 0.68;}
             //            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
-            m_feedback = m_sharp - (0.0005*m_freq);
+            m_feedback = (m_sharp + m_note_velocity/5) - (0.0005*m_freq);
             
             //m_feedback = 0.5;
             //vadimFilter.setResonance(m_mod*2);
@@ -314,7 +321,7 @@ float Oscillator::process() {
             prev_value = modulator;
             
             //value = sinf(0.25*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
-            value = sinf(m_mod*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
+            value = sinf((m_mod+ (m_note_velocity/5))*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
             vadimFilter.setCutoffFrequency(3000*m_sharp + value*1000*m_sharp);
             value = vadimFilter.processSample(1, value);
             old_value = value;
@@ -332,7 +339,7 @@ float Oscillator::process() {
             phase2 = m_pointer_pos - 0.5 * pulse_width;
             
             maxHarms = 3*(m_srOverFour / m_freq);
-            // modified to allow m_sharp to change wave shape 
+            // modified to allow m_sharp to change wave shape
             //numh = m_sharp * 80.f + 4.f;
             numh =  80.f + 4.f;
             
@@ -352,9 +359,6 @@ float Oscillator::process() {
             
             value = value1 - (m_sharp*value2);
             //value = hipass(value);
-            
-            
-            
             
             
             break;}
@@ -497,26 +501,22 @@ float Oscillator::process() {
             
             
         {
+            
+           
             if (m_mod > 0.8){m_mod = 0.8f;}
             if (m_mod < 0.2){m_mod = 0.2f;}
             float a = 0.15- (m_sharp / 10.0);
-            float w = m_mod;
+            float w = m_mod + (m_note_velocity/10);
             value = r1(m_pointer_pos, a,  w);
             break;}
             
-//            if (m_sharp > 0.8){m_sharp = 0.8f;}
-//            if (m_sharp < 0.2){m_sharp = 0.2f;}
-//            float a = (m_mod / 10.0) + 0.001;
-//            float w = m_sharp;
-//            value = r1(m_pointer_pos, a,  w);
-//            break;}
-            
-            
+
             
     }
     
 
     if (m_wavetype < 9) {
+
         m_pointer_pos += m_pitchbend* m_freq * m_oneOverSr;
         m_pointer_pos = _clip(m_pointer_pos);
         fixed_pulse_counter += 11000 * m_oneOverSr;

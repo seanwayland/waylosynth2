@@ -18,19 +18,20 @@ bool MySynthesiserVoice::canPlaySound(SynthesiserSound *sound) {
 
 void MySynthesiserVoice::startNote(int midiNoteNumber, float velocity,
                                    SynthesiserSound *, int currentPitchWheelPosition) {
+    oscillator.reset();
     level = velocity * 0.15;
     envelope.noteOn();
     auto m_freq = (MidiMessage::getMidiNoteInHertz (midiNoteNumber));
-    
-    //m_freq = m_freq*currentPitchWheelPosition;
-    
     oscillator.setFreq(m_freq);
-    
+    oscillator.set_note_velocity(velocity);
+
     
 }
 
 void MySynthesiserVoice::stopNote(float /*velocity*/, bool allowTailOff) {
     envelope.noteOff();
+    //oscillator.reset();
+    
 }
 
 
@@ -38,6 +39,10 @@ void MySynthesiserVoice::pitchWheelMoved(int value){
     oscillator.setPitchBend(value);
 
 }
+
+
+
+
 
 void MySynthesiserVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) {
     while (--numSamples >= 0) {

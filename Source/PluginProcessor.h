@@ -19,6 +19,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     MySynthesiserVoice();
 
     void pitchWheelMoved (int value) override;
+    void handleSustainPedal(int midiChannel,bool isDown);
     void controllerMoved (int, int) override {}
 
     bool canPlaySound (SynthesiserSound *sound) override;
@@ -41,6 +42,8 @@ private:
     Oscillator oscillator;
     ADSR envelope;
     double level = 0.0;
+    int voice_number = 0;
+    bool sustain_down = 0;
     
     
 };
