@@ -320,6 +320,79 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    
+    
+    
+    
+    // waylosynth code
+    
+    MidiMessage m;
+    MidiBuffer processedMidi;
+    int time;
+    
+    {
+            buffer.clear();
+            
+            
+            MidiBuffer processedMidi;
+            int time;
+            MidiMessage m;
+            
+            for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
+            {
+                if (m.isNoteOn() && m.getNoteNumber() < 60 )
+                
+                    
+                    {
+                        waylotrans = m.getNoteNumber() - 48;
+                        m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
+                        
+                    }
+                 
+                
+                else if (m.isNoteOff() && m.getNoteNumber() < 60)
+                
+                    
+                    {
+                        waylotrans = 0;
+                        m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
+                    }
+                    
+                else if (m.isNoteOn() && m.getNoteNumber() >= 60)
+                        
+                    {
+                        int NewNote = m.getNoteNumber() + waylotrans -12;
+                        playing[m.getNoteNumber()]= NewNote;
+                        m = MidiMessage::noteOn(m.getChannel(), NewNote , m.getVelocity());
+                        
+                    }
+                else if (m.isNoteOff() && m.getNoteNumber() >= 60)
+                    
+                {
+                    int NewNote = playing[m.getNoteNumber()];
+                     playing[m.getNoteNumber()] = NULL;
+                    m = MidiMessage::noteOff(m.getChannel(), NewNote , m.getVelocity());
+                    
+                }
+                
+                
+                else if (m.isAftertouch())
+                {
+                }
+                else if (m.isPitchWheel())
+                {
+                }
+                
+                processedMidi.addEvent (m, time);
+            }
+            
+            midiMessages.swapWith (processedMidi);
+        }
+    
+    
+    
+    
+    
 
     keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
     

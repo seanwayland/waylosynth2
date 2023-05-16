@@ -65,6 +65,9 @@ public:
     //==============================================================================
     waylosynth2();
     ~waylosynth2();
+    
+    int waylotrans = 0;
+    int playing[127];
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
