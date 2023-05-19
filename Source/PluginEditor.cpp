@@ -67,7 +67,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&typeLabel);
 
     typeCombo.setLookAndFeel(&plugexLookAndFeel);
-    typeCombo.addItemList({"FM_Feedback_1", "Pulse Wave", "2_OP_FM", "Sawtooth", "Fixed_Pulse", "Sin_w_Feedback", "2_OP_version2", "Tan_of_Sin", "pwm_bleb"}, 1);
+    typeCombo.addItemList({"FM_Feedback_1", "Pulse Wave", "2_OP_FM", "Sawtooth", "Fixed_Pulse", "sin_w_fdbck", "2_OP_version2", "Tan_of_Sin", "pwm_bleb"}, 1);
     typeCombo.setSelectedId(1);
     addAndMakeVisible(&typeCombo);
 
@@ -175,3 +175,22 @@ void waylosynth2AudioProcessorEditor::resized()
 
     keyboardComponent.setBounds(area.removeFromBottom(80));
 }
+
+
+//float f = 2 + m_mod*20;
+//if (f > 20) { f = 20;}
+//float j = (f*m_pointer_pos)-1;
+//float k = pow(j,5.6);
+//float x = (-1*pow(j,5.6)) + 1;
+//if (isnan(x)){x=0.0;}
+//if (x < 0) { x = 0.0 ;}
+//if (x>1 ){ x = 1.0 ;}
+////value = x;
+//float filter_cutoff = m_sharp*5000;
+//float filter_resonance = 0.05f;
+//setMultimode(1.0f);
+//setResonance(filter_resonance);
+//amp_env.Set_amp_envelope_rate(5);
+//float gain_val = amp_env.process(1.55, 1.5, 0.2, "attack_env");
+//filter_cutoff = filter_cutoff + 500*gain_val;
+//value = Apply3Pole(x,filter_cutoff);

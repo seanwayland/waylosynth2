@@ -68,6 +68,7 @@ public:
     
     int waylotrans = 0;
     int playing[127];
+    int waylochili = 60;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;

@@ -10,6 +10,89 @@
 #endif
 
 
+Attack_decay_envelope::Attack_decay_envelope(){
+    amp_envelope_position = 0;
+    amp_envelope_rate = 1;
+    amp_samplerate = 96000;
+    float last_value = 0.0;
+}
+
+Attack_decay_envelope::~Attack_decay_envelope(){
+}
+
+float Attack_decay_envelope::calculate_attack_gain(float envelope_position, float attack_coeff){
+    
+    float result = pow(envelope_position,attack_coeff );
+    
+    if (result > 1 || result < 0){return 1;}
+    return result;
+}
+float Attack_decay_envelope::calculate_decay_gain(float envelope_position, float decay_coeff, float sustain_time){
+    
+    float result = 1/( pow( (envelope_position - sustain_time) , (1/decay_coeff) ) );
+    if (result > 1 || result < 0){return 1;}
+    return result;
+}
+
+
+float Attack_decay_envelope::calculate_parabola_gain(float envelope_position){
+
+    float x_minus_1_sqr = pow(envelope_position-1,2);
+    float result = -1*((1.3*x_minus_1_sqr) - 1.3)/1.3;
+    if (result > 1){return 1.0;}
+    if (result < 0){return 0.0;}
+    return result;
+}
+
+
+
+float Attack_decay_envelope::process(float attack_coeff, float decay_coeff, float sustain_t, String type){
+    float sss = sustain_t;
+    
+    amp_envelope_position = amp_envelope_position + amp_envelope_rate/amp_samplerate;
+    
+    
+    if (type == "attack_env"){
+        if (amp_envelope_position < 1.0){
+            return 0.99*(calculate_attack_gain(amp_envelope_position, attack_coeff));
+        }
+        //    //and amp_envelope_position < (0.99 + sustain_t
+        //    else if (amp_envelope_position >= 1.0 && amp_envelope_position < (sustain_t + 1.01 )){
+        //        return 0.95;
+        //    }
+        //
+        else {return 0.94*(calculate_decay_gain(amp_envelope_position, decay_coeff, sustain_t));}}
+        //else { return 0.98;}}
+    if (type == "parabola"){
+        return calculate_parabola_gain(amp_envelope_position);
+    }
+    
+    else{return 1.0;}
+    
+    
+//    else{
+//        return calculate_decay_gain(amp_envelope_position, decay_coeff, sustain_t);
+//    }
+    
+}
+
+void Attack_decay_envelope::SetSampleRate(int Samplert){
+    amp_samplerate = Samplert;
+}
+void Attack_decay_envelope::Set_amp_envelope_rate(int envelope_rate){
+    amp_envelope_rate = envelope_rate;
+}
+
+void Attack_decay_envelope::reset(){
+    amp_envelope_position = 0;
+    amp_envelope_rate = 1;
+    amp_samplerate = 96000;
+}
+
+
+
+
+
 
 
 Oscillator::Oscillator() {
@@ -22,11 +105,18 @@ Oscillator::Oscillator() {
     m_sah_current_value = (rand() / (float)RAND_MAX) * 2.f - 1.f;
     m_pitchbend = 1;
     
+    
+    
 }
 
 void Oscillator::setup(float sampleRate) {
     m_sampleRate = sampleRate;
     m_sampleRate = 96000;
+    amp_env.SetSampleRate(96000);
+    amp_env.reset();
+    
+    
+    
     m_oneOverSr = 1.f / m_sampleRate;
     m_increment = m_runningPhase = 0.0f;
     m_twopi = 2.f * M_PI;
@@ -44,10 +134,6 @@ void Oscillator::setup(float sampleRate) {
     m_pitchbend = 1;
     
 
-
-    
-    
-    
     // obxd filter
     selfOscPush = false;
     bandPassSw = false;
@@ -82,6 +168,7 @@ Oscillator::~Oscillator() {}
 void Oscillator::reset() {
     m_pointer_pos = m_sah_pointer_pos = 0.f;
     m_pitchbend = 1;
+    amp_env.reset();
 
 }
 
@@ -89,6 +176,9 @@ void Oscillator::reset() {
 void Oscillator::set_midi_note_number(int midi_note){
     midi_note_number = midi_note;
 }
+
+
+// 
 
 
 // patrice functions
@@ -178,7 +268,7 @@ float Oscillator::Apply4Pole(float sample,float g)
 
             float y1= res;
             float y2 = tptpc(s2,y1,g);
-            float y3 = tptpc(s3,y2,g);
+            float y3 = tptpc(s3,y3,g);
             float y4 = tptpc(s4,y3,g);
             float mc;
             switch(mmch)
@@ -190,7 +280,94 @@ float Oscillator::Apply4Pole(float sample,float g)
                 mc = ((1 - mmt) * y3 + (mmt) * y2);
                 break;
             case 2:
-                mc = ((1 - mmt) * y2 + (mmt) * y1);
+               mc = ((1 - mmt) * y2 + (mmt) * y1);
+                break;
+            case 3:
+                mc = y1;
+                break;
+            default:
+                mc=0;
+                break;
+            }
+            //half volume comp
+            return mc * (1 + R24 * 0.45);
+    }
+
+
+float Oscillator::Apply3Pole(float sample,float g)
+    {
+            float g1 = (float)tan(g *sampleRateInv * M_PI);
+            g = g1;
+
+
+            
+            float lpc = g / (1 + g);
+            float y0 = NR24(sample,g,lpc);
+            //first low pass in cascade
+            double v = (y0 - s1) * lpc;
+            double res = v + s1;
+            s1 = res + v;
+            //damping
+            s1 =atan(s1*rcor24)*rcor24Inv;
+            float y1= res;
+            float y3 = tptpc(s3,y1,g);
+            float y4 = tptpc(s4,y3,g);
+
+
+            float mc;
+            switch(mmch)
+            {
+            case 0:
+                mc = ((1 - mmt) * y4 + (mmt) * y3);
+                break;
+            case 1:
+                //mc = ((1 - mmt) * y3 + (mmt) * y2);
+                break;
+            case 2:
+               // mc = ((1 - mmt) * y2 + (mmt) * y1);
+                break;
+            case 3:
+                mc = y1;
+                break;
+            default:
+                mc=0;
+                break;
+            }
+            //half volume comp
+            return mc * (1 + R24 * 0.45);
+    }
+
+
+float Oscillator::Apply2Pole(float sample,float g)
+    {
+            float g1 = (float)tan(g *sampleRateInv * M_PI);
+            g = g1;
+
+
+            
+            float lpc = g / (1 + g);
+            float y0 = NR24(sample,g,lpc);
+            //first low pass in cascade
+            double v = (y0 - s1) * lpc;
+            double res = v + s1;
+            s1 = res + v;
+            //damping
+            s1 =atan(s1*rcor24)*rcor24Inv;
+
+            float y1= res;
+            float y3 = tptpc(s2,y1,g);
+            float y4 = y3;
+            float mc;
+            switch(mmch)
+            {
+            case 0:
+                mc = ((1 - mmt) * y4 + (mmt) * y3);
+                break;
+            case 1:
+                //mc = ((1 - mmt) * y3 + (mmt) * y2);
+                break;
+            case 2:
+               // mc = ((1 - mmt) * y2 + (mmt) * y1);
                 break;
             case 3:
                 mc = y1;
@@ -233,7 +410,7 @@ float Oscillator::hipass(float input) {
 
 void Oscillator::setWavetype(int type) {
     if (type != m_wavetype) {
-        type = type < 0 ? 0 : type > 8 ? 8 : type;
+        type = type < 0 ? 0 : type > 10 ? 10 : type;
         m_wavetype = type;
     }
 }
@@ -292,8 +469,6 @@ float Oscillator::process() {
     m_feedback = 0.0f;
     
     
-    
-
 
     switch (m_wavetype) {
             // Sine with feedback attenuated with pitch
@@ -439,21 +614,41 @@ float Oscillator::process() {
             
         {
             
-            //m_feedback = 0.93 - (0.0004*m_freq);
-            if(m_sharp<0.3){
-                m_sharp = 0.3;
-            }
+//            //m_feedback = 0.93 - (0.0004*m_freq);
+//            if(m_sharp<0.3){
+//                m_sharp = 0.3;
+//            }
+//
+//            m_feedback = m_sharp*0.95 - (0.0004*m_freq);
+//            if (m_feedback > 1.0 || m_feedback < 0.1){
+//                m_feedback = 0.6;
+//            }
+//
+//            value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
+//            old_value = value;
+//            //value = hipass(value);
             
-            m_feedback = m_sharp*0.95 - (0.0004*m_freq);
-            if (m_feedback > 1.0 || m_feedback < 0.1){
-                m_feedback = 0.6;
-            }
+              float f = 2 + m_mod*20;
+              if (f > 20) { f = 20;}
+              float j = (f*m_pointer_pos)-1;
+              float x = (-1*pow(j,5.6)) + 1;
+              if (isnan(x)){x=0.0;}
+              if (x < 0) { x = 0.0 ;}
+              if (x>1 ){ x = 1.0 ;}
             
-            value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
-            old_value = value;
-            //value = hipass(value);
+              float filter_cutoff = m_sharp*5000;
+              float filter_resonance = 0.05f;
+              setMultimode(1.0f);
+               setResonance(filter_resonance);
+               value = Apply3Pole(x,filter_cutoff);
             
-            break;}
+            
+            
+            
+            break;
+            
+            
+        }
             
             // 2 op fm with feedback
         case 6:
@@ -467,7 +662,7 @@ float Oscillator::process() {
             float f1 = 1.0;
             float A2 = 3.5;
             float f2 = 1.0;
-            value = A1 * sin(f1*x + A2 * sin(f2*x) + (old_value*m_sharp))  ;
+            value = A1 * sin(f1*x + 10*m_mod * sin(f2*x) + (old_value*m_sharp))  ;
             old_value = value;
             prev_value = value;
             value = (value + prev_value)/2;
@@ -502,13 +697,17 @@ float Oscillator::process() {
             
         {
             
-           
+
             if (m_mod > 0.8){m_mod = 0.8f;}
             if (m_mod < 0.2){m_mod = 0.2f;}
             float a = 0.15- (m_sharp / 10.0);
             float w = m_mod + (m_note_velocity/10);
             value = r1(m_pointer_pos, a,  w);
-            break;}
+
+            break;
+            
+            
+        }
             
 
             

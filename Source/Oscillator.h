@@ -4,6 +4,27 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 
+class Attack_decay_envelope {
+    
+    
+        public:
+            Attack_decay_envelope();
+            ~Attack_decay_envelope();
+            float calculate_attack_gain(float envelope_position, float attack_coeff);
+            float calculate_decay_gain(float envelope_position, float decay_coeff, float sustain_time);
+            float calculate_parabola_gain(float envelope_position);
+            void SetSampleRate(int Samplerate);
+            void Set_amp_envelope_rate(int envelope_rate);
+            void reset();
+            float amp_envelope_position;
+            int amp_envelope_rate;
+            float amp_samplerate;
+            float process(float attack_coeff, float d, float sustain_t, String type);
+
+    
+};
+
+
 class Oscillator {
     public:
         Oscillator();
@@ -38,8 +59,13 @@ class Oscillator {
     float NR(float sample, float g);
     float NR24(float sample,float g,float lpc);
     float Apply4Pole(float sample,float g);
+    float Apply2Pole(float sample,float g);
+    float Apply3Pole(float sample,float g);
     void setMultimode(float m);
     float tptpc(float& state,float inp,float cutoff);
+
+    
+    
     
     
     juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
@@ -53,6 +79,10 @@ class Oscillator {
     
         
     private:
+    
+    Attack_decay_envelope amp_env;
+    
+    
     
     
       // obxd filter
@@ -135,6 +165,7 @@ class Oscillator {
         int m_mod_wheel_value = 0;
         int midi_note_number = 0;
         int pedal_steel = 1;
+
      
         // private methods
         float _clip(float x);
