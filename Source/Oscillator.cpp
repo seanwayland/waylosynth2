@@ -4,94 +4,11 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Oscillator.h"
+#include "Filters.h"
 
 #ifndef M_PI
 #define M_PI (3.14159265358979323846264338327950288)
 #endif
-
-
-Attack_decay_envelope::Attack_decay_envelope(){
-    amp_envelope_position = 0;
-    amp_envelope_rate = 1;
-    amp_samplerate = 96000;
-    float last_value = 0.0;
-}
-
-Attack_decay_envelope::~Attack_decay_envelope(){
-}
-
-float Attack_decay_envelope::calculate_attack_gain(float envelope_position, float attack_coeff){
-    
-    float result = pow(envelope_position,attack_coeff );
-    
-    if (result > 1 || result < 0){return 1;}
-    return result;
-}
-float Attack_decay_envelope::calculate_decay_gain(float envelope_position, float decay_coeff, float sustain_time){
-    
-    float result = 1/( pow( (envelope_position - sustain_time) , (1/decay_coeff) ) );
-    if (result > 1 || result < 0){return 1;}
-    return result;
-}
-
-
-float Attack_decay_envelope::calculate_parabola_gain(float envelope_position){
-
-    float x_minus_1_sqr = pow(envelope_position-1,2);
-    float result = -1*((1.3*x_minus_1_sqr) - 1.3)/1.3;
-    if (result > 1){return 1.0;}
-    if (result < 0){return 0.0;}
-    return result;
-}
-
-
-
-float Attack_decay_envelope::process(float attack_coeff, float decay_coeff, float sustain_t, String type){
-    float sss = sustain_t;
-    
-    amp_envelope_position = amp_envelope_position + amp_envelope_rate/amp_samplerate;
-    
-    
-    if (type == "attack_env"){
-        if (amp_envelope_position < 1.0){
-            return 0.99*(calculate_attack_gain(amp_envelope_position, attack_coeff));
-        }
-        //    //and amp_envelope_position < (0.99 + sustain_t
-        //    else if (amp_envelope_position >= 1.0 && amp_envelope_position < (sustain_t + 1.01 )){
-        //        return 0.95;
-        //    }
-        //
-        else {return 0.94*(calculate_decay_gain(amp_envelope_position, decay_coeff, sustain_t));}}
-        //else { return 0.98;}}
-    if (type == "parabola"){
-        return calculate_parabola_gain(amp_envelope_position);
-    }
-    
-    else{return 1.0;}
-    
-    
-//    else{
-//        return calculate_decay_gain(amp_envelope_position, decay_coeff, sustain_t);
-//    }
-    
-}
-
-void Attack_decay_envelope::SetSampleRate(int Samplert){
-    amp_samplerate = Samplert;
-}
-void Attack_decay_envelope::Set_amp_envelope_rate(int envelope_rate){
-    amp_envelope_rate = envelope_rate;
-}
-
-void Attack_decay_envelope::reset(){
-    amp_envelope_position = 0;
-    amp_envelope_rate = 1;
-    amp_samplerate = 96000;
-}
-
-
-
-
 
 
 
@@ -114,9 +31,6 @@ void Oscillator::setup(float sampleRate) {
     m_sampleRate = 96000;
     amp_env.SetSampleRate(96000);
     amp_env.reset();
-    
-    
-    
     m_oneOverSr = 1.f / m_sampleRate;
     m_increment = m_runningPhase = 0.0f;
     m_twopi = 2.f * M_PI;
@@ -127,40 +41,18 @@ void Oscillator::setup(float sampleRate) {
     SmoothData = 0.f;
     fixed_pulse_counter = 0;
     oldval = hi_pass_output = 0.f;
-    //low_cutoff = 40.0f;
-    state = 0;
-    gain = 200.0f / (m_twopi * m_sampleRate);
     modulator = 0;
     m_pitchbend = 1;
     
-
-    // obxd filter
-    selfOscPush = false;
-    bandPassSw = false;
-    mm=0;
-    s1=s2=s3=s4=0;
-    R=1;
-    R24=0;
-    SampleRate = m_sampleRate;
-    sampleRateInv = 1/SampleRate;
-    float rcrate =sqrt((44000/SampleRate));
-    rcor = (500.0 / 44000)*rcrate;
-    rcor24 = (970.0 / 44000)*rcrate;
-    rcorInv = 1 / rcor;
-    rcor24Inv = 1 / rcor24;
-    
-    
-    // vadim filter
         // vadimFilter
-        juce::dsp::ProcessSpec spec;
-        spec.maximumBlockSize = 512;
-        spec.sampleRate = sampleRate;
-        spec.numChannels = 1;
-        vadimFilter.prepare(spec);
-        vadimFilter.reset();
-        vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    juce::dsp::ProcessSpec spec;
+    spec.maximumBlockSize = 512;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = 1;
+    vadimFilter.prepare(spec);
+    vadimFilter.reset();
+    vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
 
-    
 }
 
 Oscillator::~Oscillator() {}
@@ -172,13 +64,9 @@ void Oscillator::reset() {
 
 }
 
-
 void Oscillator::set_midi_note_number(int midi_note){
     midi_note_number = midi_note;
 }
-
-
-// 
 
 
 // patrice functions
@@ -222,173 +110,6 @@ float Oscillator::r1(float input, float a, float w){
 }
 
 
-
-// obxd filter
-
-
-float Oscillator::tptpc(float& state,float inp,float cutoff)
-{
-    double v = (inp - state) * cutoff / (1 + cutoff);
-    double res = v + state;
-    state = res + v;
-    return res;
-}
-
-void Oscillator::setResonance(float res)
-{
-    R = 1-res;
-    R24 =( 3.5 * res);
-}
-
-
-float Oscillator::NR24(float sample,float g,float lpc)
-{
-    float ml = 1 / (1+g);
-    float S = (lpc*(lpc*(lpc*s1 + s2) + s3) +s4)*ml;
-    float G = lpc*lpc*lpc*lpc;
-    float y = (sample - R24 * S) / (1 + R24*G);
-    return y;
-}
-
-float Oscillator::Apply4Pole(float sample,float g)
-    {
-            float g1 = (float)tan(g *sampleRateInv * M_PI);
-            g = g1;
-
-
-            
-            float lpc = g / (1 + g);
-            float y0 = NR24(sample,g,lpc);
-            //first low pass in cascade
-            double v = (y0 - s1) * lpc;
-            double res = v + s1;
-            s1 = res + v;
-            //damping
-            s1 =atan(s1*rcor24)*rcor24Inv;
-
-            float y1= res;
-            float y2 = tptpc(s2,y1,g);
-            float y3 = tptpc(s3,y3,g);
-            float y4 = tptpc(s4,y3,g);
-            float mc;
-            switch(mmch)
-            {
-            case 0:
-                mc = ((1 - mmt) * y4 + (mmt) * y3);
-                break;
-            case 1:
-                mc = ((1 - mmt) * y3 + (mmt) * y2);
-                break;
-            case 2:
-               mc = ((1 - mmt) * y2 + (mmt) * y1);
-                break;
-            case 3:
-                mc = y1;
-                break;
-            default:
-                mc=0;
-                break;
-            }
-            //half volume comp
-            return mc * (1 + R24 * 0.45);
-    }
-
-
-float Oscillator::Apply3Pole(float sample,float g)
-    {
-            float g1 = (float)tan(g *sampleRateInv * M_PI);
-            g = g1;
-
-
-            
-            float lpc = g / (1 + g);
-            float y0 = NR24(sample,g,lpc);
-            //first low pass in cascade
-            double v = (y0 - s1) * lpc;
-            double res = v + s1;
-            s1 = res + v;
-            //damping
-            s1 =atan(s1*rcor24)*rcor24Inv;
-            float y1= res;
-            float y3 = tptpc(s3,y1,g);
-            float y4 = tptpc(s4,y3,g);
-
-
-            float mc;
-            switch(mmch)
-            {
-            case 0:
-                mc = ((1 - mmt) * y4 + (mmt) * y3);
-                break;
-            case 1:
-                //mc = ((1 - mmt) * y3 + (mmt) * y2);
-                break;
-            case 2:
-               // mc = ((1 - mmt) * y2 + (mmt) * y1);
-                break;
-            case 3:
-                mc = y1;
-                break;
-            default:
-                mc=0;
-                break;
-            }
-            //half volume comp
-            return mc * (1 + R24 * 0.45);
-    }
-
-
-float Oscillator::Apply2Pole(float sample,float g)
-    {
-            float g1 = (float)tan(g *sampleRateInv * M_PI);
-            g = g1;
-
-
-            
-            float lpc = g / (1 + g);
-            float y0 = NR24(sample,g,lpc);
-            //first low pass in cascade
-            double v = (y0 - s1) * lpc;
-            double res = v + s1;
-            s1 = res + v;
-            //damping
-            s1 =atan(s1*rcor24)*rcor24Inv;
-
-            float y1= res;
-            float y3 = tptpc(s2,y1,g);
-            float y4 = y3;
-            float mc;
-            switch(mmch)
-            {
-            case 0:
-                mc = ((1 - mmt) * y4 + (mmt) * y3);
-                break;
-            case 1:
-                //mc = ((1 - mmt) * y3 + (mmt) * y2);
-                break;
-            case 2:
-               // mc = ((1 - mmt) * y2 + (mmt) * y1);
-                break;
-            case 3:
-                mc = y1;
-                break;
-            default:
-                mc=0;
-                break;
-            }
-            //half volume comp
-            return mc * (1 + R24 * 0.45);
-    }
-
-void Oscillator::setMultimode(float m)
-{
-    mm = m;
-    mmch = (int)(mm * 3);
-    mmt = mm*3-mmch;
-}
-
-
-
 float Oscillator::_clip(float x) {
     if (x < 0.f) {
         x += 1.f;
@@ -397,15 +118,6 @@ float Oscillator::_clip(float x) {
     }
     return x;
 }
-
-
-float Oscillator::hipass(float input) {
-    
-        float retval = input - state;
-        state += gain * retval;
-        return retval;
-    }
-  
 
 
 void Oscillator::setWavetype(int type) {
@@ -435,8 +147,6 @@ void Oscillator::set_note_velocity(float note_velocity){
 
 
 void Oscillator::setPitchBend(float pitchWheelPos){
-    
-    
     
     if( (m_note_velocity > 0.5 && (pedal_steel == 1) ) || (pedal_steel == 0) ){
         if (pitchWheelPos > 8192){
@@ -489,7 +199,7 @@ float Oscillator::process() {
             //                m_feedback = 0.6;
             //            }
             
-            
+
             
             
         {modulator = sinf(m_twopi * m_pointer_pos + (prev_value*m_feedback*0.8));
@@ -503,6 +213,12 @@ float Oscillator::process() {
             
             
             break;}
+            
+        case 9:
+        {
+            value = 0;
+            break;
+        }
             
             
             // band limited pulse width waylo belangeo
@@ -582,9 +298,10 @@ float Oscillator::process() {
             
         case 4:
             
+        {
             if(m_mod < 0.001){m_mod = 0.001;}
         
-        {if (fixed_pulse_counter < 0.1f){
+        if (fixed_pulse_counter < 0.1f){
             value = m_mod*10.f * fixed_pulse_counter;
         }
         else{
@@ -600,16 +317,15 @@ float Oscillator::process() {
                 fixed_pulse_counter = 0.0f;
             }
             
-            
             float filter_cutoff = m_sharp*5000;
             float filter_resonance = 0.05f;
-            setMultimode(1.0f);
-            setResonance(filter_resonance);
-            value = Apply4Pole(value,filter_cutoff);
+            filter.setMultimode(1.0f);
+            filter.setResonance(filter_resonance);
+            value = filter.Apply4Pole(value,filter_cutoff);
             
             
         break;}
-            // sin with feedback
+            // pulse like 
         case 5:
             
         {
@@ -638,25 +354,17 @@ float Oscillator::process() {
             
               float filter_cutoff = m_sharp*5000;
               float filter_resonance = 0.05f;
-              setMultimode(1.0f);
-               setResonance(filter_resonance);
-               value = Apply3Pole(x,filter_cutoff);
-            
-            
-            
-            
+              filter.setMultimode(1.0f);
+              filter.setResonance(filter_resonance);
+              value = filter.Apply3Pole(x,filter_cutoff);
             break;
             
-            
         }
-            
+        
             // 2 op fm with feedback
         case 6:
             
-            
         {
-            
-            
             float x = m_twopi * m_pointer_pos;
             float A1 = 1.0;
             float f1 = 1.0;
@@ -672,48 +380,33 @@ float Oscillator::process() {
             // waylo tan function with low pass
         case 7:
             
+        {
             
-        {float pw = 3*(m_mod+ 0.3f);
-            
+            float pw = 3*(m_mod+ 0.3f);
             value = tanhf(m_twopi*sin(pw*M_PI*m_pointer_pos));
             if (m_pointer_pos>(1/pw)){
                 value = 0;
             }
-            
-            
-            
             float filter_cutoff = m_sharp*5000;
             float filter_resonance = 0.05f;
-            setMultimode(1.0f);
-            setResonance(filter_resonance);
-            value = Apply4Pole(value,filter_cutoff);
-            
-        
+            filter.setMultimode(1.0f);
+            filter.setResonance(filter_resonance);
+            value = filter.Apply4Pole(value,filter_cutoff);
             break;}
             
             // waylo tan function with low pass
         case 8:
             
-            
         {
-            
-
             if (m_mod > 0.8){m_mod = 0.8f;}
             if (m_mod < 0.2){m_mod = 0.2f;}
             float a = 0.15- (m_sharp / 10.0);
             float w = m_mod + (m_note_velocity/10);
             value = r1(m_pointer_pos, a,  w);
-
             break;
-            
-            
         }
-            
-
-            
     }
     
-
     if (m_wavetype < 9) {
 
         m_pointer_pos += m_pitchbend* m_freq * m_oneOverSr;

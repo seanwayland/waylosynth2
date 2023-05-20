@@ -2,27 +2,10 @@
 #pragma once
 //#include "PolyBLEP.h"
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "AttackDecayEnvelope.h"
+#include "Filters.h"
 
 
-class Attack_decay_envelope {
-    
-    
-        public:
-            Attack_decay_envelope();
-            ~Attack_decay_envelope();
-            float calculate_attack_gain(float envelope_position, float attack_coeff);
-            float calculate_decay_gain(float envelope_position, float decay_coeff, float sustain_time);
-            float calculate_parabola_gain(float envelope_position);
-            void SetSampleRate(int Samplerate);
-            void Set_amp_envelope_rate(int envelope_rate);
-            void reset();
-            float amp_envelope_position;
-            int amp_envelope_rate;
-            float amp_samplerate;
-            float process(float attack_coeff, float d, float sustain_t, String type);
-
-    
-};
 
 
 class Oscillator {
@@ -52,7 +35,6 @@ class Oscillator {
        float b(float x, float a);
     
     
-    
         //obxd filter
     void setResonance(float res);
     float diodePairResistanceApprox(float x);
@@ -66,8 +48,6 @@ class Oscillator {
 
     
     
-    
-    
     juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
     
     
@@ -76,13 +56,10 @@ class Oscillator {
             float mm;
             bool selfOscPush;
     
-    
-        
     private:
     
     Attack_decay_envelope amp_env;
-    
-    
+    Filters filter;
     
     
       // obxd filter
@@ -105,8 +82,6 @@ class Oscillator {
     int mmch;
     
     
-    
-    
          // globals
         float m_sampleRate;
         float m_oneOverSr;
@@ -117,9 +92,6 @@ class Oscillator {
         float m_srOverEight;
         float m_srOverTwo;
 
-        // parameters
-        // 0 = Sine, 1 = Triangle, 2 = Square, 3 = Saw,
-        // 4 = Ramp, 5 = pulse, 6 = bi-pulse, 7 = SAH
         int m_wavetype;
         float m_freq;
         float m_pitchbend;
