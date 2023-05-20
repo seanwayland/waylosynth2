@@ -58,7 +58,7 @@ void Oscillator::setup(float sampleRate) {
 Oscillator::~Oscillator() {}
 
 void Oscillator::reset() {
-    m_pointer_pos = m_sah_pointer_pos = 0.f;
+    m_pointer_pos = fm_phase_1 = fm_phase_2 = fm_phase_3 = m_sah_pointer_pos = 0.f;
     m_pitchbend = 1;
     amp_env.reset();
 
@@ -404,7 +404,70 @@ float Oscillator::process() {
             
         case 9:
         {
-            value = 0;
+            // reface DX
+            // operator 3 is 2 all others are 1
+            // 4 -> 3 -> 1
+            // 2 -> 1
+            // operators 1 and 3 are mixed in the output
+            float op1_level = 117/127;
+            float op2_level = 101/127;
+            float op3_level = 84/127;
+            float op4_level = 96/127;
+            
+            float op1_fdbk = 48*2/127;
+            float op2_fdbk = 33*2/127;
+            float op3_fdbk = 46*2/127;
+            float op4_fdbk = 25*2/127;
+            
+            //// dx7 2 op
+            //
+            //// f you have a signal x(t) = sin(w*t) and a modulation signal f(t) then:
+            //// x(t) = sin(w*t + f(t))
+            //
+            ////  carrierPhase += carrierFreq
+            //// carrier=sin(carrierPhase + modIndex*modulatorOut).
+            //
+            //// value = sin((phase + modulation)*TWO_PI);
+  
+            
+            
+           // if(m_sharp > 0.65){m_sharp = 0.65;}
+            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
+            if (m_feedback > 1.0){m_feedback = 0.9;}
+            if (m_feedback < 0.1){m_feedback = 0.1;}
+            
+            
+            // operator 4
+            float fm_value_4 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_4);
+            old_value_4 = 0.7*fm_value_4;
+            
+            
+            // operator 3
+            float fm_value_3 = sinf(m_twopi*fm_phase_3 + m_feedback*old_value_3 + (m_note_velocity)*m_mod*10*fm_value_4);
+            old_value_3 = 0.6*fm_value_3;
+
+    
+            // operator 2
+            float fm_value_2 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_2);
+            old_value_2 =  0.8*fm_value_2;
+            //value = (fm_value_1 + old_value)/2;
+            //value = fm_value_2;
+
+            
+            // operator 1
+            float fm_value_1 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_1 + (m_note_velocity)*m_mod*10*fm_value_2 + (m_note_velocity)*m_mod*10*fm_value_3);
+            old_value_1 = fm_value_1;
+            //value = (fm_value_1 + old_value)/2;
+            value = fm_value_1 + fm_value_3;
+            fm_phase_2 += m_pitchbend* m_freq * m_oneOverSr;
+            fm_phase_2 = _clip(m_pointer_pos);
+            fm_phase_3 += m_pitchbend* m_freq*2 * m_oneOverSr;
+            fm_phase_3 = _clip(m_pointer_pos);
+            
+            
+            
+            
+            
             break;
         }
     }

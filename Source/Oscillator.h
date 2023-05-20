@@ -98,6 +98,10 @@ class Oscillator {
         float m_sharp;
         float m_mod;
         float m_pointer_pos;
+        float fm_phase_1;
+        float fm_phase_2;
+        float fm_phase_3;
+        float fm_phase_4;
         float fm_m_pointer_pos;
         float m_sah_pointer_pos;
         float m_sah_last_value;
@@ -117,6 +121,10 @@ class Oscillator {
     
     
         float old_value;
+        float old_value_1;
+        float old_value_2;
+        float old_value_3;
+        float old_value_4;
         float old_x_value;
         float old_y_value;
         float m_feedback;
