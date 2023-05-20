@@ -122,7 +122,7 @@ float Oscillator::_clip(float x) {
 
 void Oscillator::setWavetype(int type) {
     if (type != m_wavetype) {
-        type = type < 0 ? 0 : type > 10 ? 10 : type;
+        type = type < 0 ? 0 : type > 9 ? 9 : type;
         m_wavetype = type;
     }
 }
@@ -214,12 +214,8 @@ float Oscillator::process() {
             
             break;}
             
-        case 9:
-        {
-            value = 0;
-            break;
-        }
-            
+
+    
             
             // band limited pulse width waylo belangeo
         case 1:
@@ -405,9 +401,15 @@ float Oscillator::process() {
             value = r1(m_pointer_pos, a,  w);
             break;
         }
+            
+        case 9:
+        {
+            value = 0;
+            break;
+        }
     }
     
-    if (m_wavetype < 9) {
+    if (m_wavetype < 10) {
 
         m_pointer_pos += m_pitchbend* m_freq * m_oneOverSr;
         m_pointer_pos = _clip(m_pointer_pos);
