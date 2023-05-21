@@ -453,8 +453,17 @@ float Oscillator::process() {
                 fixed_pulse_counter = 0.0f;
             }
             
-            float filter_cutoff = m_sharp*5000;
-            float filter_resonance = 0.05f;
+            
+            env.setAttackRate(m_sampleRate/15);
+            env.setDecayRate(m_sampleRate*1.2);
+            env.setReleaseRate(m_sampleRate);
+            env.setSustainLevel(0.1);
+            env.setTargetRatioA(0.1);
+            env.setTargetRatioDR(2.0);
+            float env_value = env.getOutput();
+            
+            float filter_cutoff = m_sharp*(env_value*8000+ 300);
+            float filter_resonance = 0.1f;
             filter.setMultimode(1.0f);
             filter.setResonance(filter_resonance);
             value = filter.Apply4Pole(value,filter_cutoff);
@@ -555,6 +564,30 @@ float Oscillator::process() {
 //            filter.setMultimode(1.0f);
 //            filter.setResonance(filter_resonance);
 //            value = filter.Apply4Pole(value,filter_cutoff);
+            
+            
+            
+            if (m_mod > 0.8){m_mod = 0.8f;}
+            if (m_mod < 0.2){m_mod = 0.2f;}
+            float a = 0.15- (m_sharp / 10.0);
+            float w = m_mod + (m_note_velocity/10);
+            value = r1(m_pointer_pos, a,  w);
+            
+            
+            env.setAttackRate(m_sampleRate/15);
+            env.setDecayRate(m_sampleRate*1.2);
+            env.setReleaseRate(m_sampleRate);
+            env.setSustainLevel(0.1);
+            env.setTargetRatioA(0.1);
+            env.setTargetRatioDR(2.0);
+            float env_value = env.getOutput();
+            
+            float filter_cutoff = m_sharp*(env_value*8000+ 300);
+            float filter_resonance = 0.1f;
+            filter.setMultimode(1.0f);
+            filter.setResonance(filter_resonance);
+            value = filter.Apply4Pole(value,filter_cutoff);
+
             
 
             
