@@ -347,6 +347,7 @@ float Oscillator::process() {
             
             //value = sinf(0.25*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
             value = sinf((m_mod+ (m_note_velocity/5))*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
+            vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
             vadimFilter.setCutoffFrequency(3000*m_sharp + value*1000*m_sharp);
             value = vadimFilter.processSample(1, value);
             old_value = value;
@@ -464,9 +465,15 @@ float Oscillator::process() {
             
             float filter_cutoff = m_sharp*(env_value*8000+ 300);
             float filter_resonance = 0.1f;
+            
             filter.setMultimode(1.0f);
             filter.setResonance(filter_resonance);
             value = filter.Apply4Pole(value,filter_cutoff);
+            
+            if (m_freq > 0){
+                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+                vadimFilter.setCutoffFrequency(m_freq - m_freq/20);
+                value = vadimFilter.processSample(1, value);}
             
             
         break;}
@@ -502,6 +509,8 @@ float Oscillator::process() {
               filter.setMultimode(1.0f);
               filter.setResonance(filter_resonance);
               value = filter.Apply3Pole(x,filter_cutoff);
+             
+
             break;
             
         }
@@ -574,9 +583,9 @@ float Oscillator::process() {
             value = r1(m_pointer_pos, a,  w);
             
             
-            env.setAttackRate(m_sampleRate/15);
-            env.setDecayRate(m_sampleRate*1.2);
-            env.setReleaseRate(m_sampleRate);
+            env.setAttackRate(m_sampleRate/20);
+            env.setDecayRate(m_sampleRate*0.8);
+            env.setReleaseRate(m_sampleRate*0.7);
             env.setSustainLevel(0.1);
             env.setTargetRatioA(0.1);
             env.setTargetRatioDR(2.0);
@@ -611,9 +620,9 @@ float Oscillator::process() {
         case 9:
         {
             
-            env.setAttackRate(m_sampleRate/8);
-            env.setDecayRate(m_sampleRate/6);
-            env.setReleaseRate(m_sampleRate/5);
+            env.setAttackRate(m_sampleRate*3);
+            env.setDecayRate(m_sampleRate*4);
+            env.setReleaseRate(m_sampleRate*4);
             env.setSustainLevel(0.2);
             env.setTargetRatioA(0.5);
             env.setTargetRatioDR(1.0);
@@ -648,6 +657,10 @@ float Oscillator::process() {
             m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
             if (m_feedback > 1.0){m_feedback = 0.9;}
             if (m_feedback < 0.1){m_feedback = 0.1;}
+            
+            if (midi_note_number > 0 &&   !(isnan(midi_note_number ))){ m_mod = m_mod + 1/midi_note_number;};
+            
+
             
             
             // operator 4
