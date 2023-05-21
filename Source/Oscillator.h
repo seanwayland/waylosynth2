@@ -4,6 +4,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "AttackDecayEnvelope.h"
 #include "Filters.h"
+#include "ADSR.h"
 
 
 
@@ -60,6 +61,7 @@ class Oscillator {
     
     Attack_decay_envelope amp_env;
     Filters filter;
+    ADSR2 env;
     
     
       // obxd filter
@@ -145,6 +147,8 @@ class Oscillator {
         int m_mod_wheel_value = 0;
         int midi_note_number = 0;
         int pedal_steel = 1;
+    
+    float transition[1001];
 
      
         // private methods

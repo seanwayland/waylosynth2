@@ -327,9 +327,9 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     
     
     
-    
-    // waylosynth code
-    
+//
+//     //waylosynth code
+//
 //    MidiMessage m;
 //    MidiBuffer processedMidi;
 //    int time;
@@ -392,13 +392,13 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
 //
 //            midiMessages.swapWith (processedMidi);
 //        }
-    
+//
     
     // end waylosynth code
     
     
-    /// zawinul reverse
-    ///
+    // zawinul reverse
+    
 //    MidiMessage m;
 //        MidiMessage n;
 //        buffer.clear();
@@ -522,7 +522,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     
     
     // WAYLO CHILI FUNCTION
-    
+//
 //    MidiMessage m;
 //
 //        {

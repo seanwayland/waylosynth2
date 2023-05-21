@@ -194,3 +194,6 @@ void waylosynth2AudioProcessorEditor::resized()
 //float gain_val = amp_env.process(1.55, 1.5, 0.2, "attack_env");
 //filter_cutoff = filter_cutoff + 500*gain_val;
 //value = Apply3Pole(x,filter_cutoff);
+
+
+

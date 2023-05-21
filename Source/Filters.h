@@ -33,6 +33,7 @@ public:
         void setMultimode(float m);
         float tptpc(float& state,float inp,float cutoff);
         float hipass(float input);
+        float hires(float input,float cutoff1, float resonance);
     
     // obxd filter
             bool bandPassSw;
@@ -51,6 +52,7 @@ private:
   float sampleRateInv;
   float state;
   float gain;
+
     
     //24 db multimode
     float mmt;
