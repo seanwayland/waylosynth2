@@ -5,6 +5,8 @@
 #include "AttackDecayEnvelope.h"
 #include "Filters.h"
 #include "ADSR.h"
+#include "VariableShapeOsc.h"
+#include "VariableSawOsc.h"
 
 
 
@@ -62,6 +64,8 @@ class Oscillator {
     Attack_decay_envelope amp_env;
     Filters filter;
     ADSR2 env;
+    daisysp::VariableShapeOscillator variosc;
+    daisysp::VariableSawOscillator varisaw;
     
     
       // obxd filter
