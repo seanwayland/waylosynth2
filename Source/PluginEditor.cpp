@@ -8,7 +8,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     : AudioProcessorEditor (&p), processor (p), valueTreeState (vts),
       keyboardComponent (p.keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
-    setSize (800, 400);
+    setSize (1000, 400);
 
     setLookAndFeel(&plugexLookAndFeel);
     plugexLookAndFeel.setTheme("lightgreen");
@@ -67,13 +67,13 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&typeLabel);
 
     typeCombo.setLookAndFeel(&plugexLookAndFeel);
-    typeCombo.addItemList({"FM_Feedback_1", "Pulse Wave", "2_OP_FM", "Sawtooth", "Fixed_Pulse", "pulse_up", "2_OP_version2", "Tan_of_Sin", "pwm_bleb", "face_dx", "variosc", "varisaw", "sin_w_feedbk", "empty", "empty"}, 1);
+    typeCombo.addItemList({"FM_Feedback_1", "Pulse Wave", "2_OP_FM", "Sawtooth", "Fixed_Pulse", "pulse_up", "2_OP_version2", "Tan_of_Sin", "pwm_bleb", "face_dx", "variosc", "varisaw", "sin_w_feedbk", "band_lim_saw_2", "band_lim_pulse_2", "empty", "empty","empty","empty","empty"}, 1);
     typeCombo.setSelectedId(1);
     addAndMakeVisible(&typeCombo);
 
     typeAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "type", typeCombo));
 
-    sharpLabel.setText("Bright", NotificationType::dontSendNotification);
+    sharpLabel.setText("Shape", NotificationType::dontSendNotification);
     sharpLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&sharpLabel);
 
@@ -94,6 +94,17 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(& modKnob);
 
     modAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "mod",  modKnob));
+    
+    cutoffLabel.setText("Cutoff", NotificationType::dontSendNotification);
+    cutoffLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(& cutoffLabel);
+
+    cutoffKnob.setLookAndFeel(&plugexLookAndFeel);
+    cutoffKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    cutoffKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(& cutoffKnob);
+
+    cutoffAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoff",  cutoffKnob));
 
     gainLabel.setText("Gain", NotificationType::dontSendNotification);
     gainLabel.setJustificationType(Justification::horizontallyCentred);
@@ -118,6 +129,7 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     typeCombo.setLookAndFeel(nullptr);
     sharpKnob.setLookAndFeel(nullptr);
     modKnob.setLookAndFeel(nullptr);
+    cutoffKnob.setLookAndFeel(nullptr);
     gainKnob.setLookAndFeel(nullptr);
 }
 
@@ -132,8 +144,8 @@ void waylosynth2AudioProcessorEditor::resized()
     auto area = getLocalBounds().reduced(12, 12);
     float width = area.getWidth();
 
-    title.setBounds(area.removeFromTop(36));
-    area.removeFromTop(12);
+    title.setBounds(area.removeFromTop(40));
+    area.removeFromTop(14);
 
     auto area1 = area.removeFromTop(100);
 
@@ -155,19 +167,23 @@ void waylosynth2AudioProcessorEditor::resized()
 
     auto area2 = area.removeFromTop(140);
 
-    auto typeArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    auto typeArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
     typeLabel.setBounds(typeArea.removeFromTop(20));
     typeCombo.setBounds(typeArea.removeFromTop(20).withSizeKeepingCentre(200, 24));
 
-    auto sharpArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    auto sharpArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
     sharpLabel.setBounds(sharpArea.removeFromTop(20));
     sharpKnob.setBounds(sharpArea);
-    
-    auto ModArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+
+    auto ModArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
     modLabel.setBounds(ModArea.removeFromTop(20));
     modKnob.setBounds(ModArea);
+    
+    auto CutoffArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    cutoffLabel.setBounds(CutoffArea.removeFromTop(20));
+    cutoffKnob.setBounds(CutoffArea);
 
-    auto gainArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    auto gainArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
     gainLabel.setBounds(gainArea.removeFromTop(20));
     gainKnob.setBounds(gainArea);
 

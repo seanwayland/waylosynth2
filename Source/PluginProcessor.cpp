@@ -86,6 +86,10 @@ void MySynthesiserVoice::setModParameter(float mod) {
     oscillator.setMod(mod);
 }
 
+void MySynthesiserVoice::setCutoffParameter(float cutoff) {
+    oscillator.setCutoff(cutoff);
+}
+
 //==============================================================================
 void MySynthesiser::setEnvelopeParameters(ADSR::Parameters params) {
     for (int i = 0; i < getNumVoices(); i++)
@@ -105,6 +109,11 @@ void MySynthesiser::setSharpParameter(float sharp) {
 void MySynthesiser::setModParameter(float mod) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setModParameter(mod);
+}
+
+void MySynthesiser::setCutoffParameter(float cutoff) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setCutoffParameter(cutoff);
 }
 
 //==============================================================================
@@ -127,6 +136,18 @@ static float sharpSliderTextToValue(const String& text) {
 static float modSliderTextToValue(const String& text) {
     return text.getFloatValue();
 }
+
+
+static String cutoffSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
+static float cutoffSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+
+
 
 static String gainSliderValueToText(float value) {
     float val = 20.0f * log10f(jmax(0.001f, value));
@@ -160,7 +181,7 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
                                                      0.25f, secondSliderValueToText, secondSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(String("type"), String("Type"), String(),
-                                                     NormalisableRange<float>(0.0f, 14.0f, 1.f, 1.0f),
+                                                     NormalisableRange<float>(0.0f, 19.0f, 1.f, 1.0f),
                                                      0.0f, nullptr, nullptr));
 
     parameters.push_back(std::make_unique<Parameter>(String("sharp"), String("Sharp"), String(),
@@ -170,6 +191,10 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("mod"), String("Mod"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
                                                      0.5f, sharpSliderValueToText, sharpSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("cutoff"), String("Cutoff"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
+                                                     0.5f, cutoffSliderValueToText, cutoffSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(String("gain"), String("Gain"), String(),
                                                      NormalisableRange<float>(0.001f, 7.94f, 0.001f, 0.3f),
@@ -205,6 +230,7 @@ waylosynth2::waylosynth2()
     typeParameter = parameters.getRawParameterValue("type");
     sharpParameter = parameters.getRawParameterValue("sharp");
     modParameter = parameters.getRawParameterValue("mod");
+    cutoffParameter = parameters.getRawParameterValue("cutoff");
     gainParameter = parameters.getRawParameterValue("gain");
 }
 

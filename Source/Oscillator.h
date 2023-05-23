@@ -7,6 +7,8 @@
 #include "ADSR.h"
 #include "VariableShapeOsc.h"
 #include "VariableSawOsc.h"
+#include "BandLimitedOsc.h"
+
 
 
 
@@ -21,6 +23,7 @@ class Oscillator {
         float hipass(float input);
         void setSharp(float sharp);
         void setMod(float mod);
+        void setCutoff(float cutoff);
         void setPhase(float phase);
         void setPitchBend(float pitchbend);
         void reset();
@@ -66,6 +69,7 @@ class Oscillator {
     ADSR2 env;
     daisysp::VariableShapeOscillator variosc;
     daisysp::VariableSawOscillator varisaw;
+    daisysp::BlOsc bandlimOsc;
     
     
       // obxd filter
@@ -103,6 +107,7 @@ class Oscillator {
         float m_pitchbend;
         float m_sharp;
         float m_mod;
+        float m_cutoff;
         float m_pointer_pos;
         float fm_phase_1;
         float fm_phase_2;

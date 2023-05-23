@@ -50,6 +50,10 @@ private:
     Label  modLabel;
     Slider modKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> modAttachment;
+    
+    Label  cutoffLabel;
+    Slider cutoffKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> cutoffAttachment;
 
     Label  gainLabel;
     Slider gainKnob;

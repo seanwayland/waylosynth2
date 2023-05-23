@@ -9,7 +9,7 @@
 */
 
 #include "dsp.h"
-#include "variablesawosc.h"
+#include "VariableSawOsc.h"
 #include <math.h>
 
 using namespace daisysp;

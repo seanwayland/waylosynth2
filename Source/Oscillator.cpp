@@ -46,6 +46,7 @@ void Oscillator::setup(float sampleRate) {
     m_pitchbend = 1;
     variosc.Init(m_sampleRate);
     varisaw.Init(m_sampleRate);
+    bandlimOsc.Init(m_sampleRate);
 
     
         // vadimFilter
@@ -62,12 +63,13 @@ void Oscillator::setup(float sampleRate) {
 Oscillator::~Oscillator() {}
 
 void Oscillator::reset() {
-    m_pointer_pos = fm_phase_1 = fm_phase_2 = fm_phase_3 = m_sah_pointer_pos = 0.f;
+    m_pointer_pos = fm_phase_1 = fm_phase_2 = fm_phase_3 = fm_phase_4 = m_sah_pointer_pos = 0.f;
     m_pitchbend = 1;
     amp_env.reset();
     env.gate(false);
     env.reset();
     env.gate(true);
+
 
 }
 
@@ -130,7 +132,7 @@ float Oscillator::_clip(float x) {
 
 void Oscillator::setWavetype(int type) {
     if (type != m_wavetype) {
-        type = type < 0 ? 0 : type > 14 ? 14 : type;
+        type = type < 0 ? 0 : type > 19 ? 19 : type;
         m_wavetype = type;
     }
 }
@@ -146,6 +148,10 @@ void Oscillator::setSharp(float sharp) {
 
 void Oscillator::setMod(float mod) {
     m_mod = mod < 0.f ? 0.f : mod > 1.f ? 1.f : mod;
+}
+
+void Oscillator::setCutoff(float cutoff) {
+    m_cutoff = cutoff < 0.f ? 0.f : cutoff > 1.f ? 1.f : cutoff;
 }
 
 
@@ -458,76 +464,79 @@ float Oscillator::process() {
         {
             
             env.setAttackRate(m_sampleRate*3);
-            env.setDecayRate(m_sampleRate*4);
-            env.setReleaseRate(m_sampleRate*4);
-            env.setSustainLevel(0.2);
-            env.setTargetRatioA(0.5);
-            env.setTargetRatioDR(1.0);
-            float env_value = env.getOutput();            // reface DX
-            // operator 3 is 2 all others are 1
-            // 4 -> 3 -> 1
-            // 2 -> 1
-            // operators 1 and 3 are mixed in the output
-            float op1_level = 117/127;
-            float op2_level = 101/127;
-            float op3_level = 84/127;
-            float op4_level = 96/127;
-            
-            float op1_fdbk = 48*2/127;
-            float op2_fdbk = 33*2/127;
-            float op3_fdbk = 46*2/127;
-            float op4_fdbk = 25*2/127;
-            
-            
-            
-           // if(m_sharp > 0.65){m_sharp = 0.65;}
-            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
-            if (m_feedback > 1.0){m_feedback = 0.9;}
-            if (m_feedback < 0.1){m_feedback = 0.1;}
-            
-            if (midi_note_number > 0 &&   !(isnan(midi_note_number ))){ m_mod = m_mod + 1/midi_note_number;};
-            
+                        env.setDecayRate(m_sampleRate*4);
+                        env.setReleaseRate(m_sampleRate*4);
+                        env.setSustainLevel(0.2);
+                        env.setTargetRatioA(0.5);
+                        env.setTargetRatioDR(1.0);
+                        float env_value = env.getOutput();            // reface DX
+                        // operator 3 is 2 all others are 1
+                        // 4 -> 3 -> 1
+                        // 2 -> 1
+                        // operators 1 and 3 are mixed in the output
+                        float op1_level = 117/127;
+                        float op2_level = 101/127;
+                        float op3_level = 84/127;
+                        float op4_level = 96/127;
+                        
+                        float op1_fdbk = 48*2/127;
+                        float op2_fdbk = 33*2/127;
+                        float op3_fdbk = 46*2/127;
+                        float op4_fdbk = 25*2/127;
+                        
+                        
+                        
+                       // if(m_sharp > 0.65){m_sharp = 0.65;}
+                        m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
+                        if (m_feedback > 1.0){m_feedback = 0.9;}
+                        if (m_feedback < 0.1){m_feedback = 0.1;}
+                        
+                        if (midi_note_number > 0 &&   !(isnan(midi_note_number ))){ m_mod = m_mod + 1/midi_note_number;};
+                        
 
-        
-            // operator 4
-            float fm_value_4 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_4);
-            old_value_4 = 0.7*fm_value_4;
-            
-            
-            // operator 3
-            float fm_value_3 = sinf(m_twopi*fm_phase_3 + m_feedback*old_value_3 + (m_note_velocity)*m_mod*10*fm_value_4);
-            old_value_3 = 0.6*fm_value_3;
+                    
+                        // operator 4
+                        float fm_value_4 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_4);
+                        old_value_4 = 0.7*fm_value_4;
+                        
+                        
+                        // operator 3
+                        float fm_value_3 = sinf(m_twopi*fm_phase_3 + m_feedback*old_value_3 + (m_note_velocity)*m_mod*10*fm_value_4);
+                        old_value_3 = 0.6*fm_value_3;
 
-    
-            // operator 2
-            float fm_value_2 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_2);
-            old_value_2 =  0.8*fm_value_2;
-            //value = (fm_value_1 + old_value)/2;
-            //value = fm_value_2;
+                
+                        // operator 2
+                        float fm_value_2 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_2);
+                        old_value_2 =  0.8*fm_value_2;
+                        //value = (fm_value_1 + old_value)/2;
+                        //value = fm_value_2;
 
-            
-            // operator 1
-            float fm_value_1 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_1 + env_value*(m_note_velocity*0.8)*m_mod*10*fm_value_2 + (m_note_velocity*0.8)*m_mod*10*fm_value_3);
-            old_value_1 = fm_value_1;
-            //value = (fm_value_1 + old_value)/2;
-            value = fm_value_1 + fm_value_3;
-            fm_phase_2 += m_pitchbend* m_freq * m_oneOverSr;
-            fm_phase_2 = _clip(m_pointer_pos);
-            fm_phase_3 += m_pitchbend* m_freq*2 * m_oneOverSr;
-            fm_phase_3 = _clip(m_pointer_pos);
-            
-            float filter_cutoff = 15000;
-            float filter_resonance = 0.1f;
-            
-            filter.setMultimode(1.0f);
-            filter.setResonance(filter_resonance);
-            value = filter.Apply4Pole(value,filter_cutoff);
-            
-            if (m_freq > 0){
-                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-                vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
-                value = vadimFilter.processSample(1, value);}
-            
+                        
+                        // operator 1
+                        float fm_value_1 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_1 + env_value*(m_note_velocity*0.8)*m_mod*10*fm_value_2 + (m_note_velocity*0.8)*m_mod*10*fm_value_3);
+                        old_value_1 = fm_value_1;
+                        //value = (fm_value_1 + old_value)/2;
+                        value = fm_value_1 + fm_value_3;
+                        fm_phase_2 += m_pitchbend* m_freq * m_oneOverSr;
+                        fm_phase_2 = _clip(m_pointer_pos);
+                        fm_phase_3 += m_pitchbend* m_freq*2 * m_oneOverSr;
+                        fm_phase_3 = _clip(m_pointer_pos);
+                        
+                        float filter_cutoff = 15000;
+                        float filter_resonance = 0.1f;
+                        
+                        filter.setMultimode(1.0f);
+                        filter.setResonance(filter_resonance);
+                        value = filter.Apply4Pole(value,filter_cutoff);
+                        
+                        if (m_freq > 0){
+                            vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+                            vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
+                            value = vadimFilter.processSample(1, value);}
+                        
+                        
+                    
+                        break;
             
         
             break;
@@ -590,16 +599,225 @@ float Oscillator::process() {
             break;
         }
         case 13:{
-            value = 0;
+            bandlimOsc.SetWaveform(daisysp::BlOsc::WAVE_SAW);
+            bandlimOsc.SetFreq(m_freq);
+            bandlimOsc.SetAmp(1.0);
+            
+            value = bandlimOsc.Process();
+            float filter_cutoff = m_sharp*5000;
+            //float filter_resonance = 0.1f;
+            filter.setMultimode(1.0f);
+            //filter.setResonance(filter_resonance);
+            value = filter.Apply4Pole(value,filter_cutoff);
+            
+            if (m_freq > 0){
+                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+                vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
+                value = vadimFilter.processSample(1, value);}
+            
             break;
         }
         case 14:{
+            
+            bandlimOsc.SetWaveform(daisysp::BlOsc::WAVE_SQUARE);
+            bandlimOsc.SetFreq(m_freq);
+            bandlimOsc.SetAmp(0.8 + (0.19*midi_note_number/127));
+            bandlimOsc.SetPw(m_mod);
+            value = bandlimOsc.Process();
+            float filter_cutoff = m_sharp*5000;
+            //float filter_resonance = 0.1f;
+            filter.setMultimode(1.0f);
+            //filter.setResonance(filter_resonance);
+            value = filter.Apply4Pole(value,filter_cutoff);
+            
+            if (m_freq > 0){
+                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+                vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
+                value = vadimFilter.processSample(1, value);}
+            break;
+        }
+            
+        case 15:{
+            
+            
+            env.setAttackRate(m_sampleRate/20);
+            env.setDecayRate(m_sampleRate*10);
+            env.setReleaseRate(m_sampleRate/5);
+            env.setSustainLevel(0.0);
+            env.setTargetRatioA(0.5);
+            env.setTargetRatioDR(1.0);
+            float env_value = env.getOutput();            // reface DX
+            // operator 3 is 2 all others are 1
+            // 4 -> 3 -> 1
+            // 2 -> 1
+            // operators 1 and 3 are mixed in the output
+            float op1_level = 127/127;
+            float op2_level = 83/127;
+            float op3_level = 19/127;
+            float op4_level = 19/127;
+            
+            float op1_fdbk = 48*2/127;
+            float op2_fdbk = 33*2/127;
+            float op3_fdbk = 46*2/127;
+            float op4_fdbk = 25*2/127;
+            
+            
+            // operator 3 is 2 all others are 1
+            // 4 -> 3 -> 1
+            // 2 -> 1
+            // operators 1 and 3 are mixed in the output
+            
+            
+            
+           // if(m_sharp > 0.65){m_sharp = 0.65;}
+            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
+            if (m_feedback > 1.0){m_feedback = 0.9;}
+            if (m_feedback < 0.1){m_feedback = 0.1;}
+            
+            if (midi_note_number > 0 &&   !(isnan(midi_note_number ))){ m_mod = m_mod + 1/midi_note_number;};
+            
+
+        
+            // operator 4
+            float fm_value_4 = sinf(m_twopi*fm_phase_4 );
+
+            
+            // operator 3
+            float fm_value_3 = sinf(m_twopi*fm_phase_3  + (m_note_velocity)*0.05*m_mod*fm_value_4);
+
+            // operator 2
+            float fm_value_2 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_2*0.5*m_note_velocity*0.4);
+            old_value_2 =  0.8*fm_value_2;
+            //value = (fm_value_1 + old_value)/2;
+            //value = fm_value_2;
+
+            
+            // operator 1
+            float fm_value_1 = sinf(m_twopi*fm_phase_2  + env_value*(m_note_velocity*0.6)*m_mod*10*fm_value_2 + env_value*((m_note_velocity*0.2)*m_mod*0.5*fm_value_3) + m_feedback*old_value_1) ;
+            
+            
+            old_value_1 = fm_value_1;
+            //value = (fm_value_1 + old_value)/2;
+            value = fm_value_1 + fm_value_3;
+            
+            
+            fm_phase_2 += m_pitchbend* m_freq * m_oneOverSr;
+            fm_phase_2 = _clip(fm_phase_2);
+            fm_phase_3 += m_pitchbend* m_freq*4 * m_oneOverSr;
+            fm_phase_3 = _clip(fm_phase_3);
+            fm_phase_4 += m_pitchbend* m_freq*15 * m_oneOverSr;
+            fm_phase_4 = _clip(fm_phase_4);
+            
+            float filter_cutoff = 10000;
+            float filter_resonance = 0.1f;
+            
+            filter.setMultimode(1.0f);
+            filter.setResonance(filter_resonance);
+            value = filter.Apply4Pole(value,filter_cutoff);
+            
+            if (m_freq > 0){
+                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+                vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
+                value = vadimFilter.processSample(1, value);}
+            
+            break;
+        }
+        case 16:{
+            
+            
+            env.setAttackRate(m_sampleRate*3);
+                        env.setDecayRate(m_sampleRate*4);
+                        env.setReleaseRate(m_sampleRate*4);
+                        env.setSustainLevel(0.2);
+                        env.setTargetRatioA(0.5);
+                        env.setTargetRatioDR(1.0);
+                        float env_value = env.getOutput();            // reface DX
+                        // operator 3 is 2 all others are 1
+                        // 4 -> 3 -> 1
+                        // 2 -> 1
+                        // operators 1 and 3 are mixed in the output
+                        float op1_level = 117/127;
+                        float op2_level = 101/127;
+                        float op3_level = 84/127;
+                        float op4_level = 96/127;
+                        
+                        float op1_fdbk = 48*2/127;
+                        float op2_fdbk = 33*2/127;
+                        float op3_fdbk = 46*2/127;
+                        float op4_fdbk = 25*2/127;
+                        
+                        
+                        
+                       // if(m_sharp > 0.65){m_sharp = 0.65;}
+                        m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
+                        if (m_feedback > 1.0){m_feedback = 0.9;}
+                        if (m_feedback < 0.1){m_feedback = 0.1;}
+                        
+                        if (midi_note_number > 0 &&   !(isnan(midi_note_number ))){ m_mod = m_mod + 1/midi_note_number;};
+                        
+
+                    
+                        // operator 4
+                        float fm_value_4 = (sinf(m_twopi*fm_phase_2 + m_feedback*old_value_4));
+                        old_value_4 = 0.7*fm_value_4;
+                        
+                        
+                        // operator 3
+                        float fm_value_3 = (sinf(m_twopi*fm_phase_3 + m_feedback*old_value_3 + (m_note_velocity)*m_mod*10*fm_value_4));
+                        old_value_3 = 0.6*fm_value_3;
+
+                
+                        // operator 2
+                        float fm_value_2 = (sinf(m_twopi*fm_phase_2 + m_feedback*old_value_2));
+                        old_value_2 =  0.8*fm_value_2;
+                        //value = (fm_value_1 + old_value)/2;
+                        //value = fm_value_2;
+
+                        
+                        // operator 1
+                        float fm_value_1 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_1 + env_value*(m_note_velocity*0.8)*m_mod*10*fm_value_2 + (m_note_velocity*0.8)*m_mod*10*fm_value_3);
+                        old_value_1 = fm_value_1;
+                        //value = (fm_value_1 + old_value)/2;
+                        value = fm_value_1 + fm_value_3;
+                        fm_phase_2 += m_pitchbend* m_freq * m_oneOverSr;
+                        fm_phase_2 = _clip(m_pointer_pos);
+                        fm_phase_3 += m_pitchbend* m_freq*2 * m_oneOverSr;
+                        fm_phase_3 = _clip(m_pointer_pos);
+                        
+                        float filter_cutoff = 15000;
+                        float filter_resonance = 0.1f;
+                        
+                        filter.setMultimode(1.0f);
+                        filter.setResonance(filter_resonance);
+                        value = filter.Apply4Pole(value,filter_cutoff);
+                        
+                        if (m_freq > 0){
+                            vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+                            vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
+                            value = vadimFilter.processSample(1, value);}
+                        
+                        
+                    
+                        break;
+            
+            break;
+        }
+        case 17:{
             value = 0;
             break;
         }
+        case 18:{
+            value = 0;
+            break;
+        }
+        case 19:{
+            value = 0;
+            break;
+        }
+            
     }
     
-    if (m_wavetype < 15) {
+    if (m_wavetype < 20) {
 
         m_pointer_pos += m_pitchbend* m_freq * m_oneOverSr;
         m_pointer_pos = _clip(m_pointer_pos);
