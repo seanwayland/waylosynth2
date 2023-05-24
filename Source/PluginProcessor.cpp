@@ -546,6 +546,42 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     
      //end of midi latch function
     
+            // transpose up a 5th
+    
+//            MidiMessage m;
+//            MidiMessage n;
+//
+//            MidiBuffer processedMidi;
+//             int keyboard_transpo = 7;
+//            int time;
+//            for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
+//            {
+//                int note = m.getNoteNumber();
+//                if (m.isNoteOn())
+//                {
+//                
+//                n = MidiMessage::noteOn(m.getChannel(), note + keyboard_transpo , m.getVelocity());
+//                processedMidi.addEvent(n, time);
+//                
+//                }
+//                else if (m.isNoteOff()) {
+//                    
+//                    n = MidiMessage::noteOff(m.getChannel(), note + keyboard_transpo , m.getVelocity());
+//                    processedMidi.addEvent(n, time);
+//                }
+//    
+//                else if (m.isAftertouch())
+//                {
+//                }
+//                else if (m.isPitchWheel())
+//                {
+//                }
+//            }
+//            midiMessages.swapWith  (processedMidi) ;
+//        
+        
+         //end of midi latch function
+    
     
     // WAYLO CHILI FUNCTION
 //
