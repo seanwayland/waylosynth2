@@ -24,6 +24,7 @@ class Oscillator {
         void setSharp(float sharp);
         void setMod(float mod);
         void setCutoff(float cutoff);
+        void setDetune(float detune);
         void setPhase(float phase);
         void setPitchBend(float pitchbend);
         void reset();
@@ -108,6 +109,7 @@ class Oscillator {
         float m_sharp;
         float m_mod;
         float m_cutoff;
+        float m_detune;
         float m_pointer_pos;
         float fm_phase_1;
         float fm_phase_2;

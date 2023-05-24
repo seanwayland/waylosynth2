@@ -61,6 +61,18 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&releaseKnob);
 
     releaseAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "release", releaseKnob));
+    
+    
+    detuneLabel.setText("Detune", NotificationType::dontSendNotification);
+    detuneLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&detuneLabel);
+
+    detuneKnob.setLookAndFeel(&plugexLookAndFeel);
+    detuneKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    detuneKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&detuneKnob);
+
+    detuneAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "detune", detuneKnob));
 
     typeLabel.setText("Wave Type", NotificationType::dontSendNotification);
     typeLabel.setJustificationType(Justification::horizontallyCentred);
@@ -131,6 +143,7 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     modKnob.setLookAndFeel(nullptr);
     cutoffKnob.setLookAndFeel(nullptr);
     gainKnob.setLookAndFeel(nullptr);
+    detuneKnob.setLookAndFeel(nullptr);
 }
 
 //==============================================================================
@@ -149,21 +162,25 @@ void waylosynth2AudioProcessorEditor::resized()
 
     auto area1 = area.removeFromTop(100);
 
-    auto attackArea = area1.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    auto attackArea = area1.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
     attackLabel.setBounds(attackArea.removeFromTop(20));
     attackKnob.setBounds(attackArea);
 
-    auto decayArea = area1.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    auto decayArea = area1.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
     decayLabel.setBounds(decayArea.removeFromTop(20));
     decayKnob.setBounds(decayArea);
 
-    auto sustainArea = area1.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    auto sustainArea = area1.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
     sustainLabel.setBounds(sustainArea.removeFromTop(20));
     sustainKnob.setBounds(sustainArea);
 
-    auto releaseArea = area1.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    auto releaseArea = area1.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
     releaseLabel.setBounds(releaseArea.removeFromTop(20));
     releaseKnob.setBounds(releaseArea);
+    
+    auto detuneArea = area1.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
+    detuneLabel.setBounds(detuneArea.removeFromTop(20));
+    detuneKnob.setBounds(detuneArea);
 
     auto area2 = area.removeFromTop(140);
 

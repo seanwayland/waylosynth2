@@ -18,6 +18,7 @@ Oscillator::Oscillator() {
     m_freq = 1.f;
     midi_note_number = 0;
     m_sharp = 0.f;
+    m_detune = 1.0f;
     //m_cutoff = 0.f;
     srand((unsigned int)time(0));
     m_sah_last_value = 0.f;
@@ -45,9 +46,11 @@ void Oscillator::setup(float sampleRate) {
     oldval = hi_pass_output = 0.f;
     modulator = 0;
     m_pitchbend = 1;
+    m_detune = 1.0;
     variosc.Init(m_sampleRate);
     varisaw.Init(m_sampleRate);
     bandlimOsc.Init(m_sampleRate);
+    setDetune(1.0f);
 
     
         // vadimFilter
@@ -66,6 +69,7 @@ Oscillator::~Oscillator() {}
 void Oscillator::reset() {
     m_pointer_pos = fm_phase_1 = fm_phase_2 = fm_phase_3 = fm_phase_4 = m_sah_pointer_pos = 0.f;
     m_pitchbend = 1;
+    m_detune = 1.0f;
     amp_env.reset();
     env.gate(false);
     env.reset();
@@ -153,6 +157,10 @@ void Oscillator::setMod(float mod) {
 
 void Oscillator::setCutoff(float cutoff) {
     m_cutoff = cutoff < 0.f ? 0.f : cutoff > 1.f ? 1.f : cutoff;
+}
+
+void Oscillator::setDetune(float detune) {
+    m_detune = detune < 0.5f ? 0.5f : detune > 2.f ? 2.f : detune;
 }
 
 
@@ -535,9 +543,7 @@ float Oscillator::process() {
                             vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
                             value = vadimFilter.processSample(1, value);}
                         
-                        
-                    
-                        break;
+
             
         
             break;
@@ -837,8 +843,13 @@ float Oscillator::process() {
     }
     
     if (m_wavetype < 20) {
+        
+        // 0.5x = 1
+        // 1x = 2
+        
+        //m_detune = m_detune + 0.5f;
 
-        m_pointer_pos += m_pitchbend* m_freq * m_oneOverSr;
+        m_pointer_pos += m_detune*m_pitchbend* m_freq * m_oneOverSr*m_detune;
         m_pointer_pos = _clip(m_pointer_pos);
         fixed_pulse_counter += 11000 * m_oneOverSr;
         env.process();

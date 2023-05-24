@@ -90,6 +90,10 @@ void MySynthesiserVoice::setCutoffParameter(float cutoff) {
     oscillator.setCutoff(cutoff);
 }
 
+void MySynthesiserVoice::setDetuneParameter(float detune) {
+    oscillator.setDetune(detune);
+}
+
 //==============================================================================
 void MySynthesiser::setEnvelopeParameters(ADSR::Parameters params) {
     for (int i = 0; i < getNumVoices(); i++)
@@ -116,6 +120,11 @@ void MySynthesiser::setCutoffParameter(float cutoff) {
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setCutoffParameter(cutoff);
 }
 
+void MySynthesiser::setDetuneParameter(float detune) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setDetuneParameter(detune);
+}
+
 //==============================================================================
 static String secondSliderValueToText(float value) {
     return String(value, 3) + String(" sec");
@@ -137,12 +146,25 @@ static float modSliderTextToValue(const String& text) {
     return text.getFloatValue();
 }
 
+static String modSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
 
 static String cutoffSliderValueToText(float value) {
     return String(value, 4) + String(" x");
 }
 
 static float cutoffSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+
+static String detuneSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
+static float detuneSliderTextToValue(const String& text) {
     return text.getFloatValue();
 }
 
@@ -179,6 +201,11 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("release"), String("Release"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.5f),
                                                      0.25f, secondSliderValueToText, secondSliderTextToValue));
+    
+    
+    parameters.push_back(std::make_unique<Parameter>(String("detune"), String("Detune"), String(),
+                                                     NormalisableRange<float>(0.5f, 2.f, 0.01f, 1.0f),
+                                                     1.0f, detuneSliderValueToText, detuneSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(String("type"), String("Type"), String(),
                                                      NormalisableRange<float>(0.0f, 19.0f, 1.f, 1.0f),
@@ -190,7 +217,7 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     
     parameters.push_back(std::make_unique<Parameter>(String("mod"), String("Mod"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
-                                                     0.5f, sharpSliderValueToText, sharpSliderTextToValue));
+                                                     0.5f, modSliderValueToText, modSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("cutoff"), String("Cutoff"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
@@ -232,6 +259,7 @@ waylosynth2::waylosynth2()
     modParameter = parameters.getRawParameterValue("mod");
     cutoffParameter = parameters.getRawParameterValue("cutoff");
     gainParameter = parameters.getRawParameterValue("gain");
+    detuneParameter = parameters.getRawParameterValue("detune");
 }
 
 waylosynth2::~waylosynth2()
@@ -736,6 +764,8 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
 //
     
     // RETRANSPOSE END
+    
+
         
     
     
@@ -753,6 +783,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setSharpParameter(*sharpParameter);
     synthesiser.setModParameter(*modParameter);
     synthesiser.setCutoffParameter(*cutoffParameter);
+    synthesiser.setDetuneParameter(*detuneParameter);
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
     buffer.applyGainRamp(0, buffer.getNumSamples(), lastGain, *gainParameter);

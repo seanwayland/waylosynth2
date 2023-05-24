@@ -35,6 +35,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setSharpParameter(float sharp);
     void setModParameter(float mod);
     void setCutoffParameter(float cutoff);
+    void setDetuneParameter(float detune);
     
    
     
@@ -58,6 +59,7 @@ public:
     void setSharpParameter(float sharp);
     void setModParameter(float mod);
     void setCutoffParameter(float cutoff);
+    void setDetuneParameter(float detune);
 };
 
 //==============================================================================
@@ -121,6 +123,7 @@ private:
     std::atomic<float> *decayParameter = nullptr;
     std::atomic<float> *sustainParameter = nullptr;
     std::atomic<float> *releaseParameter = nullptr;
+    std::atomic<float> *detuneParameter = nullptr;
 
     std::atomic<float> *typeParameter = nullptr;
     std::atomic<float> *sharpParameter = nullptr;
