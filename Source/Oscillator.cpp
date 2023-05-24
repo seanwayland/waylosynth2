@@ -18,6 +18,7 @@ Oscillator::Oscillator() {
     m_freq = 1.f;
     midi_note_number = 0;
     m_sharp = 0.f;
+    //m_cutoff = 0.f;
     srand((unsigned int)time(0));
     m_sah_last_value = 0.f;
     m_sah_current_value = (rand() / (float)RAND_MAX) * 2.f - 1.f;
@@ -566,7 +567,7 @@ float Oscillator::process() {
             varisaw.SetPW(m_mod);
             varisaw.SetFreq(m_freq*m_pitchbend);
             value = varisaw.Process();
-            float filter_cutoff = 2000;
+            float filter_cutoff = m_cutoff*5000;
             //float filter_resonance = 0.1f;
             filter.setMultimode(1.0f);
             //filter.setResonance(filter_resonance);
@@ -588,7 +589,7 @@ float Oscillator::process() {
                             m_sharp = 0.3;
                         }
             
-                        m_feedback = m_sharp*0.95 - (0.0004*m_freq);
+                        m_feedback = m_cutoff*0.95 - (0.0004*m_freq);
                         if (m_feedback > 1.0 || m_feedback < 0.1){
                             m_feedback = 0.6;
                         }
@@ -780,9 +781,9 @@ float Oscillator::process() {
                         //value = (fm_value_1 + old_value)/2;
                         value = fm_value_1 + fm_value_3;
                         fm_phase_2 += m_pitchbend* m_freq * m_oneOverSr;
-                        fm_phase_2 = _clip(m_pointer_pos);
+                        fm_phase_2 = _clip(fm_phase_2);
                         fm_phase_3 += m_pitchbend* m_freq*2 * m_oneOverSr;
-                        fm_phase_3 = _clip(m_pointer_pos);
+                        fm_phase_3 = _clip(fm_phase_3);
                         
                         float filter_cutoff = 15000;
                         float filter_resonance = 0.1f;
@@ -798,12 +799,30 @@ float Oscillator::process() {
                         
                         
                     
-                        break;
+                     
             
             break;
         }
+            // organ 
         case 17:{
-            value = 0;
+            
+             
+            
+            float sin1 = sinf(m_twopi*m_pointer_pos + 5*m_mod*old_value_1);
+            old_value_1 = sin1;
+            float sin2 = sinf(m_twopi*fm_phase_2 + 5*m_mod*old_value_2);
+            old_value_2 = sin2;
+            float sin3 = sinf(m_twopi*fm_phase_3 + 5*m_mod*old_value_3) ;
+            old_value_2 = sin3;
+            
+            fm_phase_2 += m_pitchbend* m_freq * m_oneOverSr*2;
+            fm_phase_3 += m_pitchbend* m_freq * m_oneOverSr*3;
+            fm_phase_2 = _clip(fm_phase_2);
+            fm_phase_3 = _clip(fm_phase_3);
+            
+            value = (sin1 + m_sharp*sin2 + m_cutoff*sin3)/3.0f;
+            
+            
             break;
         }
         case 18:{

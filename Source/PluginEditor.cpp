@@ -67,7 +67,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&typeLabel);
 
     typeCombo.setLookAndFeel(&plugexLookAndFeel);
-    typeCombo.addItemList({"FM_Feedback_1", "Pulse Wave", "2_OP_FM", "Sawtooth", "Fixed_Pulse", "pulse_up", "2_OP_version2", "Tan_of_Sin", "pwm_bleb", "face_dx", "variosc", "varisaw", "sin_w_feedbk", "band_lim_saw_2", "band_lim_pulse_2", "empty", "empty","empty","empty","empty"}, 1);
+    typeCombo.addItemList({"FM_Feedback_1", "Pulse Wave", "2_OP_FM", "Sawtooth", "Fixed_Pulse", "pulse_up", "2_OP_version2", "Tan_of_Sin", "pwm_bleb", "face_dx", "variosc", "varisaw", "sin_w_feedbk", "band_lim_saw_2", "band_lim_pulse_2", "empty", "empty","organ","empty","empty"}, 1);
     typeCombo.setSelectedId(1);
     addAndMakeVisible(&typeCombo);
 
@@ -179,7 +179,7 @@ void waylosynth2AudioProcessorEditor::resized()
     modLabel.setBounds(ModArea.removeFromTop(20));
     modKnob.setBounds(ModArea);
     
-    auto CutoffArea = area2.removeFromLeft(width/4.0f).withSizeKeepingCentre(80, 100);
+    auto CutoffArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
     cutoffLabel.setBounds(CutoffArea.removeFromTop(20));
     cutoffKnob.setBounds(CutoffArea);
 
