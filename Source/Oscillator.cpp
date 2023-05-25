@@ -18,6 +18,7 @@ Oscillator::Oscillator() {
     m_freq = 1.f;
     midi_note_number = 0;
     m_sharp = 0.f;
+    m_resonance = 0.01f;
     m_detune = 1.0f;
     //m_cutoff = 0.f;
     srand((unsigned int)time(0));
@@ -157,6 +158,10 @@ void Oscillator::setMod(float mod) {
 
 void Oscillator::setCutoff(float cutoff) {
     m_cutoff = cutoff < 0.f ? 0.f : cutoff > 1.f ? 1.f : cutoff;
+}
+
+void Oscillator::setRes(float resonance) {
+    m_resonance = resonance < 0.f ? 0.f : resonance > 1.f ? 1.f : resonance;
 }
 
 void Oscillator::setDetune(float detune) {
@@ -570,13 +575,14 @@ float Oscillator::process() {
             
         case 11:{
             varisaw.SetWaveshape(m_sharp);
+            //varisaw.SetWaveshape(m_sharp);
             varisaw.SetPW(m_mod);
-            varisaw.SetFreq(m_freq*m_pitchbend);
+            varisaw.SetFreq(m_freq*m_pitchbend*m_detune);
             value = varisaw.Process();
             float filter_cutoff = m_cutoff*5000;
-            //float filter_resonance = 0.1f;
-            filter.setMultimode(1.0f);
-            //filter.setResonance(filter_resonance);
+            float filter_resonance = m_resonance;
+            filter.setMultimode(m_sharp);
+            filter.setResonance(filter_resonance);
             value = filter.Apply4Pole(value,filter_cutoff);
             
             if (m_freq > 0){

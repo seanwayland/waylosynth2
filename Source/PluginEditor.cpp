@@ -115,8 +115,19 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     cutoffKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     cutoffKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(& cutoffKnob);
-
+    
     cutoffAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoff",  cutoffKnob));
+    
+    resonanceLabel.setText("Resonance", NotificationType::dontSendNotification);
+    resonanceLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(& resonanceLabel);
+
+    ResonanceKnob.setLookAndFeel(&plugexLookAndFeel);
+    ResonanceKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    ResonanceKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(& ResonanceKnob);
+
+    resonanceAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "resonance",  ResonanceKnob));
 
     gainLabel.setText("Gain", NotificationType::dontSendNotification);
     gainLabel.setJustificationType(Justification::horizontallyCentred);
@@ -142,6 +153,7 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     sharpKnob.setLookAndFeel(nullptr);
     modKnob.setLookAndFeel(nullptr);
     cutoffKnob.setLookAndFeel(nullptr);
+    ResonanceKnob.setLookAndFeel(nullptr);
     gainKnob.setLookAndFeel(nullptr);
     detuneKnob.setLookAndFeel(nullptr);
 }
@@ -184,23 +196,27 @@ void waylosynth2AudioProcessorEditor::resized()
 
     auto area2 = area.removeFromTop(140);
 
-    auto typeArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
-    typeLabel.setBounds(typeArea.removeFromTop(20));
-    typeCombo.setBounds(typeArea.removeFromTop(20).withSizeKeepingCentre(200, 24));
+    auto typeArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    typeLabel.setBounds(typeArea.removeFromTop(25));
+    typeCombo.setBounds(typeArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
 
-    auto sharpArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
+    auto sharpArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
     sharpLabel.setBounds(sharpArea.removeFromTop(20));
     sharpKnob.setBounds(sharpArea);
 
-    auto ModArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
+    auto ModArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
     modLabel.setBounds(ModArea.removeFromTop(20));
     modKnob.setBounds(ModArea);
     
-    auto CutoffArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
+    auto CutoffArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
     cutoffLabel.setBounds(CutoffArea.removeFromTop(20));
     cutoffKnob.setBounds(CutoffArea);
+    
+    auto ResonanceArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    resonanceLabel.setBounds(ResonanceArea.removeFromTop(20));
+    ResonanceKnob.setBounds(ResonanceArea);
 
-    auto gainArea = area2.removeFromLeft(width/5.0f).withSizeKeepingCentre(80, 100);
+    auto gainArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
     gainLabel.setBounds(gainArea.removeFromTop(20));
     gainKnob.setBounds(gainArea);
 

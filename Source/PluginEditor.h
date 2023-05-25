@@ -55,6 +55,10 @@ private:
     Slider cutoffKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> cutoffAttachment;
     
+    Label  resonanceLabel;
+    Slider ResonanceKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> resonanceAttachment;
+    
     Label  detuneLabel;
     Slider detuneKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> detuneAttachment;
