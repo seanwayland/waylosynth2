@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Oscillator.h"
-#include "Filters.h"
+#include "CheapLFO.h"
 
 
 #ifndef M_PI
@@ -52,6 +52,10 @@ void Oscillator::setup(float sampleRate) {
     varisaw.Init(m_sampleRate);
     bandlimOsc.Init(m_sampleRate);
     setDetune(1.0f);
+    lfo1.init(m_sampleRate);
+    lfo1.setDepth(1.0f);
+    lfo1.setRate(1.0f);
+    m_lfo_value = 0.0f;
 
     
         // vadimFilter
@@ -75,6 +79,9 @@ void Oscillator::reset() {
     env.gate(false);
     env.reset();
     env.gate(true);
+    lfo1.setDepth(1.0f);
+    lfo1.setRate(1.0f);
+    m_lfo_value = 0.0f;
 
 
 }
@@ -228,6 +235,8 @@ float Oscillator::process() {
             //            if (m_feedback > 1.0 || m_feedback < 0.1){
             //                m_feedback = 0.6;
             //            }
+            
+           
             
 
             
@@ -576,7 +585,7 @@ float Oscillator::process() {
         case 11:{
             varisaw.SetWaveshape(m_sharp);
             //varisaw.SetWaveshape(m_sharp);
-            varisaw.SetPW(m_mod);
+            varisaw.SetPW(m_mod + .1*m_lfo_value);
             varisaw.SetFreq(m_freq*m_pitchbend*m_detune);
             value = varisaw.Process();
             float filter_cutoff = m_cutoff*5000;
@@ -859,8 +868,9 @@ float Oscillator::process() {
         m_pointer_pos = _clip(m_pointer_pos);
         fixed_pulse_counter += 11000 * m_oneOverSr;
         env.process();
-    
+        m_lfo_value = lfo1.process();
         
+    
     }
 
     return value;

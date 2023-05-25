@@ -8,6 +8,7 @@
 #include "VariableShapeOsc.h"
 #include "VariableSawOsc.h"
 #include "BandLimitedOsc.h"
+#include "CheapLFO.h"
 
 
 
@@ -72,6 +73,7 @@ class Oscillator {
     daisysp::VariableShapeOscillator variosc;
     daisysp::VariableSawOscillator varisaw;
     daisysp::BlOsc bandlimOsc;
+    CheapLFO lfo1;
     
     
       // obxd filter
@@ -124,6 +126,8 @@ class Oscillator {
         float fm_depth;
         float fm_frequency;
         float fm_index;
+    
+        float m_lfo_value = 0.0f;
     
         float phase1;
         float phase2;
