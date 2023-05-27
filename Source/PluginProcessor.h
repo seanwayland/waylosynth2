@@ -36,6 +36,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setModParameter(float mod);
     void setCutoffParameter(float cutoff);
     void setResParameter(float resonance);
+    void setBassoffParameter(float bassoff);
     void setDetuneParameter(float detune);
     
    
@@ -61,6 +62,7 @@ public:
     void setModParameter(float mod);
     void setCutoffParameter(float cutoff);
     void setResParameter(float resonance);
+    void setBassoffParameter(float bassoff);
     void setDetuneParameter(float detune);
 };
 
@@ -132,6 +134,7 @@ private:
     std::atomic<float> *modParameter = nullptr;
     std::atomic<float> *cutoffParameter = nullptr;
     std::atomic<float> *resonanceParameter = nullptr;
+    std::atomic<float> *bassoffParameter = nullptr;
     std::atomic<float> *gainParameter = nullptr;
     float lastGain = 0.f;
     

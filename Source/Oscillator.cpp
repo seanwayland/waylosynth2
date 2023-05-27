@@ -6,7 +6,6 @@
 #include "Oscillator.h"
 #include "CheapLFO.h"
 
-
 #ifndef M_PI
 #define M_PI (3.14159265358979323846264338327950288)
 #endif
@@ -19,6 +18,7 @@ Oscillator::Oscillator() {
     midi_note_number = 0;
     m_sharp = 0.f;
     m_resonance = 0.01f;
+    m_bassoff = 0.f;
     m_detune = 1.0f;
     //m_cutoff = 0.f;
     srand((unsigned int)time(0));
@@ -54,7 +54,7 @@ void Oscillator::setup(float sampleRate) {
     setDetune(1.0f);
     lfo1.init(m_sampleRate);
     lfo1.setDepth(1.0f);
-    lfo1.setRate(1.0f);
+    lfo1.setRate(0.4f);
     m_lfo_value = 0.0f;
 
     
@@ -171,6 +171,10 @@ void Oscillator::setRes(float resonance) {
     m_resonance = resonance < 0.f ? 0.f : resonance > 1.f ? 1.f : resonance;
 }
 
+void Oscillator::setBassoff(float bassoff) {
+    m_bassoff = bassoff < 0.f ? 0.f : bassoff > 1.f ? 1.f : bassoff;
+}
+
 void Oscillator::setDetune(float detune) {
     m_detune = detune < 0.5f ? 0.5f : detune > 2.f ? 2.f : detune;
 }
@@ -237,8 +241,7 @@ float Oscillator::process() {
             //            }
             
            
-            
-
+        
             
             
         {modulator = sinf(m_twopi * m_pointer_pos + (prev_value*m_feedback*0.8));
@@ -246,9 +249,10 @@ float Oscillator::process() {
             
             //value = sinf(0.25*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
             value = sinf((m_mod+ (m_note_velocity/5))*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
-            vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
-            vadimFilter.setCutoffFrequency(3000*m_sharp + value*1000*m_sharp);
-            value = vadimFilter.processSample(1, value);
+            //vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+            // filter fm ?
+            //vadimFilter.setCutoffFrequency(3000*m_sharp + value*1000*m_sharp);
+            //value = vadimFilter.processSample(1, value);
             old_value = value;
             
             
@@ -358,26 +362,6 @@ float Oscillator::process() {
             }
             
             
-            env.setAttackRate(m_sampleRate/15);
-            env.setDecayRate(m_sampleRate*1.2);
-            env.setReleaseRate(m_sampleRate);
-            env.setSustainLevel(0.1);
-            env.setTargetRatioA(0.1);
-            env.setTargetRatioDR(2.0);
-            float env_value = env.getOutput();
-            
-            float filter_cutoff = m_sharp*(env_value*8000+ 300);
-            float filter_resonance = 0.1f;
-            
-            filter.setMultimode(1.0f);
-            filter.setResonance(filter_resonance);
-            value = filter.Apply4Pole(value,filter_cutoff);
-            
-            if (m_freq > 0){
-                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-                vadimFilter.setCutoffFrequency(m_freq - m_freq/20);
-                value = vadimFilter.processSample(1, value);}
-            
             
         break;}
             // pulse like 
@@ -406,12 +390,9 @@ float Oscillator::process() {
               if (isnan(x)){x=0.0;}
               if (x < 0) { x = 0.0 ;}
               if (x>1 ){ x = 1.0 ;}
+                value = x;
             
-              float filter_cutoff = m_sharp*5000;
-              float filter_resonance = 0.05f;
-              filter.setMultimode(1.0f);
-              filter.setResonance(filter_resonance);
-              value = filter.Apply3Pole(x,filter_cutoff);
+
              
 
             break;
@@ -431,7 +412,7 @@ float Oscillator::process() {
             old_value = value;
             prev_value = value;
             value = (value + prev_value)/2;
-            //value = hipass(value);
+
             break;}
             
             // waylo tan function with low pass
@@ -444,11 +425,7 @@ float Oscillator::process() {
             if (m_pointer_pos>(1/pw)){
                 value = 0;
             }
-            float filter_cutoff = m_sharp*5000;
-            float filter_resonance = 0.05f;
-            filter.setMultimode(1.0f);
-            filter.setResonance(filter_resonance);
-            value = filter.Apply4Pole(value,filter_cutoff);
+
             break;}
             
             // waylo tan function with low pass
@@ -472,11 +449,6 @@ float Oscillator::process() {
 //            env.setTargetRatioDR(2.0);
 //            float env_value = env.getOutput();
 
-            float filter_cutoff = m_sharp*(5000);
-            float filter_resonance = 0.1f;
-            filter.setMultimode(1.0f);
-            filter.setResonance(filter_resonance);
-            value = filter.Apply4Pole(value,filter_cutoff);
 
             
 
@@ -516,25 +488,21 @@ float Oscillator::process() {
                         
                         if (midi_note_number > 0 &&   !(isnan(midi_note_number ))){ m_mod = m_mod + 1/midi_note_number;};
                         
-
-                    
                         // operator 4
                         float fm_value_4 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_4);
                         old_value_4 = 0.7*fm_value_4;
-                        
                         
                         // operator 3
                         float fm_value_3 = sinf(m_twopi*fm_phase_3 + m_feedback*old_value_3 + (m_note_velocity)*m_mod*10*fm_value_4);
                         old_value_3 = 0.6*fm_value_3;
 
-                
                         // operator 2
                         float fm_value_2 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_2);
                         old_value_2 =  0.8*fm_value_2;
                         //value = (fm_value_1 + old_value)/2;
                         //value = fm_value_2;
 
-                        
+            
                         // operator 1
                         float fm_value_1 = sinf(m_twopi*fm_phase_2 + m_feedback*old_value_1 + env_value*(m_note_velocity*0.8)*m_mod*10*fm_value_2 + (m_note_velocity*0.8)*m_mod*10*fm_value_3);
                         old_value_1 = fm_value_1;
@@ -545,20 +513,7 @@ float Oscillator::process() {
                         fm_phase_3 += m_pitchbend* m_freq*2 * m_oneOverSr;
                         fm_phase_3 = _clip(m_pointer_pos);
                         
-                        float filter_cutoff = 15000;
-                        float filter_resonance = 0.1f;
-                        
-                        filter.setMultimode(1.0f);
-                        filter.setResonance(filter_resonance);
-                        value = filter.Apply4Pole(value,filter_cutoff);
-                        
-                        if (m_freq > 0){
-                            vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-                            vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
-                            value = vadimFilter.processSample(1, value);}
-                        
 
-            
         
             break;
         }
@@ -569,35 +524,17 @@ float Oscillator::process() {
             variosc.SetWaveshape(m_sharp);
             variosc.SetPW(m_mod);
             value = variosc.Process();
-            float filter_cutoff = 2000;
-            //float filter_resonance = 0.1f;
-            filter.setMultimode(1.0f);
-            //filter.setResonance(filter_resonance);
-            value = filter.Apply4Pole(value,filter_cutoff);
-            
-            if (m_freq > 0){
-                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-                vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
-                value = vadimFilter.processSample(1, value);}
+
             break;
         }
             
         case 11:{
             varisaw.SetWaveshape(m_sharp);
-            //varisaw.SetWaveshape(m_sharp);
-            varisaw.SetPW(m_mod + .1*m_lfo_value);
+            varisaw.SetPW(m_mod);
             varisaw.SetFreq(m_freq*m_pitchbend*m_detune);
             value = varisaw.Process();
-            float filter_cutoff = m_cutoff*5000;
-            float filter_resonance = m_resonance;
-            filter.setMultimode(m_sharp);
-            filter.setResonance(filter_resonance);
-            value = filter.Apply4Pole(value,filter_cutoff);
-            
-            if (m_freq > 0){
-                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-                vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
-                value = vadimFilter.processSample(1, value);}
+
+
             break;
         }
             
@@ -626,16 +563,6 @@ float Oscillator::process() {
             bandlimOsc.SetAmp(1.0);
             
             value = bandlimOsc.Process();
-            float filter_cutoff = m_sharp*5000;
-            //float filter_resonance = 0.1f;
-            filter.setMultimode(1.0f);
-            //filter.setResonance(filter_resonance);
-            value = filter.Apply4Pole(value,filter_cutoff);
-            
-            if (m_freq > 0){
-                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-                vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
-                value = vadimFilter.processSample(1, value);}
             
             break;
         }
@@ -646,16 +573,8 @@ float Oscillator::process() {
             bandlimOsc.SetAmp(0.8 + (0.19*midi_note_number/127));
             bandlimOsc.SetPw(m_mod);
             value = bandlimOsc.Process();
-            float filter_cutoff = m_sharp*5000;
-            //float filter_resonance = 0.1f;
-            filter.setMultimode(1.0f);
-            //filter.setResonance(filter_resonance);
-            value = filter.Apply4Pole(value,filter_cutoff);
-            
-            if (m_freq > 0){
-                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-                vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
-                value = vadimFilter.processSample(1, value);}
+
+
             break;
         }
             
@@ -690,7 +609,6 @@ float Oscillator::process() {
             // operators 1 and 3 are mixed in the output
             
             
-            
            // if(m_sharp > 0.65){m_sharp = 0.65;}
             m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
             if (m_feedback > 1.0){m_feedback = 0.9;}
@@ -698,12 +616,9 @@ float Oscillator::process() {
             
             if (midi_note_number > 0 &&   !(isnan(midi_note_number ))){ m_mod = m_mod + 1/midi_note_number;};
             
-
-        
             // operator 4
             float fm_value_4 = sinf(m_twopi*fm_phase_4 );
 
-            
             // operator 3
             float fm_value_3 = sinf(m_twopi*fm_phase_3  + (m_note_velocity)*0.05*m_mod*fm_value_4);
 
@@ -713,7 +628,6 @@ float Oscillator::process() {
             //value = (fm_value_1 + old_value)/2;
             //value = fm_value_2;
 
-            
             // operator 1
             float fm_value_1 = sinf(m_twopi*fm_phase_2  + env_value*(m_note_velocity*0.6)*m_mod*10*fm_value_2 + env_value*((m_note_velocity*0.2)*m_mod*0.5*fm_value_3) + m_feedback*old_value_1) ;
             
@@ -722,25 +636,12 @@ float Oscillator::process() {
             //value = (fm_value_1 + old_value)/2;
             value = fm_value_1 + fm_value_3;
             
-            
             fm_phase_2 += m_pitchbend* m_freq * m_oneOverSr;
             fm_phase_2 = _clip(fm_phase_2);
             fm_phase_3 += m_pitchbend* m_freq*4 * m_oneOverSr;
             fm_phase_3 = _clip(fm_phase_3);
             fm_phase_4 += m_pitchbend* m_freq*15 * m_oneOverSr;
             fm_phase_4 = _clip(fm_phase_4);
-            
-            float filter_cutoff = 10000;
-            float filter_resonance = 0.1f;
-            
-            filter.setMultimode(1.0f);
-            filter.setResonance(filter_resonance);
-            value = filter.Apply4Pole(value,filter_cutoff);
-            
-            if (m_freq > 0){
-                vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-                vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
-                value = vadimFilter.processSample(1, value);}
             
             break;
         }
@@ -805,22 +706,8 @@ float Oscillator::process() {
                         fm_phase_2 = _clip(fm_phase_2);
                         fm_phase_3 += m_pitchbend* m_freq*2 * m_oneOverSr;
                         fm_phase_3 = _clip(fm_phase_3);
+
                         
-                        float filter_cutoff = 15000;
-                        float filter_resonance = 0.1f;
-                        
-                        filter.setMultimode(1.0f);
-                        filter.setResonance(filter_resonance);
-                        value = filter.Apply4Pole(value,filter_cutoff);
-                        
-                        if (m_freq > 0){
-                            vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-                            vadimFilter.setCutoffFrequency(m_freq - m_freq/80);
-                            value = vadimFilter.processSample(1, value);}
-                        
-                        
-                    
-                     
             
             break;
         }
@@ -843,7 +730,6 @@ float Oscillator::process() {
             
             value = (sin1 + m_sharp*sin2 + m_cutoff*sin3)/3.0f;
             
-            
             break;
         }
         case 18:{
@@ -858,20 +744,36 @@ float Oscillator::process() {
     }
     
     if (m_wavetype < 20) {
-        
-        // 0.5x = 1
-        // 1x = 2
-        
-        //m_detune = m_detune + 0.5f;
+
+
 
         m_pointer_pos += m_detune*m_pitchbend* m_freq * m_oneOverSr*m_detune;
         m_pointer_pos = _clip(m_pointer_pos);
         fixed_pulse_counter += 11000 * m_oneOverSr;
         env.process();
-        m_lfo_value = lfo1.process();
+        
+        amp_env.Set_amp_envelope_rate(80);
+        value = value*amp_env.process(0.75,0.75,"attack_env");
+        if (m_cutoff < 0.99){
+            float filter_cutoff = m_cutoff*20000;
+            float filter_resonance = m_resonance;
+            filter.setMultimode(1.0);
+            filter.setResonance(filter_resonance);
+            value = filter.Apply4Pole(value,filter_cutoff);
+        }
+        
+        if ((m_freq > 0) && (m_bassoff < 1.0) && (m_bassoff > 0.1)){
+             
+             float bass_adjust = m_bassoff*10.0f;
+             vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+             vadimFilter.setCutoffFrequency(m_freq - m_freq/bass_adjust);
+             value = vadimFilter.processSample(1, value);}
+        
+//        
         
     
     }
 
     return value;
 }
+

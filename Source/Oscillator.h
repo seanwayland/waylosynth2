@@ -26,6 +26,7 @@ class Oscillator {
         void setMod(float mod);
         void setCutoff(float cutoff);
         void setRes(float resonance);
+        void setBassoff(float bassoff);
         void setDetune(float detune);
         void setPhase(float phase);
         void setPitchBend(float pitchbend);
@@ -69,6 +70,7 @@ class Oscillator {
     
     Attack_decay_envelope amp_env;
     Filters filter;
+    Filters bass_off;
     ADSR2 env;
     daisysp::VariableShapeOscillator variosc;
     daisysp::VariableSawOscillator varisaw;
@@ -113,6 +115,7 @@ class Oscillator {
         float m_mod;
         float m_cutoff;
         float m_resonance;
+        float m_bassoff;
         float m_detune;
         float m_pointer_pos;
         float fm_phase_1;

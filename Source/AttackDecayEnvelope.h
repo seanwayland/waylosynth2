@@ -30,7 +30,7 @@ class Attack_decay_envelope {
             Attack_decay_envelope();
             ~Attack_decay_envelope();
             float calculate_attack_gain(float envelope_position, float attack_coeff);
-            float calculate_decay_gain(float envelope_position, float decay_coeff, float sustain_time);
+            float calculate_decay_gain(float envelope_position, float decay_coeff);
             float calculate_parabola_gain(float envelope_position);
             void SetSampleRate(int Samplerate);
             void Set_amp_envelope_rate(int envelope_rate);
@@ -38,7 +38,7 @@ class Attack_decay_envelope {
             float amp_envelope_position;
             int amp_envelope_rate;
             float amp_samplerate;
-    float process(float attack_coeff, float d, float sustain_t, string type);
+            float process(float attack_coeff, float decay_coeff, string type);
 
     
 };

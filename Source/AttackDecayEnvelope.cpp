@@ -35,9 +35,9 @@ float Attack_decay_envelope::calculate_attack_gain(float envelope_position, floa
     if (result > 1 || result < 0){return 1;}
     return result;
 }
-float Attack_decay_envelope::calculate_decay_gain(float envelope_position, float decay_coeff, float sustain_time){
+float Attack_decay_envelope::calculate_decay_gain(float envelope_position, float decay_coeff){
     
-    float result = 1/( pow( (envelope_position - sustain_time) , (1/decay_coeff) ) );
+    float result = 1/( pow( (envelope_position + 1) , (1/decay_coeff) ) );
     if (result > 1 || result < 0){return 1;}
     return result;
 }
@@ -54,25 +54,31 @@ float Attack_decay_envelope::calculate_parabola_gain(float envelope_position){
 
 
 
-float Attack_decay_envelope::process(float attack_coeff, float decay_coeff, float sustain_t, string type){
+float Attack_decay_envelope::process(float attack_coeff, float decay_coeff, string type){
     
     amp_envelope_position = amp_envelope_position + amp_envelope_rate/amp_samplerate;
-    
-    
+
+    // coeff of 1 is linear . less than one is concave higher than one convex . nord lead 3 looks to be 0.75
     if (type == "attack_env"){
+
         if (amp_envelope_position < 1.0){
-            return 0.99*(calculate_attack_gain(amp_envelope_position, attack_coeff));
-        }
-        else {return 0.94*(calculate_decay_gain(amp_envelope_position, decay_coeff, sustain_t));}}
-        //else { return 0.98;}}
+            return 0.99*(calculate_attack_gain(amp_envelope_position, attack_coeff));}
+        else { return 1.0f;}
+        
+    }
+
+    if (type == "decay_env")
+        {return 0.94*(calculate_decay_gain(amp_envelope_position, decay_coeff));}
+
     if (type == "parabola"){
         return calculate_parabola_gain(amp_envelope_position);
     }
-    
+
     else{return 1.0;}
     
 }
 
+// a value of 1 is one second higher values faster 
 void Attack_decay_envelope::SetSampleRate(int Samplert){
     amp_samplerate = Samplert;
 }

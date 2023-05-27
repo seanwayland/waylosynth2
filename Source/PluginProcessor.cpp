@@ -94,6 +94,10 @@ void MySynthesiserVoice::setResParameter(float resonance) {
     oscillator.setRes(resonance);
 }
 
+void MySynthesiserVoice::setBassoffParameter(float bassoff) {
+    oscillator.setBassoff(bassoff);
+}
+
 void MySynthesiserVoice::setDetuneParameter(float detune) {
     oscillator.setDetune(detune);
 }
@@ -127,6 +131,11 @@ void MySynthesiser::setCutoffParameter(float cutoff) {
 void MySynthesiser::setResParameter(float resonance) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setResParameter(resonance);
+}
+
+void MySynthesiser::setBassoffParameter(float bassoff) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setResParameter(bassoff);
 }
 
 void MySynthesiser::setDetuneParameter(float detune) {
@@ -173,6 +182,14 @@ static String resonanceSliderValueToText(float value) {
 }
 
 static float resonanceSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+static String bassoffSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
+static float bassoffSliderTextToValue(const String& text) {
     return text.getFloatValue();
 }
 
@@ -229,20 +246,24 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
                                                      0.0f, nullptr, nullptr));
 
     parameters.push_back(std::make_unique<Parameter>(String("sharp"), String("Sharp"), String(),
-                                                     NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.1f, sharpSliderValueToText, sharpSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("mod"), String("Mod"), String(),
-                                                     NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.1f, modSliderValueToText, modSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("cutoff"), String("Cutoff"), String(),
-                                                     NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, cutoffSliderValueToText, cutoffSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("resonance"), String("Resonance"), String(),
-                                                     NormalisableRange<float>(0.f, 1.f, 0.001f, 0.5f),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.05f, resonanceSliderValueToText, resonanceSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("bassoff"), String("Resonance"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.05f, bassoffSliderValueToText, bassoffSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(String("gain"), String("Gain"), String(),
                                                      NormalisableRange<float>(0.001f, 7.94f, 0.001f, 0.3f),
@@ -280,6 +301,7 @@ waylosynth2::waylosynth2()
     modParameter = parameters.getRawParameterValue("mod");
     cutoffParameter = parameters.getRawParameterValue("cutoff");
     resonanceParameter = parameters.getRawParameterValue("resonance");
+    bassoffParameter = parameters.getRawParameterValue("bassoff");
     gainParameter = parameters.getRawParameterValue("gain");
     detuneParameter = parameters.getRawParameterValue("detune");
 }
@@ -806,6 +828,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setModParameter(*modParameter);
     synthesiser.setCutoffParameter(*cutoffParameter);
     synthesiser.setResParameter(*resonanceParameter);
+    synthesiser.setResParameter(*bassoffParameter);
     synthesiser.setDetuneParameter(*detuneParameter);
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 

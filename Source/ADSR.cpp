@@ -20,6 +20,19 @@
 //  1.03  2020-04-08  njr   changed float to double; large target ratio and rate resulted in exp returning 1 in calcCoef
 //
 
+
+/**
+ Set the Attack, Decay, and Release rates (in samples—you can multiply time in seconds by the sample rate)
+ , and the sustain level (0.0-1.0); call these when settings change, not at the sample rate:
+
+ Adjust the curves of the Attack, or Decay and Release segments,
+ from the initial default values (small number such as 0.0001 to 0.01 for mostly-exponential, large numbers like 100 for virtually linear):
+ 
+ void setTargetRatioA(float targetRatio);
+ void setTargetRatioDR(float targetRatio);
+ 
+ */
+
 #include "ADSR.h"
 #include <math.h>
 
