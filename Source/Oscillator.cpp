@@ -764,12 +764,13 @@ float Oscillator::process() {
         
         if ((m_freq > 0) && (m_bassoff < 1.0) && (m_bassoff > 0.1)){
              
+             
              float bass_adjust = m_bassoff*10.0f;
              vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
              vadimFilter.setCutoffFrequency(m_freq - m_freq/bass_adjust);
              value = vadimFilter.processSample(1, value);}
         
-//        
+        
         
     
     }
