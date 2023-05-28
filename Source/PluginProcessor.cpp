@@ -86,6 +86,15 @@ void MySynthesiserVoice::setModParameter(float mod) {
     oscillator.setMod(mod);
 }
 
+void MySynthesiserVoice::setAttackRateParameter(float attackRate) {
+    oscillator.setAttackRate(attackRate);
+}
+
+void MySynthesiserVoice::setAttackShapeParameter(float attackShape) {
+    oscillator.setAttackshape(attackShape);
+}
+
+
 void MySynthesiserVoice::setCutoffParameter(float cutoff) {
     oscillator.setCutoff(cutoff);
 }
@@ -122,6 +131,21 @@ void MySynthesiser::setModParameter(float mod) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setModParameter(mod);
 }
+
+void MySynthesiser::setAttackRateParameter(float attackRate) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setAttackRateParameter(attackRate);
+}
+
+void MySynthesiser::setAttackShapeParameter(float attackShape) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setAttackShapeParameter(attackShape);
+}
+
+
+
+
+
 
 void MySynthesiser::setCutoffParameter(float cutoff) {
     for (int i = 0; i < getNumVoices(); i++)
@@ -223,6 +247,14 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("attack"), String("Attack"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.5f),
                                                      0.005f, secondSliderValueToText, secondSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("attackRate"), String("AttackRate"), String(),
+                                                     NormalisableRange<float>(0.001f, 1.f, 0.0001f, 0.5f),
+                                                     0.01f, secondSliderValueToText, secondSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("attackShape"), String("AttackShape"), String(),
+                                                     NormalisableRange<float>(0.001f, 1.f, 0.0001f, 0.5f),
+                                                     0.75f, secondSliderValueToText, secondSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(String("decay"), String("Decay"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.5f),
@@ -234,11 +266,11 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
 
     parameters.push_back(std::make_unique<Parameter>(String("release"), String("Release"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.5f),
-                                                     0.25f, secondSliderValueToText, secondSliderTextToValue));
+                                                     1.0f, secondSliderValueToText, secondSliderTextToValue));
     
     
     parameters.push_back(std::make_unique<Parameter>(String("detune"), String("Detune"), String(),
-                                                     NormalisableRange<float>(0.5f, 2.f, 0.01f, 1.0f),
+                                                     NormalisableRange<float>(0.5f, 2.f, 0.0001f, 1.0f),
                                                      1.0f, detuneSliderValueToText, detuneSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(String("type"), String("Type"), String(),
@@ -293,6 +325,8 @@ waylosynth2::waylosynth2()
     synthesiser.addSound(new MySynthesiserSound());
 
     attackParameter = parameters.getRawParameterValue("attack");
+    attackRateParameter = parameters.getRawParameterValue("attackRate");
+    attackShapeParameter = parameters.getRawParameterValue("attackShape");
     decayParameter = parameters.getRawParameterValue("decay");
     sustainParameter = parameters.getRawParameterValue("sustain");
     releaseParameter = parameters.getRawParameterValue("release");
@@ -826,6 +860,8 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setWavetypeParameter((int)*typeParameter);
     synthesiser.setSharpParameter(*sharpParameter);
     synthesiser.setModParameter(*modParameter);
+    synthesiser.setAttackRateParameter(*attackRateParameter);
+    synthesiser.setAttackShapeParameter(*attackShapeParameter);
     synthesiser.setCutoffParameter(*cutoffParameter);
     synthesiser.setResParameter(*resonanceParameter);
     synthesiser.setBassoffParameter(*bassoffParameter);
@@ -855,12 +891,20 @@ void waylosynth2::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    auto state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml (state.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
-void waylosynth2::setStateInformation (const void* data, int sizeInBytes)
+void waylosynth2::setStateInformation (const void* data, int sizeInBytes) 
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName (parameters.state.getType()))
+            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
 }
 
 //==============================================================================

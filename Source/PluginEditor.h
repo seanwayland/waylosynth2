@@ -26,6 +26,14 @@ private:
     Label  attackLabel;
     Slider attackKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> attackAttachment;
+    
+    Label  attackRateLabel;
+    Slider attackRateKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> attackRateAttachment;
+    
+    Label  attackShapeLabel;
+    Slider attackShapeKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> attackShapeAttachment;
 
     Label  decayLabel;
     Slider decayKnob;

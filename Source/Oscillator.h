@@ -24,6 +24,8 @@ class Oscillator {
         float hipass(float input);
         void setSharp(float sharp);
         void setMod(float mod);
+        void setAttackshape(float attackShape);
+        void setAttackRate(float attackRate);
         void setCutoff(float cutoff);
         void setRes(float resonance);
         void setBassoff(float bassoff);
@@ -113,6 +115,8 @@ class Oscillator {
         float m_pitchbend;
         float m_sharp;
         float m_mod;
+        float m_attackRate;
+        float m_attackShape;
         float m_cutoff;
         float m_resonance;
         float m_bassoff;

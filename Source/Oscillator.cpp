@@ -17,6 +17,8 @@ Oscillator::Oscillator() {
     m_freq = 1.f;
     midi_note_number = 0;
     m_sharp = 0.f;
+    m_attackRate = 0.1f;
+    m_attackShape = 0.75f;
     m_resonance = 0.01f;
     m_bassoff = 0.f;
     m_detune = 1.0f;
@@ -56,6 +58,8 @@ void Oscillator::setup(float sampleRate) {
     lfo1.setDepth(1.0f);
     lfo1.setRate(0.4f);
     m_lfo_value = 0.0f;
+    m_attackRate = 0.1f;
+    m_attackShape = 0.75f;
 
     
         // vadimFilter
@@ -82,6 +86,8 @@ void Oscillator::reset() {
     lfo1.setDepth(1.0f);
     lfo1.setRate(1.0f);
     m_lfo_value = 0.0f;
+    m_attackRate = 0.1f;
+    m_attackShape = 0.75f;
 
 
 }
@@ -161,6 +167,15 @@ void Oscillator::setSharp(float sharp) {
 
 void Oscillator::setMod(float mod) {
     m_mod = mod < 0.f ? 0.f : mod > 1.f ? 1.f : mod;
+}
+
+
+void Oscillator::setAttackRate(float attackRate){
+    m_attackRate = attackRate < 0.f ? 0.f : attackRate > 1.f ? 1.f : attackRate;
+}
+
+void Oscillator::setAttackshape(float attackShape){
+    m_attackShape = attackShape < 0.f ? 0.f : attackShape > 1.f ? 1.f : attackShape;
 }
 
 void Oscillator::setCutoff(float cutoff) {
@@ -752,8 +767,8 @@ float Oscillator::process() {
         fixed_pulse_counter += 11000 * m_oneOverSr;
         env.process();
         
-        amp_env.Set_amp_envelope_rate(80);
-        value = value*amp_env.process(0.75,0.75,"attack_env");
+        amp_env.Set_amp_envelope_rate(m_attackRate*100);
+        value = value*amp_env.process(m_attackShape,0.75,"attack_env");
         if (m_cutoff < 0.99){
             float filter_cutoff = m_cutoff*20000;
             float filter_resonance = m_resonance;
@@ -762,11 +777,11 @@ float Oscillator::process() {
             value = filter.Apply4Pole(value,filter_cutoff);
         }
         
-        if ((m_freq > 0) && (m_bassoff < 1.0) && (m_bassoff > 0.1)){
-             
+        if ((m_freq > 0)  && (m_bassoff > 0.1)){
              
              float bass_adjust = m_bassoff*10.0f;
              vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+             vadimFilter.setCutoffFrequency(0.9f);
              vadimFilter.setCutoffFrequency(m_freq - m_freq/bass_adjust);
              value = vadimFilter.processSample(1, value);}
         

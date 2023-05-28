@@ -34,6 +34,8 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setWavetypeParameter(int type);
     void setSharpParameter(float sharp);
     void setModParameter(float mod);
+    void setAttackRateParameter(float attackRate);
+    void setAttackShapeParameter(float attackShape);
     void setCutoffParameter(float cutoff);
     void setResParameter(float resonance);
     void setBassoffParameter(float bassoff);
@@ -60,6 +62,8 @@ public:
     void setWavetypeParameter(int type);
     void setSharpParameter(float sharp);
     void setModParameter(float mod);
+    void setAttackRateParameter(float attackRate);
+    void setAttackShapeParameter(float attackshape);
     void setCutoffParameter(float cutoff);
     void setResParameter(float resonance);
     void setBassoffParameter(float bassoff);
@@ -124,6 +128,8 @@ private:
     MySynthesiser synthesiser;
 
     std::atomic<float> *attackParameter = nullptr;
+    std::atomic<float> *attackRateParameter = nullptr;
+    std::atomic<float> *attackShapeParameter = nullptr;
     std::atomic<float> *decayParameter = nullptr;
     std::atomic<float> *sustainParameter = nullptr;
     std::atomic<float> *releaseParameter = nullptr;
