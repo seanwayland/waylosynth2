@@ -5,6 +5,9 @@
 #include <math.h>
 #include "Oscillator.h"
 #include "CheapLFO.h"
+#include<iostream>
+#include<cstdlib>
+#include<ctime>
 
 #ifndef M_PI
 #define M_PI (3.14159265358979323846264338327950288)
@@ -70,6 +73,14 @@ void Oscillator::setup(float sampleRate) {
     vadimFilter.prepare(spec);
     vadimFilter.reset();
     vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    
+    
+    int max;
+    max = 100; //set the upper bound to generate the random number
+    srand(time(0));
+    pitchchange = rand()%max;
+    float pp = float(pitchchange)/10000.f;
+    rand_detune = 0.005 + pp;
 
 }
 
@@ -88,6 +99,13 @@ void Oscillator::reset() {
     m_lfo_value = 0.0f;
     m_attackRate = 0.1f;
     m_attackShape = 0.75f;
+    
+    int max;
+    max = 100; //set the upper bound to generate the random number
+    srand(time(0));
+    pitchchange = rand()%max;
+    float pp = float(pitchchange)/10000.f;
+    rand_detune = 0.005 + pp;
 
 
 }
@@ -761,8 +779,8 @@ float Oscillator::process() {
     if (m_wavetype < 20) {
 
 
-
-        m_pointer_pos += m_detune*m_pitchbend* m_freq * m_oneOverSr*m_detune;
+        
+        m_pointer_pos += m_detune*m_pitchbend* m_freq * m_oneOverSr*m_detune;//*(1-rand_detune)
         m_pointer_pos = _clip(m_pointer_pos);
         fixed_pulse_counter += 11000 * m_oneOverSr;
         env.process();

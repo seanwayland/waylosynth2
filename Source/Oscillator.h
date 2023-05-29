@@ -171,6 +171,8 @@ class Oscillator {
         int m_mod_wheel_value = 0;
         int midi_note_number = 0;
         int pedal_steel = 1;
+    float rand_detune = 0.0;
+    int pitchchange = 0;
     
     float transition[1001];
 

@@ -1,6 +1,9 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include<iostream>
+#include<cstdlib>
+#include<ctime>
 
 static const int numberOfVoices = 10;
 
@@ -22,8 +25,22 @@ void MySynthesiserVoice::startNote(int midiNoteNumber, float velocity,
     level = velocity * 0.15;
     envelope.noteOn();
     auto m_freq = (MidiMessage::getMidiNoteInHertz (midiNoteNumber));
+    
+    // random pitch slop
+    int max;
+    max = 200; //set the upper bound to generate the random number
+    srand(time(0));
+    int pitchchange = rand()%max;
+    float pp = float(pitchchange)/100000.f;
+    float rand_detune = 0.0005 + pp;
+    m_freq = m_freq*(1-rand_detune);
+    
+    
+    
     oscillator.setFreq(m_freq);
     oscillator.set_note_velocity(velocity);
+    
+    //
 
     
 }
@@ -79,11 +96,26 @@ void MySynthesiserVoice::setWavetypeParameter(int type) {
 }
 
 void MySynthesiserVoice::setSharpParameter(float sharp) {
-    oscillator.setSharp(sharp);
+    
+    // random  slop
+    int mm;
+    mm = 500; //set the upper bound to generate the random number
+    srand(time(0));
+    int rr = rand()%mm;
+    float pp = float(rr)/100000.f;
+    oscillator.setSharp(sharp + pp);
 }
 
 void MySynthesiserVoice::setModParameter(float mod) {
-    oscillator.setMod(mod);
+    
+    
+    // random  slop
+    int mmm;
+    mmm = 500; //set the upper bound to generate the random number
+    srand(time(0));
+    int rrr = rand()%mmm;
+    float ppp = float(rrr)/100000.f;
+    oscillator.setMod(mod + ppp);
 }
 
 void MySynthesiserVoice::setAttackRateParameter(float attackRate) {
@@ -96,7 +128,24 @@ void MySynthesiserVoice::setAttackShapeParameter(float attackShape) {
 
 
 void MySynthesiserVoice::setCutoffParameter(float cutoff) {
-    oscillator.setCutoff(cutoff);
+    
+    
+    // random pitch slop
+//    int max;
+//    max = 200; //set the upper bound to generate the random number
+//    srand(time(0));
+//    int pitchchange = rand()%max;
+//    float pp = float(pitchchange)/100000.f;
+//    float rand_detune = 0.0005 + pp;
+//    m_freq = m_freq*(1-rand_detune);
+    
+    int mmmm;
+    mmmm = 500; //set the upper bound to generate the random number
+    srand(time(0));
+    int rrrr = rand()%mmmm;
+    float pppp = float(rrrr)/100000.f;
+    
+    oscillator.setCutoff(cutoff - pppp);
 }
 
 void MySynthesiserVoice::setResParameter(float resonance) {
