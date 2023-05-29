@@ -174,6 +174,8 @@ class Oscillator {
     float rand_detune = 0.0;
     int pitchchange = 0;
     
+        
+    
     float transition[1001];
 
      

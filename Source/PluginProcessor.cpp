@@ -98,24 +98,24 @@ void MySynthesiserVoice::setWavetypeParameter(int type) {
 void MySynthesiserVoice::setSharpParameter(float sharp) {
     
     // random  slop
-    int mm;
-    mm = 500; //set the upper bound to generate the random number
-    srand(time(0));
-    int rr = rand()%mm;
-    float pp = float(rr)/100000.f;
-    oscillator.setSharp(sharp + pp);
+//    int mm;
+//    mm = 500; //set the upper bound to generate the random number
+//    srand(time(0));
+//    int rr = rand()%mm;
+//    float pp = float(rr)/100000.f;
+    oscillator.setSharp(sharp);
 }
 
 void MySynthesiserVoice::setModParameter(float mod) {
     
     
     // random  slop
-    int mmm;
-    mmm = 500; //set the upper bound to generate the random number
-    srand(time(0));
-    int rrr = rand()%mmm;
-    float ppp = float(rrr)/100000.f;
-    oscillator.setMod(mod + ppp);
+//    int mmm;
+//    mmm = 500; //set the upper bound to generate the random number
+//    srand(time(0));
+//    int rrr = rand()%mmm;
+//    float ppp = float(rrr)/100000.f;
+    oscillator.setMod(mod);
 }
 
 void MySynthesiserVoice::setAttackRateParameter(float attackRate) {
@@ -139,13 +139,13 @@ void MySynthesiserVoice::setCutoffParameter(float cutoff) {
 //    float rand_detune = 0.0005 + pp;
 //    m_freq = m_freq*(1-rand_detune);
     
-    int mmmm;
-    mmmm = 500; //set the upper bound to generate the random number
-    srand(time(0));
-    int rrrr = rand()%mmmm;
-    float pppp = float(rrrr)/100000.f;
+//    int mmmm;
+//    mmmm = 500; //set the upper bound to generate the random number
+//    srand(time(0));
+//    int rrrr = rand()%mmmm;
+//    float pppp = float(rrrr)/100000.f;
     
-    oscillator.setCutoff(cutoff - pppp);
+    oscillator.setCutoff(cutoff);
 }
 
 void MySynthesiserVoice::setResParameter(float resonance) {
@@ -363,9 +363,14 @@ waylosynth2::waylosynth2()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       ),
+                       ), parameters (*this, nullptr, Identifier(JucePlugin_Name), createParameterLayout()),
+     tree(*this, nullptr), lowPassFilter(dsp::IIR::Coefficients<float>::makeLowPass(96000, 10000.0f, 0.1))
+
+// lowPassFilterLeft  (juce::dsp::IIR::Coefficients<float>::makeLowPass  (getSampleRate(), 17000.0f)),
+// lowPassFilterRight (juce::dsp::IIR::Coefficients<float>::makeLowPass  (getSampleRate(), 17000.0f)),
+
 #endif
-    parameters (*this, nullptr, Identifier(JucePlugin_Name), createParameterLayout())
+//lowPassFilter(*this, nullptr, dsp::IIR::Coefficients<float>::makeLowPass(96000, 10000.0f, 0.1f))
 {
 
     for (auto i = 0; i < numberOfVoices; ++i)
@@ -466,6 +471,17 @@ void waylosynth2::prepareToPlay (double sampleRate, int samplesPerBlock)
     for ( int j = 0 ; j < 127; j++){
         playing[j] = 0;
     }
+    
+    dsp::ProcessSpec spec;
+    spec.sampleRate = sampleRate;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.numChannels = getTotalNumOutputChannels();
+    
+    lowPassFilter.prepare(spec);
+    lowPassFilter.reset();
+    
+    
+    
 
 }
 
@@ -893,10 +909,6 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     // RETRANSPOSE END
     
 
-        
-    
-    
-    
     
 
     keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
@@ -918,6 +930,37 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
     buffer.applyGainRamp(0, buffer.getNumSamples(), lastGain, *gainParameter);
+    
+    
+    // IIR filter set at 10000
+    dsp::AudioBlock<float> block (buffer);
+    lowPassFilter.process(dsp::ProcessContextReplacing<float> (block));
+    
+    
+    
+    // average value with last sampling anti aliasing
+    for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+    {
+        //input data
+        const float* inputData = buffer.getReadPointer(channel);
+
+        float* outputData = buffer.getWritePointer(channel);
+        
+        //place audio samples into buffer
+        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+        {
+            //get current value from read pointer
+            float inputSample = inputData[sample];
+            float returnval = (inputSample + lastSample[channel])/2.0f;
+            outputData[sample] = returnval;
+            lastSample[channel] = returnval;
+            
+
+        }
+    }
+    
+
+    
     
 
     lastGain = *gainParameter;

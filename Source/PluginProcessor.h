@@ -78,6 +78,8 @@ public:
     waylosynth2();
     ~waylosynth2();
     
+    AudioProcessorValueTreeState tree;
+    
     int waylotrans = 0;
     int playing[127];
     int waylochili = 60;
@@ -116,6 +118,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
+    //juce::dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilterLeft ;
+    //juce::dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilterRight ;
+
+
     
     
 
@@ -143,8 +149,33 @@ private:
     std::atomic<float> *bassoffParameter = nullptr;
     std::atomic<float> *gainParameter = nullptr;
     float lastGain = 0.f;
+    float lastSample[2] = { 0.0, 0.0};
     
-
+    dsp::ProcessorDuplicator<dsp::IIR::Filter <float>, dsp::IIR::Coefficients <float>> lowPassFilter;
+    
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (waylosynth2)
 };
+
+
+
+
+//for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+//    {
+//        //input data
+//        const float* inputData = buffer.getReadPointer(channel);
+//
+//        float* outputData = buffer.getWritePointer(channel);
+//        
+//        //place audio samples into buffer
+//        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+//        {
+//            //get current value from read pointer
+//            float inputSample = inputData[sample];
+//
+//
+//                outputData[sample] = filter[channel].simpleIIRLowPass(inputSample, 10000.0f);
+//
+//            outputData[sample] = outputData[sample] * Decibels::decibelsToGain(1.0);
+//        }
+//    }
