@@ -30,6 +30,9 @@ Oscillator::Oscillator() {
     m_sah_last_value = 0.f;
     m_sah_current_value = (rand() / (float)RAND_MAX) * 2.f - 1.f;
     m_pitchbend = 1;
+    env.reset();
+    m_filter_decay = 0.0f;
+
     
     
     
@@ -40,6 +43,8 @@ void Oscillator::setup(float sampleRate) {
     m_sampleRate = 96000;
     amp_env.SetSampleRate(96000);
     amp_env.reset();
+    filter_amp_env.SetSampleRate(96000);
+    filter_amp_env.reset();
     m_oneOverSr = 1.f / m_sampleRate;
     m_increment = m_runningPhase = 0.0f;
     m_twopi = 2.f * M_PI;
@@ -63,8 +68,9 @@ void Oscillator::setup(float sampleRate) {
     m_lfo_value = 0.0f;
     m_attackRate = 0.1f;
     m_attackShape = 0.75f;
-
+    m_filter_decay = 0.0f;
     
+
         // vadimFilter
     juce::dsp::ProcessSpec spec;
     spec.maximumBlockSize = 512;
@@ -73,6 +79,9 @@ void Oscillator::setup(float sampleRate) {
     vadimFilter.prepare(spec);
     vadimFilter.reset();
     vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    
+    
+
     
     
     int max;
@@ -91,9 +100,7 @@ void Oscillator::reset() {
     m_pitchbend = 1;
     m_detune = 1.0f;
     amp_env.reset();
-    env.gate(false);
-    env.reset();
-    env.gate(true);
+    filter_amp_env.reset();
     lfo1.setDepth(1.0f);
     lfo1.setRate(1.0f);
     m_lfo_value = 0.0f;
@@ -112,6 +119,16 @@ void Oscillator::reset() {
 
 void Oscillator::set_midi_note_number(int midi_note){
     midi_note_number = midi_note;
+}
+
+
+void Oscillator::gate_filter_env(){
+    env.gate(false);
+}
+
+void Oscillator::open_filter_env(){
+    env.gate(true);
+    filter_amp_env.reset();
 }
 
 
@@ -789,6 +806,37 @@ float Oscillator::process() {
         value = value*amp_env.process(m_attackShape,0.75,"attack_env");
         if (m_cutoff < 0.99){
             float filter_cutoff = m_cutoff*20000;
+            
+            
+
+           // Adjust the curves of the Attack, or Decay and Release segments,
+           // from the initial default values (small number such as 0.0001 to 0.01 for mostly-exponential, large numbers like 100 for //       virtually linear):
+            
+            
+            
+            
+            env.setAttackRate(0.07*96000);  // .1 second
+            env.setDecayRate(0.4 * 96000);
+            env.setReleaseRate(0.16 * 96000);
+            env.setSustainLevel(0.1);
+            env.setTargetRatioA(2.0f);
+            env.setTargetRatioDR(10.5f);
+            m_envValue = env.process();
+            m_envValue = m_envValue + 2*(m_note_velocity/127.0f);
+            filter_cutoff = filter_cutoff + 3*(filter_cutoff*m_envValue);
+            if (filter_cutoff > 15000){ filter_cutoff = 15000.0f;}
+            
+            // higher notes louder
+            value = (value + 2*(value/127))/3;
+            
+            
+            
+            
+            
+
+  
+
+            
             float filter_resonance = m_resonance;
             filter.setMultimode(1.0);
             filter.setResonance(filter_resonance);

@@ -36,6 +36,9 @@ class Oscillator {
         float process();
         void set_midi_note_number(int midi_note);
         void set_note_velocity(float note_velocity);
+    
+        void gate_filter_env();
+        void open_filter_env();
 
     
     
@@ -71,6 +74,7 @@ class Oscillator {
     private:
     
     Attack_decay_envelope amp_env;
+    Attack_decay_envelope filter_amp_env;
     Filters filter;
     Filters bass_off;
     ADSR2 env;
@@ -133,6 +137,7 @@ class Oscillator {
         float fm_depth;
         float fm_frequency;
         float fm_index;
+        float m_envValue = 0.0f;
     
         float m_lfo_value = 0.0f;
     
@@ -173,6 +178,9 @@ class Oscillator {
         int pedal_steel = 1;
     float rand_detune = 0.0;
     int pitchchange = 0;
+    
+    float m_filter_decay = 0.0f;
+    float m_filter_decay_rate = 0.0f;
     
         
     

@@ -68,7 +68,8 @@ float Attack_decay_envelope::process(float attack_coeff, float decay_coeff, stri
     }
 
     if (type == "decay_env")
-        {return 0.94*(calculate_decay_gain(amp_envelope_position, decay_coeff));}
+        {
+            return 0.2 + (calculate_decay_gain(amp_envelope_position, decay_coeff));}
 
     if (type == "parabola"){
         return calculate_parabola_gain(amp_envelope_position);

@@ -40,6 +40,8 @@ void MySynthesiserVoice::startNote(int midiNoteNumber, float velocity,
     oscillator.setFreq(m_freq);
     oscillator.set_note_velocity(velocity);
     
+    oscillator.open_filter_env();
+    
     //
 
     
@@ -48,6 +50,7 @@ void MySynthesiserVoice::startNote(int midiNoteNumber, float velocity,
 void MySynthesiserVoice::stopNote(float /*velocity*/, bool allowTailOff) {
     envelope.noteOff();
     //oscillator.reset();
+    oscillator.gate_filter_env();
     
 }
 
