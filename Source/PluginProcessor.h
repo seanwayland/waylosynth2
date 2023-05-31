@@ -148,6 +148,10 @@ private:
     std::atomic<float> *resonanceParameter = nullptr;
     std::atomic<float> *bassoffParameter = nullptr;
     std::atomic<float> *gainParameter = nullptr;
+    std::atomic<float> *filtAttackParameter = nullptr;
+    std::atomic<float> *filtAttackShapeParameter = nullptr;
+    std::atomic<float> *filtDecayParameter = nullptr;
+    std::atomic<float> *filtDecayShapeParameter = nullptr;
     float lastGain = 0.f;
     float lastSample[2] = { 0.0, 0.0};
     

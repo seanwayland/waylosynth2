@@ -13,6 +13,8 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
+    
+    //myimage = juce::ImageCache::getFromMemory(BinaryData::logocolor_png, BinaryData::logocolor_pngSize);
 
 private:
     waylosynth2& processor;
@@ -20,6 +22,9 @@ private:
     waylo_look_and_feel plugexLookAndFeel;
 
     AudioProcessorValueTreeState& valueTreeState;
+    
+    //Image myimage;
+
 
     Label title;
 
@@ -78,6 +83,24 @@ private:
     Label  gainLabel;
     Slider gainKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
+    
+    Label  filtAttackLabel;
+    Slider filtAttackKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtAttackAttachment;
+    
+    Label  filtAttackShapeLabel;
+    Slider filtAttackShapeKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtAttackShapeAttachment;
+    
+    Label  filtDecayLabel;
+    Slider filtDecayKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtDecayAttachment;
+    
+    Label  filtDecayShapeLabel;
+    Slider filtDecayShapeKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtDecayShapeAttachment;
+    
+    
 
     MidiKeyboardComponent keyboardComponent;
 

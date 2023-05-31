@@ -31,7 +31,7 @@ public:
     // se différencient par leur couleur dominante.
     bool setTheme(String newTheme) {
         const StringArray themes = StringArray("blue", "green", "red", "orange", "purple", "grey", "steal",
-                                               "lightblue", "lightgreen", "pink");
+                                               "lightblue", "lightgreen", "pink", "yellow");
         if (! themes.contains(newTheme)) {
             return false;
         }
@@ -70,6 +70,13 @@ public:
             darktheme = Colour(56, 6, 40);
             lighttheme = Colour(184, 18, 131);
         }
+        
+        else if (newTheme == "yellow") {
+            darktheme = Colour(6, 28, 64);
+            lighttheme = Colour(255, 255, 0);
+        }
+        
+
 
         // Fenêtre principale.
         setColour(ResizableWindow::backgroundColourId, darktheme);

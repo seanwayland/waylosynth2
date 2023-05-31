@@ -291,6 +291,40 @@ static float gainSliderTextToValue(const String& text) {
     return powf(10.0f, val * 0.05f);
 }
 
+static String filtAttackSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
+static float filtAttackSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+static String filtDecaySliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
+static float filtDecaySliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+static String filtAttackShapeSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
+static float filtAttackShapeSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+static String filtDecayShapeSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
+static float filtDecayShapeSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+
+
 AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     using Parameter = AudioProcessorValueTreeState::Parameter;
 
@@ -352,6 +386,21 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("gain"), String("Gain"), String(),
                                                      NormalisableRange<float>(0.001f, 7.94f, 0.001f, 0.3f),
                                                      1.0f, gainSliderValueToText, gainSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("filtAttack"), String("FilterAttack"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("filtAttackShape"), String("FilterAttackShape"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("filtDecay"), String("FilterDecay"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    parameters.push_back(std::make_unique<Parameter>(String("filtDecayShape"), String("FilterDecayShape"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtDecaySliderValueToText, filtDecaySliderTextToValue));
 
     return { parameters.begin(), parameters.end() };
 }
@@ -395,6 +444,10 @@ waylosynth2::waylosynth2()
     bassoffParameter = parameters.getRawParameterValue("bassoff");
     gainParameter = parameters.getRawParameterValue("gain");
     detuneParameter = parameters.getRawParameterValue("detune");
+    filtAttackParameter = parameters.getRawParameterValue("filtAttack");
+    filtAttackShapeParameter = parameters.getRawParameterValue("filtAttackShape");
+    filtDecayParameter = parameters.getRawParameterValue("filtDecay");
+    filtDecayShapeParameter = parameters.getRawParameterValue("filtDecaykShape");
 }
 
 waylosynth2::~waylosynth2()
