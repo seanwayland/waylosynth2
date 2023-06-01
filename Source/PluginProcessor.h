@@ -144,7 +144,9 @@ private:
     std::atomic<float> *typeParameter = nullptr;
     std::atomic<float> *sharpParameter = nullptr;
     std::atomic<float> *modParameter = nullptr;
+    std::atomic<float> *greaseModParameter = nullptr;
     std::atomic<float> *cutoffParameter = nullptr;
+    std::atomic<float> *cutoffModParameter = nullptr;
     std::atomic<float> *resonanceParameter = nullptr;
     std::atomic<float> *bassoffParameter = nullptr;
     std::atomic<float> *gainParameter = nullptr;
@@ -152,6 +154,14 @@ private:
     std::atomic<float> *filtAttackShapeParameter = nullptr;
     std::atomic<float> *filtDecayParameter = nullptr;
     std::atomic<float> *filtDecayShapeParameter = nullptr;
+    std::atomic<float> *filtSustainParameter = nullptr;
+    std::atomic<float> *filtReleaseParameter = nullptr;
+    std::atomic<float> *greaseAttackParameter = nullptr;
+    std::atomic<float> *greaseAttackShapeParameter = nullptr;
+    std::atomic<float> *greaseDecayParameter = nullptr;
+    std::atomic<float> *greaseDecayShapeParameter = nullptr;
+    std::atomic<float> *greaseSustainParameter = nullptr;
+    std::atomic<float> *greaseReleaseParameter = nullptr;
     float lastGain = 0.f;
     float lastSample[2] = { 0.0, 0.0};
     

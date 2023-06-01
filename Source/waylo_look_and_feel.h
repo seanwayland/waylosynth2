@@ -72,7 +72,9 @@ public:
         }
         
         else if (newTheme == "yellow") {
-            darktheme = Colour(6, 28, 64);
+            //darktheme = Colour(6, 28, 64);
+            darktheme = Colour(47,48,47);
+            
             lighttheme = Colour(255, 255, 0);
         }
         

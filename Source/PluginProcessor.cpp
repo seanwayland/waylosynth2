@@ -324,6 +324,23 @@ static float filtDecayShapeSliderTextToValue(const String& text) {
 }
 
 
+static String filtSustainSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
+static float filtSustainSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+static String filtReleaseSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
+
+static float filtReleaseSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
+
+
 
 AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     using Parameter = AudioProcessorValueTreeState::Parameter;
@@ -371,9 +388,17 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.1f, modSliderValueToText, modSliderTextToValue));
     
+    parameters.push_back(std::make_unique<Parameter>(String("greaseMod"), String("GreaseMod"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.1f, modSliderValueToText, modSliderTextToValue));
+    
     parameters.push_back(std::make_unique<Parameter>(String("cutoff"), String("Cutoff"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, cutoffSliderValueToText, cutoffSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("cutoffMod"), String("CutoffMod"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, modSliderValueToText, modSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("resonance"), String("Resonance"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
@@ -401,6 +426,37 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("filtDecayShape"), String("FilterDecayShape"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtDecaySliderValueToText, filtDecaySliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("filtSustain"), String("FilterSustain"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtSustainSliderValueToText, filtSustainSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("filtRelease"), String("FilterRelease"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtReleaseSliderValueToText, filtReleaseSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("greaseAttack"), String("GreaseAttack"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("greaseAttackShape"), String("greaseAttackShape"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+
+    parameters.push_back(std::make_unique<Parameter>(String("greaseDecay"), String("greaseDecay"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    parameters.push_back(std::make_unique<Parameter>(String("greaseDecayShape"), String("greaseDecayShape"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtDecaySliderValueToText, filtDecaySliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("greaseSustain"), String("greaseSustain"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtSustainSliderValueToText, filtSustainSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("greaseRelease"), String("greaseRelease"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtReleaseSliderValueToText, filtReleaseSliderTextToValue));
 
     return { parameters.begin(), parameters.end() };
 }
@@ -439,7 +495,9 @@ waylosynth2::waylosynth2()
     typeParameter = parameters.getRawParameterValue("type");
     sharpParameter = parameters.getRawParameterValue("sharp");
     modParameter = parameters.getRawParameterValue("mod");
+    greaseModParameter = parameters.getRawParameterValue("greaseMod");
     cutoffParameter = parameters.getRawParameterValue("cutoff");
+    cutoffModParameter = parameters.getRawParameterValue("cutoffMod");
     resonanceParameter = parameters.getRawParameterValue("resonance");
     bassoffParameter = parameters.getRawParameterValue("bassoff");
     gainParameter = parameters.getRawParameterValue("gain");
@@ -448,6 +506,14 @@ waylosynth2::waylosynth2()
     filtAttackShapeParameter = parameters.getRawParameterValue("filtAttackShape");
     filtDecayParameter = parameters.getRawParameterValue("filtDecay");
     filtDecayShapeParameter = parameters.getRawParameterValue("filtDecaykShape");
+    filtSustainParameter = parameters.getRawParameterValue("filtSustain");
+    filtReleaseParameter = parameters.getRawParameterValue("filtRelease");
+    greaseAttackParameter = parameters.getRawParameterValue("greaseAttack");
+    greaseAttackShapeParameter = parameters.getRawParameterValue("greaseAttackShape");
+    greaseDecayParameter = parameters.getRawParameterValue("greaseDecay");
+    greaseDecayShapeParameter = parameters.getRawParameterValue("greaseDecaykShape");
+    greaseSustainParameter = parameters.getRawParameterValue("greaseSustain");
+    greaseReleaseParameter = parameters.getRawParameterValue("greaseRelease");
 }
 
 waylosynth2::~waylosynth2()

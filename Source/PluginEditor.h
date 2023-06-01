@@ -64,9 +64,17 @@ private:
     Slider modKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> modAttachment;
     
+    Label  greaseModLabel;
+    Slider greaseModKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseModAttachment;
+    
     Label  cutoffLabel;
     Slider cutoffKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> cutoffAttachment;
+    
+    Label  cutoffModLabel;
+    Slider cutoffModKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> cutoffModAttachment;
     
     Label  resonanceLabel;
     Slider ResonanceKnob;
@@ -99,6 +107,38 @@ private:
     Label  filtDecayShapeLabel;
     Slider filtDecayShapeKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtDecayShapeAttachment;
+    
+    Label  filtSustainLabel;
+    Slider filtSustainKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtSustainAttachment;
+    
+    Label  filtReleaseLabel;
+    Slider filtReleaseKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtReleaseAttachment;
+    
+    Label  greaseAttackLabel;
+    Slider greaseAttackKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseAttackAttachment;
+    
+    Label  greaseAttackShapeLabel;
+    Slider greaseAttackShapeKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseAttackShapeAttachment;
+    
+    Label  greaseDecayLabel;
+    Slider greaseDecayKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseDecayAttachment;
+    
+    Label  greaseDecayShapeLabel;
+    Slider greaseDecayShapeKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseDecayShapeAttachment;
+    
+    Label  greaseSustainLabel;
+    Slider greaseSustainKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseSustainAttachment;
+    
+    Label  greaseReleaseLabel;
+    Slider greaseReleaseKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseReleaseAttachment;
     
     
 
