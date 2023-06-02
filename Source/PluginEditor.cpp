@@ -8,7 +8,8 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     : AudioProcessorEditor (&p), processor (p), valueTreeState (vts),
       keyboardComponent (p.keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
-    setSize (1200, 800);
+    setSize (1200, 900);
+    setResizable (true, true);
     
     
 
@@ -112,6 +113,17 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&typeCombo);
 
     typeAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "type", typeCombo));
+    
+    
+    spaceLabel.setText("Hyperspace", NotificationType::dontSendNotification);
+    spaceLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&spaceLabel);
+    
+    spaceCombo.setLookAndFeel(&plugexLookAndFeel);
+    spaceCombo.addItemList({"Normal", "WayloSpace", "SpicySpace", "JoeSpace", "LatchSpace"}, 1);
+    spaceCombo.setSelectedId(1);
+    addAndMakeVisible(&spaceCombo);
+    spaceAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "space", spaceCombo));
 
     sharpLabel.setText("Osc Gravy", NotificationType::dontSendNotification);
     sharpLabel.setJustificationType(Justification::horizontallyCentred);
@@ -333,6 +345,74 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&greaseReleaseKnob);
         
     greaseReleaseAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseRelease", greaseReleaseKnob));
+    
+    greaseVelocityLabel.setText("grease Velocity", NotificationType::dontSendNotification);
+    greaseVelocityLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&greaseVelocityLabel);
+
+    greaseVelocityKnob.setLookAndFeel(&plugexLookAndFeel);
+    greaseVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    greaseVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&greaseVelocityKnob);
+        
+    greaseVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseVelocity", greaseVelocityKnob));
+    
+    greaseKeyboardLabel.setText("grease Kboard", NotificationType::dontSendNotification);
+    greaseKeyboardLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&greaseKeyboardLabel);
+
+    greaseKeyboardKnob.setLookAndFeel(&plugexLookAndFeel);
+    greaseKeyboardKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    greaseKeyboardKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&greaseKeyboardKnob);
+        
+    greaseKeyboardAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseKeyboard", greaseKeyboardKnob));
+    
+    gravyVelocityLabel.setText("gravy Velocity", NotificationType::dontSendNotification);
+    gravyVelocityLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&gravyVelocityLabel);
+
+    gravyVelocityKnob.setLookAndFeel(&plugexLookAndFeel);
+    gravyVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    gravyVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&gravyVelocityKnob);
+        
+    gravyVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "gravyVelocity", gravyVelocityKnob));
+    
+    gravyKeyboardLabel.setText("gravy Keyboard", NotificationType::dontSendNotification);
+    gravyKeyboardLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&gravyKeyboardLabel);
+
+    gravyKeyboardKnob.setLookAndFeel(&plugexLookAndFeel);
+    gravyKeyboardKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    gravyKeyboardKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&gravyKeyboardKnob);
+        
+    gravyKeyboardAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "gravyKeyboard", gravyKeyboardKnob));
+    
+    cutoffVelocityLabel.setText("cutoff Velocity", NotificationType::dontSendNotification);
+    cutoffVelocityLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&cutoffVelocityLabel);
+
+    cutoffVelocityKnob.setLookAndFeel(&plugexLookAndFeel);
+    cutoffVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    cutoffVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&cutoffVelocityKnob);
+        
+    cutoffVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoffVelocity", cutoffVelocityKnob));
+    
+    
+    cutoffKeyboardLabel.setText("cutoff Keyboard", NotificationType::dontSendNotification);
+    cutoffKeyboardLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&cutoffKeyboardLabel);
+
+    cutoffKeyboardKnob.setLookAndFeel(&plugexLookAndFeel);
+    cutoffKeyboardKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    cutoffKeyboardKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&cutoffKeyboardKnob);
+        
+    cutoffKeyboardAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoffKeyboard", cutoffKeyboardKnob));
+    
 
     addAndMakeVisible(keyboardComponent);
 }
@@ -346,6 +426,7 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     sustainKnob.setLookAndFeel(nullptr);
     releaseKnob.setLookAndFeel(nullptr);
     typeCombo.setLookAndFeel(nullptr);
+    spaceCombo.setLookAndFeel(nullptr);
     sharpKnob.setLookAndFeel(nullptr);
     modKnob.setLookAndFeel(nullptr);
     greaseModKnob.setLookAndFeel(nullptr);
@@ -367,6 +448,14 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     greaseDecayShapeKnob.setLookAndFeel(nullptr);
     greaseSustainKnob.setLookAndFeel(nullptr);
     greaseReleaseKnob.setLookAndFeel(nullptr);
+    
+    greaseKeyboardKnob.setLookAndFeel(nullptr);
+    greaseVelocityKnob.setLookAndFeel(nullptr);
+    gravyKeyboardKnob.setLookAndFeel(nullptr);
+    gravyVelocityKnob.setLookAndFeel(nullptr);
+    cutoffVelocityKnob.setLookAndFeel(nullptr);
+    cutoffKeyboardKnob.setLookAndFeel(nullptr);
+    
 }
 
 //==============================================================================
@@ -395,76 +484,71 @@ void waylosynth2AudioProcessorEditor::resized()
     //title.setBounds(area.removeFromTop(40));
     //area.removeFromTop(14);
 
-    auto area1 = area.removeFromTop(110);
+    auto area1 = area.removeFromTop(130);
     
-
-    
-   
-    auto attackArea = area1.removeFromLeft(width/7.0f).withSizeKeepingCentre(80, 100);
-    attackLabel.setBounds(attackArea.removeFromTop(20));
-    attackKnob.setBounds(attackArea);
-    
-    auto attackRateArea = area1.removeFromLeft(width/7.0f).withSizeKeepingCentre(80, 100);
-    attackRateLabel.setBounds(attackRateArea.removeFromTop(20));
-    attackRateKnob.setBounds(attackRateArea);
-    
-    auto attackShapeArea = area1.removeFromLeft(width/7.0f).withSizeKeepingCentre(80, 100);
-    attackShapeLabel.setBounds(attackShapeArea.removeFromTop(20));
-    attackShapeKnob.setBounds(attackShapeArea);
-
-    auto decayArea = area1.removeFromLeft(width/7.0f).withSizeKeepingCentre(80, 100);
-    decayLabel.setBounds(decayArea.removeFromTop(20));
-    decayKnob.setBounds(decayArea);
-
-    auto sustainArea = area1.removeFromLeft(width/7.0f).withSizeKeepingCentre(80, 100);
-    sustainLabel.setBounds(sustainArea.removeFromTop(20));
-    sustainKnob.setBounds(sustainArea);
-
-    auto releaseArea = area1.removeFromLeft(width/7.0f).withSizeKeepingCentre(80, 100);
-    releaseLabel.setBounds(releaseArea.removeFromTop(20));
-    releaseKnob.setBounds(releaseArea);
-    
-    auto detuneArea = area1.removeFromLeft(width/7.0f).withSizeKeepingCentre(80, 100);
-    detuneLabel.setBounds(detuneArea.removeFromTop(20));
-    detuneKnob.setBounds(detuneArea);
-
-    auto area2 = area.removeFromTop(100);
-
-    auto typeArea = area2.removeFromRight(width/7.0f).withSizeKeepingCentre(80, 100);
-    typeLabel.setBounds(typeArea.removeFromTop(25));
-    typeCombo.setBounds(typeArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
-
-    auto sharpArea = area2.removeFromLeft(width/9.0f).withSizeKeepingCentre(80, 100);
+    auto sharpArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     sharpLabel.setBounds(sharpArea.removeFromTop(20));
     sharpKnob.setBounds(sharpArea);
 
-    auto ModArea = area2.removeFromLeft(width/9.0f).withSizeKeepingCentre(80, 100);
+    auto ModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     modLabel.setBounds(ModArea.removeFromTop(20));
     modKnob.setBounds(ModArea);
     
-    auto GreaseModArea = area2.removeFromLeft(width/9.0f).withSizeKeepingCentre(80, 100);
+    auto GreaseModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     greaseModLabel.setBounds(GreaseModArea.removeFromTop(20));
     greaseModKnob.setBounds(GreaseModArea);
     
-    auto CutoffArea = area2.removeFromLeft(width/9.0f).withSizeKeepingCentre(80, 100);
+    auto CutoffArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     cutoffLabel.setBounds(CutoffArea.removeFromTop(20));
     cutoffKnob.setBounds(CutoffArea);
     
-    auto CutoffModArea = area2.removeFromLeft(width/9.0f).withSizeKeepingCentre(80, 100);
+    auto CutoffModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     cutoffModLabel.setBounds(CutoffModArea.removeFromTop(20));
     cutoffModKnob.setBounds(CutoffModArea);
     
-    auto ResonanceArea = area2.removeFromLeft(width/9.0f).withSizeKeepingCentre(80, 100);
+    auto ResonanceArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     resonanceLabel.setBounds(ResonanceArea.removeFromTop(20));
     ResonanceKnob.setBounds(ResonanceArea);
     
-    auto BassoffArea = area2.removeFromLeft(width/9.0f).withSizeKeepingCentre(80, 100);
+    auto BassoffArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     bassoffLabel.setBounds(BassoffArea.removeFromTop(20));
     bassoffKnob.setBounds(BassoffArea);
 
-    auto gainArea = area2.removeFromLeft(width/9.0f).withSizeKeepingCentre(80, 100);
+    auto gainArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     gainLabel.setBounds(gainArea.removeFromTop(20));
     gainKnob.setBounds(gainArea);
+   
+
+    
+
+
+    auto area2 = area.removeFromTop(100);
+    
+    auto attackArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    attackLabel.setBounds(attackArea.removeFromTop(20));
+    attackKnob.setBounds(attackArea);
+    
+    auto attackRateArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    attackRateLabel.setBounds(attackRateArea.removeFromTop(20));
+    attackRateKnob.setBounds(attackRateArea);
+    
+    auto attackShapeArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    attackShapeLabel.setBounds(attackShapeArea.removeFromTop(20));
+    attackShapeKnob.setBounds(attackShapeArea);
+
+    auto decayArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    decayLabel.setBounds(decayArea.removeFromTop(20));
+    decayKnob.setBounds(decayArea);
+
+    auto sustainArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    sustainLabel.setBounds(sustainArea.removeFromTop(20));
+    sustainKnob.setBounds(sustainArea);
+
+    auto releaseArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    releaseLabel.setBounds(releaseArea.removeFromTop(20));
+    releaseKnob.setBounds(releaseArea);
+
+
     
     auto area3 = area.removeFromTop(110);
     
@@ -519,11 +603,57 @@ void waylosynth2AudioProcessorEditor::resized()
     greaseReleaseKnob.setBounds(greaseReleaseArea);
     
     auto area5 = area.removeFromTop(110);
+    
+    auto gravyVelocityArea = area5.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    gravyVelocityLabel.setBounds(gravyVelocityArea.removeFromTop(20));
+    gravyVelocityKnob.setBounds(gravyVelocityArea);
+    
+    auto gravyKeyboardArea = area5.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    gravyKeyboardLabel.setBounds(gravyKeyboardArea.removeFromTop(20));
+    gravyKeyboardKnob.setBounds(gravyKeyboardArea);
+    
+    auto cutoffVelocityArea = area5.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    cutoffVelocityLabel.setBounds(cutoffVelocityArea.removeFromTop(20));
+    cutoffVelocityKnob.setBounds(cutoffVelocityArea);
+    
+    auto cutoffKeyboardArea = area5.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    cutoffKeyboardLabel.setBounds(cutoffKeyboardArea.removeFromTop(20));
+    cutoffKeyboardKnob.setBounds(cutoffKeyboardArea);
+    
+    
+    auto area6 = area.removeFromTop(110);
+    
+    auto greaseVelocityArea = area6.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    greaseVelocityLabel.setBounds(greaseVelocityArea.removeFromTop(20));
+    greaseVelocityKnob.setBounds(greaseVelocityArea);
+    
+    auto greaseKeyboardArea = area6.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    greaseKeyboardLabel.setBounds(greaseKeyboardArea.removeFromTop(20));
+    greaseKeyboardKnob.setBounds(greaseKeyboardArea);
+    
+    auto detuneArea = area6.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    detuneLabel.setBounds(detuneArea.removeFromTop(20));
+    detuneKnob.setBounds(detuneArea);
+    
 
+    
+    auto area7 = area.removeFromTop(100);
+    
+    auto typeArea = area7.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    typeLabel.setBounds(typeArea.removeFromTop(25));
+    typeCombo.setBounds(typeArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
+    
+    auto spaceArea = area7.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    spaceLabel.setBounds(spaceArea.removeFromTop(25));
+    spaceCombo.setBounds(spaceArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
+    
+
+    
     area.removeFromTop(12);
 
-    keyboardComponent.setBounds(area.removeFromBottom(60));
+    keyboardComponent.setBounds(area.removeFromBottom(90));
 }
+
 
 
 

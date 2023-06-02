@@ -379,6 +379,10 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("type"), String("Type"), String(),
                                                      NormalisableRange<float>(0.0f, 19.0f, 1.f, 1.0f),
                                                      0.0f, nullptr, nullptr));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("space"), String("Space"), String(),
+                                                     NormalisableRange<float>(0.0f, 4.0f, 1.f, 1.0f),
+                                                     0.0f, nullptr, nullptr));
 
     parameters.push_back(std::make_unique<Parameter>(String("sharp"), String("Sharp"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
@@ -457,6 +461,32 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("greaseRelease"), String("greaseRelease"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtReleaseSliderValueToText, filtReleaseSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("greaseVelocity"), String("greaseVelocity"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("greaseKeyboard"), String("greaseKeyboard"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("gravyVelocity"), String("gravyVelocity"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("gravyKeyboard"), String("gravyKeyboard"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("cutoffVelocity"), String("cutoffVelocity"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("cutoffKeyboard"), String("cutoffKeyboard"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    
 
     return { parameters.begin(), parameters.end() };
 }
@@ -493,6 +523,7 @@ waylosynth2::waylosynth2()
     sustainParameter = parameters.getRawParameterValue("sustain");
     releaseParameter = parameters.getRawParameterValue("release");
     typeParameter = parameters.getRawParameterValue("type");
+    spaceParameter = parameters.getRawParameterValue("space");
     sharpParameter = parameters.getRawParameterValue("sharp");
     modParameter = parameters.getRawParameterValue("mod");
     greaseModParameter = parameters.getRawParameterValue("greaseMod");
@@ -514,6 +545,13 @@ waylosynth2::waylosynth2()
     greaseDecayShapeParameter = parameters.getRawParameterValue("greaseDecaykShape");
     greaseSustainParameter = parameters.getRawParameterValue("greaseSustain");
     greaseReleaseParameter = parameters.getRawParameterValue("greaseRelease");
+    greaseKeyboardParameter = parameters.getRawParameterValue("greaseKeyboard");
+    greaseVelocityParameter = parameters.getRawParameterValue("greaseVelocity");
+    gravyKeyboardParameter = parameters.getRawParameterValue("gravyKeyboard");
+    gravyVelocityParameter = parameters.getRawParameterValue("gravyVelocity");
+    cutoffKeyboardParameter = parameters.getRawParameterValue("cutoffKeyboard");
+    cutoffVelocityParameter = parameters.getRawParameterValue("cutoffVelocity");
+    
 }
 
 waylosynth2::~waylosynth2()

@@ -142,6 +142,7 @@ private:
     std::atomic<float> *detuneParameter = nullptr;
 
     std::atomic<float> *typeParameter = nullptr;
+    std::atomic<float> *spaceParameter = nullptr;
     std::atomic<float> *sharpParameter = nullptr;
     std::atomic<float> *modParameter = nullptr;
     std::atomic<float> *greaseModParameter = nullptr;
@@ -162,6 +163,15 @@ private:
     std::atomic<float> *greaseDecayShapeParameter = nullptr;
     std::atomic<float> *greaseSustainParameter = nullptr;
     std::atomic<float> *greaseReleaseParameter = nullptr;
+    
+    std::atomic<float> *greaseVelocityParameter = nullptr;
+    std::atomic<float> *greaseKeyboardParameter = nullptr;
+    std::atomic<float> *gravyVelocityParameter = nullptr;
+    std::atomic<float> *gravyKeyboardParameter = nullptr;
+    std::atomic<float> *cutoffVelocityParameter = nullptr;
+    std::atomic<float> *cutoffKeyboardParameter = nullptr;
+
+    
     float lastGain = 0.f;
     float lastSample[2] = { 0.0, 0.0};
     

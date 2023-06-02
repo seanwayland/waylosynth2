@@ -55,6 +55,10 @@ private:
     Label typeLabel;
     ComboBox typeCombo;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> typeAttachment;
+    
+    Label spaceLabel;
+    ComboBox spaceCombo;
+    std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> spaceAttachment;
 
     Label  sharpLabel;
     Slider sharpKnob;
@@ -139,6 +143,38 @@ private:
     Label  greaseReleaseLabel;
     Slider greaseReleaseKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseReleaseAttachment;
+    
+    
+    
+    Label  greaseVelocityLabel;
+    Slider greaseVelocityKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseVelocityAttachment;
+    
+    Label  greaseKeyboardLabel;
+    Slider greaseKeyboardKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseKeyboardAttachment;
+    
+    Label  gravyVelocityLabel;
+    Slider gravyVelocityKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gravyVelocityAttachment;
+    
+    Label  gravyKeyboardLabel;
+    Slider gravyKeyboardKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gravyKeyboardAttachment;
+    
+    Label  cutoffVelocityLabel;
+    Slider cutoffVelocityKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> cutoffVelocityAttachment;
+    
+    Label  cutoffKeyboardLabel;
+    Slider cutoffKeyboardKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> cutoffKeyboardAttachment;
+    
+    
+    
+    
+    
+    
     
     
 
