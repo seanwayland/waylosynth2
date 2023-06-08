@@ -129,6 +129,15 @@ void MySynthesiserVoice::setAttackShapeParameter(float attackShape) {
     oscillator.setAttackshape(attackShape);
 }
 
+void MySynthesiserVoice::setFilterAttackParameter(float filterAttack) {
+    oscillator.setFilterAttack(filterAttack);
+}
+//
+//
+void MySynthesiserVoice::setFilterDecayParameter(float filterdecay) {
+    oscillator.setFilterDecay(filterdecay);
+}
+
 
 void MySynthesiserVoice::setCutoffParameter(float cutoff) {
     
@@ -195,6 +204,16 @@ void MySynthesiser::setAttackShapeParameter(float attackShape) {
 }
 
 
+
+void MySynthesiser::setFilterAttackParameter(float filterAttack) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterAttackParameter(filterAttack);
+}
+//
+void MySynthesiser::setFilterDecayParameter(float filterDecay) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterDecayParameter(filterDecay);
+}
 
 
 
@@ -1083,6 +1102,8 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setModParameter(*modParameter);
     synthesiser.setAttackRateParameter(*attackRateParameter);
     synthesiser.setAttackShapeParameter(*attackShapeParameter);
+    synthesiser.setFilterAttackParameter(*filtAttackParameter);
+    synthesiser.setFilterDecayParameter(*filtDecayParameter);
     synthesiser.setCutoffParameter(*cutoffParameter);
     synthesiser.setResParameter(*resonanceParameter);
     synthesiser.setBassoffParameter(*bassoffParameter);

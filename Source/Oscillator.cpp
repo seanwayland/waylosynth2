@@ -1,5 +1,3 @@
-
-
 #include <time.h>
 #include <stdlib.h>
 #include <math.h>
@@ -203,6 +201,16 @@ void Oscillator::setSharp(float sharp) {
 void Oscillator::setMod(float mod) {
     m_mod = mod < 0.f ? 0.f : mod > 1.f ? 1.f : mod;
 }
+
+void Oscillator::setFilterAttack(float filterattack) {
+    filterattack = filterattack < 0.f ? 0.f : filterattack > 1.f ? 1.f : filterattack;
+}
+
+
+void Oscillator::setFilterDecay(float filterdecay) {
+    m_filterDecay = filterdecay < 0.f ? 0.f : filterdecay > 1.f ? 1.f : filterdecay;
+}
+
 
 
 void Oscillator::setAttackRate(float attackRate){
@@ -414,7 +422,7 @@ float Oscillator::process() {
             
             
         break;}
-            // pulse like 
+            // pulse like
         case 5:
             
         {
@@ -588,7 +596,7 @@ float Oscillator::process() {
             break;
         }
             
-            // sin w / feedback 
+            // sin w / feedback
         case 12:{
                 
             
@@ -761,7 +769,7 @@ float Oscillator::process() {
             
             break;
         }
-            // organ 
+            // organ
         case 17:{
             
              
@@ -814,27 +822,22 @@ float Oscillator::process() {
             
             
             
-            
-            env.setAttackRate(0.07*96000);  // .1 second
-            env.setDecayRate(0.4 * 96000);
+            env.setAttackRate(m_filterAttack*96000);  // .1 second
+            env.setDecayRate(m_filterDecay*4 * 96000);
             env.setReleaseRate(0.16 * 96000);
-            env.setSustainLevel(0.1);
-            env.setTargetRatioA(2.0f);
-            env.setTargetRatioDR(10.5f);
+            env.setSustainLevel(0.01);
+            env.setTargetRatioA(0.4f);
+            env.setTargetRatioDR(0.5f);
             m_envValue = env.process();
-            m_envValue = m_envValue + 2*(m_note_velocity/127.0f);
-            filter_cutoff = filter_cutoff + 3*(filter_cutoff*m_envValue);
+//            m_envValue = m_envValue + 2*(m_note_velocity/127.0f);
+            filter_cutoff = filter_cutoff + 10*(filter_cutoff*m_envValue);
+            //filter_cutoff = 3*m_envValue*filter_cutoff;
             if (filter_cutoff > 15000){ filter_cutoff = 15000.0f;}
             
             // higher notes louder
-            value = (value + 2*(value/127))/3;
+            //value = (value + 2*(value/127))/3;
             
             
-            
-            
-            
-
-  
 
             
             float filter_resonance = m_resonance;

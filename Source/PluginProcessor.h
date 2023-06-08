@@ -36,6 +36,8 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setModParameter(float mod);
     void setAttackRateParameter(float attackRate);
     void setAttackShapeParameter(float attackShape);
+    void setFilterAttackParameter(float filterAttack);
+    void setFilterDecayParameter(float filterDecay);
     void setCutoffParameter(float cutoff);
     void setResParameter(float resonance);
     void setBassoffParameter(float bassoff);
@@ -64,6 +66,8 @@ public:
     void setModParameter(float mod);
     void setAttackRateParameter(float attackRate);
     void setAttackShapeParameter(float attackshape);
+    void setFilterAttackParameter(float filterAttack);
+    void setFilterDecayParameter(float filterDecay);
     void setCutoffParameter(float cutoff);
     void setResParameter(float resonance);
     void setBassoffParameter(float bassoff);
