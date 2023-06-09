@@ -26,6 +26,7 @@ class Oscillator {
         void setMod(float mod);
         void setAttackshape(float attackShape);
         void setAttackRate(float attackRate);
+        void setFilterAmount(float filteramount);
         void setFilterAttack(float filterattack);
         void setFilterDecay(float filterDecay);
         void setCutoff(float cutoff);
@@ -123,6 +124,7 @@ class Oscillator {
         float m_mod;
         float m_attackRate;
         float m_attackShape;
+        float m_filterAmount;
         float m_filterAttack;
         float m_filterDecay;
         float m_filterSustain;

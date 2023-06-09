@@ -214,6 +214,18 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     gainAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "gain", gainKnob));
     
     
+    filtAmountLabel.setText("Filter Amount", NotificationType::dontSendNotification);
+    filtAmountLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&filtAmountLabel);
+
+    filtAmountKnob.setLookAndFeel(&plugexLookAndFeel);
+    filtAmountKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    filtAmountKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&filtAmountKnob);
+    
+    filtAmountAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtAmount", filtAmountKnob));
+    
+    
     filtAttackLabel.setText("Filter Attack", NotificationType::dontSendNotification);
     filtAttackLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtAttackLabel);
@@ -436,6 +448,7 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     bassoffKnob.setLookAndFeel(nullptr);
     gainKnob.setLookAndFeel(nullptr);
     detuneKnob.setLookAndFeel(nullptr);
+    filtAmountKnob.setLookAndFeel(nullptr);
     filtAttackKnob.setLookAndFeel(nullptr);
     filtAttackShapeKnob.setLookAndFeel(nullptr);
     filtDecayKnob.setLookAndFeel(nullptr);
@@ -552,27 +565,32 @@ void waylosynth2AudioProcessorEditor::resized()
     
     auto area3 = area.removeFromTop(110);
     
-    auto filtAttackArea = area3.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    
+    auto filtAttackArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     filtAttackLabel.setBounds(filtAttackArea.removeFromTop(20));
     filtAttackKnob.setBounds(filtAttackArea);
     
-    auto filtAttackShapeArea = area3.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto filtAmountArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+    filtAmountLabel.setBounds(filtAmountArea.removeFromTop(20));
+    filtAmountKnob.setBounds(filtAmountArea);
+    
+    auto filtAttackShapeArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     filtAttackShapeLabel.setBounds(filtAttackShapeArea.removeFromTop(20));
     filtAttackShapeKnob.setBounds(filtAttackShapeArea);
     
-    auto filtDecayArea = area3.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto filtDecayArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     filtDecayLabel.setBounds(filtDecayArea.removeFromTop(20));
     filtDecayKnob.setBounds(filtDecayArea);
     
-    auto filtDecayShapeArea = area3.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto filtDecayShapeArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     filtDecayShapeLabel.setBounds(filtDecayShapeArea.removeFromTop(20));
     filtDecayShapeKnob.setBounds(filtDecayShapeArea);
     
-    auto filtSustainArea = area3.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto filtSustainArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     filtSustainLabel.setBounds(filtSustainArea.removeFromTop(20));
     filtSustainKnob.setBounds(filtSustainArea);
     
-    auto filtReleaseArea = area3.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto filtReleaseArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     filtReleaseLabel.setBounds(filtReleaseArea.removeFromTop(20));
     filtReleaseKnob.setBounds(filtReleaseArea);
     
