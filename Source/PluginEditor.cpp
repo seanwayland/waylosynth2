@@ -213,6 +213,17 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
 
     gainAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "gain", gainKnob));
     
+    filtVelocityLabel.setText("Filter Velocity", NotificationType::dontSendNotification);
+    filtVelocityLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&filtVelocityLabel);
+
+    filtVelocityKnob.setLookAndFeel(&plugexLookAndFeel);
+    filtVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    filtVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&filtVelocityKnob);
+    
+    filtVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtVelocity", filtVelocityKnob));
+    
     
     filtAmountLabel.setText("Filter Amount", NotificationType::dontSendNotification);
     filtAmountLabel.setJustificationType(Justification::horizontallyCentred);
@@ -448,6 +459,7 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     bassoffKnob.setLookAndFeel(nullptr);
     gainKnob.setLookAndFeel(nullptr);
     detuneKnob.setLookAndFeel(nullptr);
+    filtVelocityKnob.setLookAndFeel(nullptr);
     filtAmountKnob.setLookAndFeel(nullptr);
     filtAttackKnob.setLookAndFeel(nullptr);
     filtAttackShapeKnob.setLookAndFeel(nullptr);
@@ -569,6 +581,10 @@ void waylosynth2AudioProcessorEditor::resized()
     auto filtAttackArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     filtAttackLabel.setBounds(filtAttackArea.removeFromTop(20));
     filtAttackKnob.setBounds(filtAttackArea);
+    
+    auto filtVelocityArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+    filtVelocityLabel.setBounds(filtVelocityArea.removeFromTop(20));
+    filtVelocityKnob.setBounds(filtVelocityArea);
     
     auto filtAmountArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     filtAmountLabel.setBounds(filtAmountArea.removeFromTop(20));

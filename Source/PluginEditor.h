@@ -96,6 +96,10 @@ private:
     Slider gainKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
     
+    Label  filtVelocityLabel;
+    Slider filtVelocityKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtVelocityAttachment;
+    
     Label  filtAmountLabel;
     Slider filtAmountKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtAmountAttachment;

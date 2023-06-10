@@ -36,6 +36,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setModParameter(float mod);
     void setAttackRateParameter(float attackRate);
     void setAttackShapeParameter(float attackShape);
+    void setFilterVelocityParameter(float filterVelocity);
     void setFilterAmountParameter(float filterAmount);
     void setFilterAttackParameter(float filterAttack);
     void setFilterDecayParameter(float filterDecay);
@@ -67,6 +68,7 @@ public:
     void setModParameter(float mod);
     void setAttackRateParameter(float attackRate);
     void setAttackShapeParameter(float attackshape);
+    void setFilterVelocityParameter(float filterVelocity);
     void setFilterAmountParameter(float filterAmount);
     void setFilterAttackParameter(float filterAttack);
     void setFilterDecayParameter(float filterDecay);
@@ -157,6 +159,7 @@ private:
     std::atomic<float> *resonanceParameter = nullptr;
     std::atomic<float> *bassoffParameter = nullptr;
     std::atomic<float> *gainParameter = nullptr;
+    std::atomic<float> *filtVelocityParameter = nullptr;
     std::atomic<float> *filtAmountParameter = nullptr;
     std::atomic<float> *filtAttackParameter = nullptr;
     std::atomic<float> *filtAttackShapeParameter = nullptr;

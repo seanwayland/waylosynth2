@@ -68,6 +68,7 @@ void Oscillator::setup(float sampleRate) {
     m_attackShape = 0.75f;
     m_filter_decay = 0.0f;
     m_filterAmount = 0.1f;
+    m_filterVelocity = 0.1f;
     
 
         // vadimFilter
@@ -201,6 +202,10 @@ void Oscillator::setSharp(float sharp) {
 
 void Oscillator::setMod(float mod) {
     m_mod = mod < 0.f ? 0.f : mod > 1.f ? 1.f : mod;
+}
+
+void Oscillator::setFilterVelocity(float filterVelocity) {
+    m_filterVelocity = filterVelocity < 0.f ? 0.f : filterVelocity > 1.f ? 1.f : filterVelocity;
 }
 
 void Oscillator::setFilterAmount(float filteramount) {
@@ -829,15 +834,16 @@ float Oscillator::process() {
             
             env.setAttackRate(5*m_filterAttack*96000);  // .1 second
             env.setDecayRate(5*m_filterDecay*4 * 96000);
-            env.setReleaseRate(0.16 * 96000);
+            env.setReleaseRate(0.04 * 96000);
             env.setSustainLevel(0.01);
             env.setTargetRatioA(0.4f);
             env.setTargetRatioDR(0.5f);
             m_envValue = env.process();
 //            m_envValue = m_envValue + 2*(m_note_velocity/127.0f);
-            filter_cutoff = filter_cutoff + 40*m_filterAmount*(filter_cutoff*m_envValue);
+            filter_cutoff = filter_cutoff + 40*m_filterAmount*(filter_cutoff*m_envValue) + 20*(m_note_velocity/127.0f)*m_filterVelocity*m_envValue;
             //filter_cutoff = 3*m_envValue*filter_cutoff;
             if (filter_cutoff > 15000){ filter_cutoff = 15000.0f;}
+            
             
             // higher notes louder
             //value = (value + 2*(value/127))/3;
