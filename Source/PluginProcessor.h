@@ -39,8 +39,13 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setFilterVelocityParameter(float filterVelocity);
     void setFilterAmountParameter(float filterAmount);
     void setFilterAttackParameter(float filterAttack);
+    void setFilterAttackShapeParameter(float filterAttackShape);
     void setFilterDecayParameter(float filterDecay);
+    void setFilterDecayShapeParameter(float filterDecayShape);
+    void setFilterSustainParameter(float filterSustain);
+    void setFilterReleaseParameter(float filterRelease);
     void setCutoffParameter(float cutoff);
+    void setCutoffKeyboardParameter(float cutoffKeyboard);
     void setResParameter(float resonance);
     void setBassoffParameter(float bassoff);
     void setDetuneParameter(float detune);
@@ -71,8 +76,13 @@ public:
     void setFilterVelocityParameter(float filterVelocity);
     void setFilterAmountParameter(float filterAmount);
     void setFilterAttackParameter(float filterAttack);
+    void setFilterAttackShapeParameter(float filterAttackShape);
     void setFilterDecayParameter(float filterDecay);
+    void setFilterDecayShapeParameter(float filterDecayShape);
+    void setFilterSustainParameter(float filterSustain);
+    void setFilterReleaseParameter(float filterRelease);
     void setCutoffParameter(float cutoff);
+    void setCutoffKeyboardParameter(float cutoffKeyboard);
     void setResParameter(float resonance);
     void setBassoffParameter(float bassoff);
     void setDetuneParameter(float detune);

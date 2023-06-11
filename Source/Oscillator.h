@@ -29,8 +29,13 @@ class Oscillator {
         void setFilterVelocity(float filterVelocity);
         void setFilterAmount(float filteramount);
         void setFilterAttack(float filterattack);
+        void setFilterSustain(float filterSustain);
+        void setFilterAttackShape(float filterAttackShape);
         void setFilterDecay(float filterDecay);
+        void setFilterRelease(float filterRelease);
+        void setFilterDecayShape(float filterDecayShape);
         void setCutoff(float cutoff);
+        void setCutoffKeyboard(float cutoffKeyboard);
         void setRes(float resonance);
         void setBassoff(float bassoff);
         void setDetune(float detune);
@@ -128,9 +133,13 @@ class Oscillator {
         float m_filterVelocity;
         float m_filterAmount;
         float m_filterAttack;
+        float m_filterAttackShape;
         float m_filterDecay;
+        float m_filterDecayShape;
         float m_filterSustain;
+        float m_filterRelease;
         float m_cutoff;
+        float m_cutoffKeyboard;
         float m_resonance;
         float m_bassoff;
         float m_detune;

@@ -68,7 +68,12 @@ void Oscillator::setup(float sampleRate) {
     m_attackShape = 0.75f;
     m_filter_decay = 0.0f;
     m_filterAmount = 0.1f;
+    m_filterSustain = 0.2f;
+    m_filterRelease = 0.2f;
+    m_filterAttackShape = 0.1f;
+    m_filterDecayShape = 0.1f;
     m_filterVelocity = 0.1f;
+    m_cutoffKeyboard = 0.1f;
     
 
         // vadimFilter
@@ -216,9 +221,25 @@ void Oscillator::setFilterAttack(float filterattack) {
     m_filterAttack = filterattack < 0.f ? 0.f : filterattack > 1.f ? 1.f : filterattack;
 }
 
+void Oscillator::setFilterSustain(float filterSustain) {
+    m_filterSustain = filterSustain < 0.f ? 0.f : filterSustain > 1.f ? 1.f : filterSustain;
+}
+
+void Oscillator::setFilterRelease(float filterRelease) {
+    m_filterRelease = filterRelease < 0.f ? 0.f : filterRelease > 1.f ? 1.f : filterRelease;
+}
+
+void Oscillator::setFilterAttackShape(float filterAttackShape) {
+    m_filterAttackShape = filterAttackShape < 0.f ? 0.f : filterAttackShape > 1.f ? 1.f : filterAttackShape;
+}
+
 
 void Oscillator::setFilterDecay(float filterdecay) {
     m_filterDecay = filterdecay < 0.f ? 0.f : filterdecay > 1.f ? 1.f : filterdecay;
+}
+
+void Oscillator::setFilterDecayShape(float filterDecayshape) {
+    m_filterDecayShape = filterDecayshape < 0.f ? 0.f : filterDecayshape > 1.f ? 1.f : filterDecayshape;
 }
 
 
@@ -233,6 +254,10 @@ void Oscillator::setAttackshape(float attackShape){
 
 void Oscillator::setCutoff(float cutoff) {
     m_cutoff = cutoff < 0.f ? 0.f : cutoff > 1.f ? 1.f : cutoff;
+}
+
+void Oscillator::setCutoffKeyboard(float CutoffKeyboard) {
+    m_cutoffKeyboard = CutoffKeyboard < 0.f ? 0.f  : CutoffKeyboard > 1.f ? 1.f : CutoffKeyboard;
 }
 
 void Oscillator::setRes(float resonance) {
@@ -834,19 +859,20 @@ float Oscillator::process() {
             
             env.setAttackRate(5*m_filterAttack*96000);  // .1 second
             env.setDecayRate(5*m_filterDecay*4 * 96000);
-            env.setReleaseRate(0.04 * 96000);
-            env.setSustainLevel(0.01);
-            env.setTargetRatioA(0.4f);
-            env.setTargetRatioDR(0.5f);
+            env.setReleaseRate(m_filterRelease * 96000);
+            env.setSustainLevel(m_filterSustain);
+            env.setTargetRatioA(m_filterAttackShape/10.0f);
+            env.setTargetRatioDR(m_filterDecayShape*100);
             m_envValue = env.process();
 //            m_envValue = m_envValue + 2*(m_note_velocity/127.0f);
-            filter_cutoff = filter_cutoff + 40*m_filterAmount*(filter_cutoff*m_envValue) + 20*(m_note_velocity/127.0f)*m_filterVelocity*m_envValue;
+            filter_cutoff = filter_cutoff + 40*m_filterAmount*(filter_cutoff*m_envValue) + m_note_velocity*m_filterVelocity*m_envValue;
             //filter_cutoff = 3*m_envValue*filter_cutoff;
+            filter_cutoff = filter_cutoff + filter_cutoff*m_cutoffKeyboard*(midi_note_number);
             if (filter_cutoff > 15000){ filter_cutoff = 15000.0f;}
             
             
             // higher notes louder
-            //value = (value + 2*(value/127))/3;
+            value = (value + 3*(midi_note_number/127)*value)/4;
             
             
 
@@ -855,6 +881,7 @@ float Oscillator::process() {
             filter.setMultimode(1.0);
             filter.setResonance(filter_resonance);
             value = filter.Apply4Pole(value,filter_cutoff);
+            
         }
         
         if ((m_freq > 0)  && (m_bassoff > 0.1)){

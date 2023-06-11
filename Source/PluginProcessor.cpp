@@ -36,7 +36,7 @@ void MySynthesiserVoice::startNote(int midiNoteNumber, float velocity,
     m_freq = m_freq*(1-rand_detune);
     
     
-    
+    oscillator.set_midi_note_number(midiNoteNumber);
     oscillator.setFreq(m_freq);
     oscillator.set_note_velocity(velocity);
     
@@ -137,13 +137,32 @@ void MySynthesiserVoice::setFilterAmountParameter(float filterAmount) {
     oscillator.setFilterAmount(filterAmount);
 }
 
+void MySynthesiserVoice::setFilterSustainParameter(float filterSustain) {
+    oscillator.setFilterSustain(filterSustain);
+}
+
 void MySynthesiserVoice::setFilterAttackParameter(float filterAttack) {
     oscillator.setFilterAttack(filterAttack);
 }
+
+void MySynthesiserVoice::setFilterAttackShapeParameter(float filterAttackShape) {
+    oscillator.setFilterAttackShape(filterAttackShape);
+}
 //
 //
+void MySynthesiserVoice::setFilterDecayShapeParameter(float filterDecayShape) {
+    oscillator.setFilterDecayShape(filterDecayShape);
+}
 void MySynthesiserVoice::setFilterDecayParameter(float filterdecay) {
     oscillator.setFilterDecay(filterdecay);
+}
+
+void MySynthesiserVoice::setFilterReleaseParameter(float filterRelease) {
+    oscillator.setFilterRelease(filterRelease);
+}
+
+void MySynthesiserVoice::setCutoffKeyboardParameter(float CutoffKeyboard) {
+    oscillator.setCutoffKeyboard(CutoffKeyboard);
 }
 
 
@@ -216,19 +235,39 @@ void MySynthesiser::setFilterVelocityParameter(float filterVelocity) {
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterVelocityParameter(filterVelocity);
 }
 
+void MySynthesiser::setFilterReleaseParameter(float filterRelease) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterReleaseParameter(filterRelease);
+}
+
 void MySynthesiser::setFilterAmountParameter(float filterAmount) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterAmountParameter(filterAmount);
+}
+
+void MySynthesiser::setFilterSustainParameter(float filterSustain) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterSustainParameter(filterSustain);
 }
 
 void MySynthesiser::setFilterAttackParameter(float filterAttack) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterAttackParameter(filterAttack);
 }
+
+void MySynthesiser::setFilterAttackShapeParameter(float filterAttackShape) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterAttackShapeParameter(filterAttackShape);
+}
 //
 void MySynthesiser::setFilterDecayParameter(float filterDecay) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterDecayParameter(filterDecay);
+}
+
+void MySynthesiser::setFilterDecayShapeParameter(float filterDecayShape) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterDecayShapeParameter(filterDecayShape);
 }
 
 
@@ -237,6 +276,11 @@ void MySynthesiser::setFilterDecayParameter(float filterDecay) {
 void MySynthesiser::setCutoffParameter(float cutoff) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setCutoffParameter(cutoff);
+}
+
+void MySynthesiser::setCutoffKeyboardParameter(float CutoffKeyboard) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setCutoffKeyboardParameter(CutoffKeyboard);
 }
 
 void MySynthesiser::setResParameter(float resonance) {
@@ -462,6 +506,9 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("filtAttack"), String("FilterAttack"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    parameters.push_back(std::make_unique<Parameter>(String("filtSustain"), String("FilterSustain"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("filtAttackShape"), String("FilterAttackShape"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
@@ -470,13 +517,11 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     parameters.push_back(std::make_unique<Parameter>(String("filtDecay"), String("FilterDecay"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
     parameters.push_back(std::make_unique<Parameter>(String("filtDecayShape"), String("FilterDecayShape"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtDecaySliderValueToText, filtDecaySliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("filtSustain"), String("FilterSustain"), String(),
-                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
-                                                     0.3f, filtSustainSliderValueToText, filtSustainSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("filtRelease"), String("FilterRelease"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
@@ -581,7 +626,7 @@ waylosynth2::waylosynth2()
     filtAttackParameter = parameters.getRawParameterValue("filtAttack");
     filtAttackShapeParameter = parameters.getRawParameterValue("filtAttackShape");
     filtDecayParameter = parameters.getRawParameterValue("filtDecay");
-    filtDecayShapeParameter = parameters.getRawParameterValue("filtDecaykShape");
+    filtDecayShapeParameter = parameters.getRawParameterValue("filtDecayShape");
     filtSustainParameter = parameters.getRawParameterValue("filtSustain");
     filtReleaseParameter = parameters.getRawParameterValue("filtRelease");
     greaseAttackParameter = parameters.getRawParameterValue("greaseAttack");
@@ -1131,8 +1176,13 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setFilterVelocityParameter(*filtVelocityParameter);
     synthesiser.setFilterAmountParameter(*filtAmountParameter);
     synthesiser.setFilterAttackParameter(*filtAttackParameter);
+    synthesiser.setFilterSustainParameter(*filtSustainParameter);
+    synthesiser.setFilterAttackShapeParameter(*filtAttackShapeParameter);
+    synthesiser.setFilterReleaseParameter(*filtReleaseParameter);
     synthesiser.setFilterDecayParameter(*filtDecayParameter);
+    synthesiser.setFilterDecayShapeParameter(*filtDecayShapeParameter);
     synthesiser.setCutoffParameter(*cutoffParameter);
+    synthesiser.setCutoffKeyboardParameter(*cutoffKeyboardParameter);
     synthesiser.setResParameter(*resonanceParameter);
     synthesiser.setBassoffParameter(*bassoffParameter);
     synthesiser.setDetuneParameter(*detuneParameter);
