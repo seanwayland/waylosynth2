@@ -136,6 +136,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
+    
     //juce::dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilterLeft ;
     //juce::dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilterRight ;
 
@@ -196,6 +197,9 @@ private:
     float lastSample[2] = { 0.0, 0.0};
     
     dsp::ProcessorDuplicator<dsp::IIR::Filter <float>, dsp::IIR::Coefficients <float>> lowPassFilter;
+    //dsp::ProcessorDuplicator<juce::dsp::LadderFilter<float>, dsp::IIR::Coefficients <float>> ladderFilter;
+    juce::dsp::LadderFilter<float> ladderFilter;
+    
     
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (waylosynth2)

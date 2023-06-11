@@ -73,6 +73,12 @@ class Oscillator {
     
     
     juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
+    juce::dsp::StateVariableTPTFilter<float> vadimFilter2 ;
+    
+    
+    //"LPF24"
+    
+    
     
     
     // obxd filter
@@ -81,6 +87,8 @@ class Oscillator {
             bool selfOscPush;
     
     private:
+    
+    //juce::dsp::ProcessorDuplicator <dsp::IIR::Filter<float>, dsp::IIR::Coefficients <float>> lowPassFilter2;
     
     Attack_decay_envelope amp_env;
     Attack_decay_envelope filter_amp_env;

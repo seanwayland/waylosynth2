@@ -30,6 +30,7 @@ Oscillator::Oscillator() {
     m_pitchbend = 1;
     env.reset();
     m_filter_decay = 0.0f;
+    
 
     
     
@@ -84,6 +85,9 @@ void Oscillator::setup(float sampleRate) {
     vadimFilter.prepare(spec);
     vadimFilter.reset();
     vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    //lowPassFilter2.state = juce::dsp::IIR::Coefficients<float>::makeLowPass (sampleRate, 440.0);
+    //lowPassFilter2.prepare (spec);
+
     
     
 
@@ -857,15 +861,15 @@ float Oscillator::process() {
             
             
             
-            env.setAttackRate(5*m_filterAttack*96000);  // .1 second
-            env.setDecayRate(5*m_filterDecay*4 * 96000);
+            env.setAttackRate(20*m_filterAttack*96000);  // .1 second
+            env.setDecayRate(50*m_filterDecay*4 * 96000);
             env.setReleaseRate(m_filterRelease * 96000);
             env.setSustainLevel(m_filterSustain);
             env.setTargetRatioA(m_filterAttackShape/10.0f);
             env.setTargetRatioDR(m_filterDecayShape*100);
             m_envValue = env.process();
 //            m_envValue = m_envValue + 2*(m_note_velocity/127.0f);
-            filter_cutoff = filter_cutoff + 40*m_filterAmount*(filter_cutoff*m_envValue) + m_note_velocity*m_filterVelocity*m_envValue;
+            filter_cutoff = filter_cutoff + 10*m_filterAmount*(filter_cutoff*m_envValue) + 10*m_note_velocity*m_filterVelocity*m_envValue*filter_cutoff;
             //filter_cutoff = 3*m_envValue*filter_cutoff;
             filter_cutoff = filter_cutoff + filter_cutoff*m_cutoffKeyboard*(midi_note_number);
             if (filter_cutoff > 15000){ filter_cutoff = 15000.0f;}
@@ -876,11 +880,33 @@ float Oscillator::process() {
             
             
 
-            
+            // obxd filter
             float filter_resonance = m_resonance;
             filter.setMultimode(1.0);
             filter.setResonance(filter_resonance);
+            filter_cutoff = filter_cutoff + value*5000*m_filterAttackShape;
             value = filter.Apply4Pole(value,filter_cutoff);
+            
+            
+//            //vadim filter
+//            vadimFilter2.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+//            vadimFilter2.setCutoffFrequency(filter_cutoff);
+//            if(m_resonance < 0.01){m_resonance = 0.01;}
+//            vadimFilter2.setResonance(m_resonance);
+//
+//            vadimFilter2.setCutoffFrequency(filter_cutoff + value*5000*m_filterAttackShape);
+//            //value = vadimFilter.processSample(1, value);
+//            value = vadimFilter2.processSample(1, value);
+            
+            
+//            ladderFilter.setCutoffFrequencyHz(filter_cutoff);
+//            if(m_resonance < 0.01){m_resonance = 0.01;}
+//            ladderFilter.setResonance(m_resonance);
+//            value = ladderFilter.process(value, 1);
+            
+        
+            
+            
             
         }
         

@@ -439,7 +439,7 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
                                                      0.75f, secondSliderValueToText, secondSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(String("decay"), String("Decay"), String(),
-                                                     NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.5f),
+                                                     NormalisableRange<float>(0.001f, 10.f, 0.001f, 0.5f),
                                                      0.2f, secondSliderValueToText, secondSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(String("sustain"), String("Sustain"), String(),
@@ -590,7 +590,8 @@ waylosynth2::waylosynth2()
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        ), parameters (*this, nullptr, Identifier(JucePlugin_Name), createParameterLayout()),
-     tree(*this, nullptr), lowPassFilter(dsp::IIR::Coefficients<float>::makeLowPass(96000, 10000.0f, 0.1))
+     tree(*this, nullptr), lowPassFilter(dsp::IIR::Coefficients<float>::makeLowPass(96000, 7000.0f, 0.1))
+     
 
 // lowPassFilterLeft  (juce::dsp::IIR::Coefficients<float>::makeLowPass  (getSampleRate(), 17000.0f)),
 // lowPassFilterRight (juce::dsp::IIR::Coefficients<float>::makeLowPass  (getSampleRate(), 17000.0f)),
@@ -641,6 +642,7 @@ waylosynth2::waylosynth2()
     gravyVelocityParameter = parameters.getRawParameterValue("gravyVelocity");
     cutoffKeyboardParameter = parameters.getRawParameterValue("cutoffKeyboard");
     cutoffVelocityParameter = parameters.getRawParameterValue("cutoffVelocity");
+    
     
 }
 
@@ -729,6 +731,11 @@ void waylosynth2::prepareToPlay (double sampleRate, int samplesPerBlock)
     
     lowPassFilter.prepare(spec);
     lowPassFilter.reset();
+
+    ladderFilter.reset();
+    ladderFilter.prepare(spec);
+    ladderFilter.setEnabled(true);
+
     
     
     
@@ -1193,7 +1200,18 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     
     // IIR filter set at 10000
     dsp::AudioBlock<float> block (buffer);
+    
+
     lowPassFilter.process(dsp::ProcessContextReplacing<float> (block));
+   
+    //ladderFilter.process(dsp::ProcessContextReplacing<float> (block));
+    
+//    //ladderFilter.setMode(juce::dsp::LadderFilter<float>::Mode::LPF24);
+//    ladderFilter.setMode(juce::dsp::LadderFilter<float>::Mode::LPF12);
+//    ladderFilter.setCutoffFrequencyHz(4000.0f);
+//    ladderFilter.setResonance(0.2f);
+//    ladderFilter.process(dsp::ProcessContextReplacing<float> (block));
+
     
     
     
