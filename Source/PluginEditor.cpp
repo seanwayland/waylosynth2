@@ -436,6 +436,29 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
         
     cutoffKeyboardAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoffKeyboard", cutoffKeyboardKnob));
     
+    filtFMVelocityLabel.setText("filterFM Velocity", NotificationType::dontSendNotification);
+    filtFMVelocityLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&filtFMVelocityLabel);
+
+    filtFMVelocityKnob.setLookAndFeel(&plugexLookAndFeel);
+    filtFMVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    filtFMVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&filtFMVelocityKnob);
+        
+    filtFMVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtFMVelocity", filtFMVelocityKnob));
+    
+    
+    filtFMLabel.setText("filterFM", NotificationType::dontSendNotification);
+    filtFMLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&filtFMLabel);
+
+    filtFMKnob.setLookAndFeel(&plugexLookAndFeel);
+    filtFMKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    filtFMKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+    addAndMakeVisible(&filtFMKnob);
+        
+    filtFMAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtFM", filtFMKnob));
+    
 
     addAndMakeVisible(keyboardComponent);
 }
@@ -480,6 +503,9 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     gravyVelocityKnob.setLookAndFeel(nullptr);
     cutoffVelocityKnob.setLookAndFeel(nullptr);
     cutoffKeyboardKnob.setLookAndFeel(nullptr);
+    
+    filtFMVelocityKnob.setLookAndFeel(nullptr);
+    filtFMKnob.setLookAndFeel(nullptr);
     
 }
 
@@ -657,15 +683,23 @@ void waylosynth2AudioProcessorEditor::resized()
     
     auto area6 = area.removeFromTop(110);
     
-    auto greaseVelocityArea = area6.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto greaseVelocityArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
     greaseVelocityLabel.setBounds(greaseVelocityArea.removeFromTop(20));
     greaseVelocityKnob.setBounds(greaseVelocityArea);
     
-    auto greaseKeyboardArea = area6.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto greaseKeyboardArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
     greaseKeyboardLabel.setBounds(greaseKeyboardArea.removeFromTop(20));
     greaseKeyboardKnob.setBounds(greaseKeyboardArea);
     
-    auto detuneArea = area6.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto filterFMVelocityArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
+    filtFMVelocityLabel.setBounds(filterFMVelocityArea.removeFromTop(20));
+    filtFMVelocityKnob.setBounds(filterFMVelocityArea);
+    
+    auto filterFMArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
+    filtFMLabel.setBounds(filterFMArea.removeFromTop(20));
+    filtFMKnob.setBounds(filterFMArea);
+    
+    auto detuneArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
     detuneLabel.setBounds(detuneArea.removeFromTop(20));
     detuneKnob.setBounds(detuneArea);
     

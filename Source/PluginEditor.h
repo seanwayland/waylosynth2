@@ -128,6 +128,14 @@ private:
     Slider filtReleaseKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtReleaseAttachment;
     
+    Label  filtFMLabel;
+    Slider filtFMKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtFMAttachment;
+    
+    Label  filtFMVelocityLabel;
+    Slider filtFMVelocityKnob;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filtFMVelocityAttachment;
+    
     Label  greaseAttackLabel;
     Slider greaseAttackKnob;
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> greaseAttackAttachment;

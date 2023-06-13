@@ -27,7 +27,11 @@ class Oscillator {
         void setAttackshape(float attackShape);
         void setAttackRate(float attackRate);
         void setFilterVelocity(float filterVelocity);
+        void setGreaseVelocity(float GreaseVelocity);
+        void setGravyVelocity(float GravyVelocity);
         void setFilterAmount(float filteramount);
+        void setFilterFM(float filterFM);
+        void setFilterFMVelocity(float filterFMVelocity);
         void setFilterAttack(float filterattack);
         void setFilterSustain(float filterSustain);
         void setFilterAttackShape(float filterAttackShape);
@@ -139,6 +143,8 @@ class Oscillator {
         float m_attackRate;
         float m_attackShape;
         float m_filterVelocity;
+        float m_greaseVelocity;
+        float m_gravyVelocity;
         float m_filterAmount;
         float m_filterAttack;
         float m_filterAttackShape;
@@ -148,6 +154,8 @@ class Oscillator {
         float m_filterRelease;
         float m_cutoff;
         float m_cutoffKeyboard;
+        float m_filterFMVelocity;
+        float m_filterFM;
         float m_resonance;
         float m_bassoff;
         float m_detune;

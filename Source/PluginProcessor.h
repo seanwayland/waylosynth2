@@ -37,6 +37,8 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setAttackRateParameter(float attackRate);
     void setAttackShapeParameter(float attackShape);
     void setFilterVelocityParameter(float filterVelocity);
+    void setGreaseVelocityParameter(float greaseVelocity);
+    void setGravyVelocityParameter(float GravyVelocity);
     void setFilterAmountParameter(float filterAmount);
     void setFilterAttackParameter(float filterAttack);
     void setFilterAttackShapeParameter(float filterAttackShape);
@@ -44,6 +46,8 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setFilterDecayShapeParameter(float filterDecayShape);
     void setFilterSustainParameter(float filterSustain);
     void setFilterReleaseParameter(float filterRelease);
+    void setFilterFMParameter(float filterFM);
+    void setFilterFMVelocityParameter(float filterFMVelocity);
     void setCutoffParameter(float cutoff);
     void setCutoffKeyboardParameter(float cutoffKeyboard);
     void setResParameter(float resonance);
@@ -74,10 +78,14 @@ public:
     void setAttackRateParameter(float attackRate);
     void setAttackShapeParameter(float attackshape);
     void setFilterVelocityParameter(float filterVelocity);
+    void setGreaseVelocityParameter(float greaseVelocity);
+    void setGravyVelocityParameter(float GravyVelocity);
     void setFilterAmountParameter(float filterAmount);
     void setFilterAttackParameter(float filterAttack);
     void setFilterAttackShapeParameter(float filterAttackShape);
     void setFilterDecayParameter(float filterDecay);
+    void setFilterFMParameter(float filterFM);
+    void setFilterFMVelocityParameter(float filterFMVelocity);
     void setFilterDecayShapeParameter(float filterDecayShape);
     void setFilterSustainParameter(float filterSustain);
     void setFilterReleaseParameter(float filterRelease);
@@ -191,6 +199,8 @@ private:
     std::atomic<float> *gravyKeyboardParameter = nullptr;
     std::atomic<float> *cutoffVelocityParameter = nullptr;
     std::atomic<float> *cutoffKeyboardParameter = nullptr;
+    std::atomic<float> *filtFMVelocityParameter = nullptr;
+    std::atomic<float> *filtFMParameter = nullptr;
 
     
     float lastGain = 0.f;

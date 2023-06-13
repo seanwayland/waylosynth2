@@ -74,6 +74,7 @@ void Oscillator::setup(float sampleRate) {
     m_filterAttackShape = 0.1f;
     m_filterDecayShape = 0.1f;
     m_filterVelocity = 0.1f;
+    m_greaseVelocity = 0.1f;
     m_cutoffKeyboard = 0.1f;
     
 
@@ -115,6 +116,8 @@ void Oscillator::reset() {
     m_lfo_value = 0.0f;
     m_attackRate = 0.1f;
     m_attackShape = 0.75f;
+    m_filterFM = 0.1f;
+    m_filterFMVelocity = 0.1f;
     
     int max;
     max = 100; //set the upper bound to generate the random number
@@ -217,6 +220,22 @@ void Oscillator::setFilterVelocity(float filterVelocity) {
     m_filterVelocity = filterVelocity < 0.f ? 0.f : filterVelocity > 1.f ? 1.f : filterVelocity;
 }
 
+void Oscillator::setGreaseVelocity(float GreaseVelocity) {
+    m_greaseVelocity = GreaseVelocity < 0.f ? 0.f : GreaseVelocity > 1.f ? 1.f : GreaseVelocity;
+}
+
+void Oscillator::setGravyVelocity(float GravyVelocity) {
+    m_gravyVelocity = GravyVelocity < 0.f ? 0.f : GravyVelocity > 1.f ? 1.f : GravyVelocity;
+}
+
+void Oscillator::setFilterFMVelocity(float FilterFMVelocity) {
+    m_filterFMVelocity = FilterFMVelocity < 0.f ? 0.f : FilterFMVelocity > 1.f ? 1.f : FilterFMVelocity;
+}
+
+void Oscillator::setFilterFM(float FilterFM) {
+    m_filterFM = FilterFM < 0.f ? 0.f : FilterFM > 1.f ? 1.f : FilterFM;
+}
+
 void Oscillator::setFilterAmount(float filteramount) {
     m_filterAmount = filteramount < 0.f ? 0.f : filteramount > 1.f ? 1.f : filteramount;
 }
@@ -314,12 +333,18 @@ float Oscillator::process() {
     float key_adjust = 0.0f;
     m_feedback = 0.0f;
     
+    //m_mod = (m_mod + m_greaseVelocity*(m_note_velocity/127.0f))/2;
+    float m_mod_g = (m_mod + m_greaseVelocity*m_note_velocity*m_mod)/2;
+    float m_sharp_g = (m_sharp + m_gravyVelocity*m_note_velocity*m_mod)/2;
+    
     
     
     
 
     switch (m_wavetype) {
             // Sine with feedback attenuated with pitch
+            
+        
         case 0:
             
             
@@ -327,7 +352,7 @@ float Oscillator::process() {
             
             //            if (m_sharp > 0.68){m_sharp = 0.68;}
             //            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
-            m_feedback = (m_sharp + m_note_velocity/5) - (0.0005*m_freq);
+            m_feedback = (m_sharp_g + m_note_velocity/5) - (0.0005*m_freq);
             
             //m_feedback = 0.5;
             //vadimFilter.setResonance(m_mod*2);
@@ -344,8 +369,10 @@ float Oscillator::process() {
         {modulator = sinf(m_twopi * m_pointer_pos + (prev_value*m_feedback*0.8));
             prev_value = modulator;
             
+            
+            
             //value = sinf(0.25*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
-            value = sinf((m_mod+ (m_note_velocity/5))*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
+            value = sinf((m_mod_g+ (m_note_velocity/5))*10*(modulator) + m_twopi * m_pointer_pos + (old_value*m_feedback*0.8));
             //vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
             // filter fm ?
             //vadimFilter.setCutoffFrequency(3000*m_sharp + value*1000*m_sharp);
@@ -440,10 +467,10 @@ float Oscillator::process() {
         case 4:
             
         {
-            if(m_mod < 0.001){m_mod = 0.001;}
+            if(m_mod_g < 0.001){m_mod_g = 0.001;}
         
         if (fixed_pulse_counter < 0.1f){
-            value = m_mod*10.f * fixed_pulse_counter;
+            value = m_mod_g*10.f * fixed_pulse_counter;
         }
         else{
             value = 2.0f + (-10.f * fixed_pulse_counter*m_mod);
@@ -884,7 +911,7 @@ float Oscillator::process() {
             float filter_resonance = m_resonance;
             filter.setMultimode(1.0);
             filter.setResonance(filter_resonance);
-            filter_cutoff = filter_cutoff + value*5000*m_filterAttackShape;
+            filter_cutoff = filter_cutoff + m_filterFM*value*5000 + m_filterFMVelocity*m_note_velocity*value*5000;
             value = filter.Apply4Pole(value,filter_cutoff);
             
             

@@ -133,6 +133,14 @@ void MySynthesiserVoice::setFilterVelocityParameter(float filterVelocity) {
     oscillator.setFilterVelocity(filterVelocity);
 }
 
+void MySynthesiserVoice::setGreaseVelocityParameter(float GreaseVelocity) {
+    oscillator.setGreaseVelocity(GreaseVelocity);
+}
+
+void MySynthesiserVoice::setGravyVelocityParameter(float GravyVelocity) {
+    oscillator.setGravyVelocity(GravyVelocity);
+}
+
 void MySynthesiserVoice::setFilterAmountParameter(float filterAmount) {
     oscillator.setFilterAmount(filterAmount);
 }
@@ -159,6 +167,14 @@ void MySynthesiserVoice::setFilterDecayParameter(float filterdecay) {
 
 void MySynthesiserVoice::setFilterReleaseParameter(float filterRelease) {
     oscillator.setFilterRelease(filterRelease);
+}
+
+void MySynthesiserVoice::setFilterFMParameter(float filterFM) {
+    oscillator.setFilterFM(filterFM);
+}
+
+void MySynthesiserVoice::setFilterFMVelocityParameter(float filterFMVelocity) {
+    oscillator.setFilterFMVelocity(filterFMVelocity);
 }
 
 void MySynthesiserVoice::setCutoffKeyboardParameter(float CutoffKeyboard) {
@@ -235,6 +251,12 @@ void MySynthesiser::setFilterVelocityParameter(float filterVelocity) {
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterVelocityParameter(filterVelocity);
 }
 
+void MySynthesiser::setGreaseVelocityParameter(float GreaseVelocity) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setGreaseVelocityParameter(GreaseVelocity);
+}
+
+
 void MySynthesiser::setFilterReleaseParameter(float filterRelease) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterReleaseParameter(filterRelease);
@@ -297,6 +319,18 @@ void MySynthesiser::setDetuneParameter(float detune) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setDetuneParameter(detune);
 }
+
+void MySynthesiser::setFilterFMParameter(float FilterFM) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterFMParameter(FilterFM);
+}
+
+void MySynthesiser::setFilterFMVelocityParameter(float FilterFMVelocity) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterFMVelocityParameter(FilterFMVelocity);
+}
+
+
 
 //==============================================================================
 static String secondSliderValueToText(float value) {
@@ -570,7 +604,16 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
+    
     parameters.push_back(std::make_unique<Parameter>(String("cutoffKeyboard"), String("cutoffKeyboard"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("filtFMVelocity"), String("filtFMVelocity"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(String("filtFM"), String("filtFM"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
@@ -642,6 +685,8 @@ waylosynth2::waylosynth2()
     gravyVelocityParameter = parameters.getRawParameterValue("gravyVelocity");
     cutoffKeyboardParameter = parameters.getRawParameterValue("cutoffKeyboard");
     cutoffVelocityParameter = parameters.getRawParameterValue("cutoffVelocity");
+    filtFMParameter = parameters.getRawParameterValue("filtFM");
+    filtFMVelocityParameter = parameters.getRawParameterValue("filtFMVelocity");
     
     
 }
@@ -1181,8 +1226,11 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setAttackRateParameter(*attackRateParameter);
     synthesiser.setAttackShapeParameter(*attackShapeParameter);
     synthesiser.setFilterVelocityParameter(*filtVelocityParameter);
+    synthesiser.setGreaseVelocityParameter(*greaseVelocityParameter);
     synthesiser.setFilterAmountParameter(*filtAmountParameter);
     synthesiser.setFilterAttackParameter(*filtAttackParameter);
+    synthesiser.setFilterFMParameter(*filtFMParameter);
+    synthesiser.setFilterFMVelocityParameter(*filtFMVelocityParameter);
     synthesiser.setFilterSustainParameter(*filtSustainParameter);
     synthesiser.setFilterAttackShapeParameter(*filtAttackShapeParameter);
     synthesiser.setFilterReleaseParameter(*filtReleaseParameter);
