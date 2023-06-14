@@ -38,6 +38,13 @@ class Oscillator {
         void setFilterDecay(float filterDecay);
         void setFilterRelease(float filterRelease);
         void setFilterDecayShape(float filterDecayShape);
+        void setModAmount(float Modamount);
+        void setModAttack(float Modattack);
+        void setModSustain(float ModSustain);
+        void setModAttackShape(float ModAttackShape);
+        void setModDecay(float ModDecay);
+        void setModRelease(float ModRelease);
+        void setModDecayShape(float ModDecayShape);
         void setCutoff(float cutoff);
         void setCutoffKeyboard(float cutoffKeyboard);
         void setRes(float resonance);
@@ -99,6 +106,7 @@ class Oscillator {
     Filters filter;
     Filters bass_off;
     ADSR2 env;
+    ADSR2 mod_env;
     daisysp::VariableShapeOscillator variosc;
     daisysp::VariableSawOscillator varisaw;
     daisysp::BlOsc bandlimOsc;
@@ -172,6 +180,7 @@ class Oscillator {
         float fm_frequency;
         float fm_index;
         float m_envValue = 0.0f;
+        float mod_envValue = 0.0f;
     
         float m_lfo_value = 0.0f;
     

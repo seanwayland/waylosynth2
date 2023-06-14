@@ -29,6 +29,7 @@ Oscillator::Oscillator() {
     m_sah_current_value = (rand() / (float)RAND_MAX) * 2.f - 1.f;
     m_pitchbend = 1;
     env.reset();
+    mod_env.reset();
     m_filter_decay = 0.0f;
     
 
@@ -136,10 +137,12 @@ void Oscillator::set_midi_note_number(int midi_note){
 
 void Oscillator::gate_filter_env(){
     env.gate(false);
+    mod_env.gate(false);
 }
 
 void Oscillator::open_filter_env(){
     env.gate(true);
+    mod_env.gate(true);
     filter_amp_env.reset();
 }
 
@@ -267,6 +270,7 @@ void Oscillator::setFilterDecayShape(float filterDecayshape) {
 
 
 
+
 void Oscillator::setAttackRate(float attackRate){
     m_attackRate = attackRate < 0.f ? 0.f : attackRate > 1.f ? 1.f : attackRate;
 }
@@ -334,7 +338,10 @@ float Oscillator::process() {
     m_feedback = 0.0f;
     
     //m_mod = (m_mod + m_greaseVelocity*(m_note_velocity/127.0f))/2;
+
+    
     float m_mod_g = (m_mod + m_greaseVelocity*m_note_velocity*m_mod)/2;
+    //float m_mod_g = m_modAmount*mod_envValue*m_mod;
     float m_sharp_g = (m_sharp + m_gravyVelocity*m_note_velocity*m_mod)/2;
     
     
@@ -473,7 +480,7 @@ float Oscillator::process() {
             value = m_mod_g*10.f * fixed_pulse_counter;
         }
         else{
-            value = 2.0f + (-10.f * fixed_pulse_counter*m_mod);
+            value = 2.0f + (-10.f * fixed_pulse_counter*m_mod_g);
         }
             
             if (value < 0){

@@ -169,7 +169,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     
     cutoffAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoff",  cutoffKnob));
     
-    cutoffModLabel.setText("cutoffMod", NotificationType::dontSendNotification);
+    cutoffModLabel.setText("GravyMod", NotificationType::dontSendNotification);
     cutoffModLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(& cutoffModLabel);
 
@@ -303,7 +303,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     
     filtReleaseAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtRelease", filtReleaseKnob));
     
-    greaseAttackLabel.setText("grease Atk", NotificationType::dontSendNotification);
+    greaseAttackLabel.setText("mod Atk", NotificationType::dontSendNotification);
     greaseAttackLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseAttackLabel);
 
@@ -314,7 +314,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
 
     greaseAttackAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseAttack", greaseAttackKnob));
         
-    greaseAttackShapeLabel.setText("grease Att Shp", NotificationType::dontSendNotification);
+    greaseAttackShapeLabel.setText("mod Att Shp", NotificationType::dontSendNotification);
     greaseAttackShapeLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseAttackShapeLabel);
 
@@ -325,7 +325,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
 
     greaseAttackShapeAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseAttackShape", greaseAttackShapeKnob));
         
-    greaseDecayLabel.setText("grease Decay", NotificationType::dontSendNotification);
+    greaseDecayLabel.setText("mod Decay", NotificationType::dontSendNotification);
     greaseDecayLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseDecayLabel);
 
@@ -336,7 +336,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
 
     greaseDecayAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseDecay", greaseDecayKnob));
         
-    greaseDecayShapeLabel.setText("grease Dcy Shp", NotificationType::dontSendNotification);
+    greaseDecayShapeLabel.setText("mod Dcy Shp", NotificationType::dontSendNotification);
     greaseDecayShapeLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseDecayShapeLabel);
 
@@ -347,7 +347,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
 
     greaseDecayShapeAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseDecayShape", greaseDecayShapeKnob));
         
-    greaseSustainLabel.setText("grease Sustain", NotificationType::dontSendNotification);
+    greaseSustainLabel.setText("mod Sustain", NotificationType::dontSendNotification);
     greaseSustainLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseSustainLabel);
 
@@ -358,7 +358,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
 
     greaseSustainAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseSustain", greaseSustainKnob));
         
-    greaseReleaseLabel.setText("grease Release", NotificationType::dontSendNotification);
+    greaseReleaseLabel.setText("mod Release", NotificationType::dontSendNotification);
     greaseReleaseLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseReleaseLabel);
 
@@ -545,17 +545,17 @@ void waylosynth2AudioProcessorEditor::resized()
     modLabel.setBounds(ModArea.removeFromTop(20));
     modKnob.setBounds(ModArea);
     
-    auto GreaseModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
-    greaseModLabel.setBounds(GreaseModArea.removeFromTop(20));
-    greaseModKnob.setBounds(GreaseModArea);
+//    auto GreaseModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+//    greaseModLabel.setBounds(GreaseModArea.removeFromTop(20));
+//    greaseModKnob.setBounds(GreaseModArea);
     
     auto CutoffArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     cutoffLabel.setBounds(CutoffArea.removeFromTop(20));
     cutoffKnob.setBounds(CutoffArea);
     
-    auto CutoffModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
-    cutoffModLabel.setBounds(CutoffModArea.removeFromTop(20));
-    cutoffModKnob.setBounds(CutoffModArea);
+//    auto CutoffModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+//    cutoffModLabel.setBounds(CutoffModArea.removeFromTop(20));
+//    cutoffModKnob.setBounds(CutoffModArea);
     
     auto ResonanceArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
     resonanceLabel.setBounds(ResonanceArea.removeFromTop(20));
@@ -636,31 +636,31 @@ void waylosynth2AudioProcessorEditor::resized()
     filtReleaseLabel.setBounds(filtReleaseArea.removeFromTop(20));
     filtReleaseKnob.setBounds(filtReleaseArea);
     
-    auto area4 = area.removeFromTop(110);
-    
-    auto greaseAttackArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-    greaseAttackLabel.setBounds(greaseAttackArea.removeFromTop(20));
-    greaseAttackKnob.setBounds(greaseAttackArea);
-    
-    auto greaseAttackShapeArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-    greaseAttackShapeLabel.setBounds(greaseAttackShapeArea.removeFromTop(20));
-    greaseAttackShapeKnob.setBounds(greaseAttackShapeArea);
-    
-    auto greaseDecayArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-    greaseDecayLabel.setBounds(greaseDecayArea.removeFromTop(20));
-    greaseDecayKnob.setBounds(greaseDecayArea);
-    
-    auto greaseDecayShapeArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-    greaseDecayShapeLabel.setBounds(greaseDecayShapeArea.removeFromTop(20));
-    greaseDecayShapeKnob.setBounds(greaseDecayShapeArea);
-    
-    auto greaseSustainArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-    greaseSustainLabel.setBounds(greaseSustainArea.removeFromTop(20));
-    greaseSustainKnob.setBounds(greaseSustainArea);
-    
-    auto greaseReleaseArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-    greaseReleaseLabel.setBounds(greaseReleaseArea.removeFromTop(20));
-    greaseReleaseKnob.setBounds(greaseReleaseArea);
+//    auto area4 = area.removeFromTop(110);
+//
+//    auto greaseAttackArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+//    greaseAttackLabel.setBounds(greaseAttackArea.removeFromTop(20));
+//    greaseAttackKnob.setBounds(greaseAttackArea);
+//
+//    auto greaseAttackShapeArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+//    greaseAttackShapeLabel.setBounds(greaseAttackShapeArea.removeFromTop(20));
+//    greaseAttackShapeKnob.setBounds(greaseAttackShapeArea);
+//
+//    auto greaseDecayArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+//    greaseDecayLabel.setBounds(greaseDecayArea.removeFromTop(20));
+//    greaseDecayKnob.setBounds(greaseDecayArea);
+//
+//    auto greaseDecayShapeArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+//    greaseDecayShapeLabel.setBounds(greaseDecayShapeArea.removeFromTop(20));
+//    greaseDecayShapeKnob.setBounds(greaseDecayShapeArea);
+//
+//    auto greaseSustainArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+//    greaseSustainLabel.setBounds(greaseSustainArea.removeFromTop(20));
+//    greaseSustainKnob.setBounds(greaseSustainArea);
+//
+//    auto greaseReleaseArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+//    greaseReleaseLabel.setBounds(greaseReleaseArea.removeFromTop(20));
+//    greaseReleaseKnob.setBounds(greaseReleaseArea);
     
     auto area5 = area.removeFromTop(110);
     
