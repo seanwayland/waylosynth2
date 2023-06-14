@@ -74,9 +74,10 @@ void Oscillator::setup(float sampleRate) {
     m_filterRelease = 0.2f;
     m_filterAttackShape = 0.1f;
     m_filterDecayShape = 0.1f;
-    m_filterVelocity = 0.1f;
-    m_greaseVelocity = 0.1f;
-    m_cutoffKeyboard = 0.1f;
+    m_filterVelocity = 0.0f;
+    m_greaseVelocity = 0.0f;
+    m_greaseKeyboard = 0.0f;
+    m_cutoffKeyboard = 0.0f;
     
 
         // vadimFilter
@@ -224,7 +225,11 @@ void Oscillator::setFilterVelocity(float filterVelocity) {
 }
 
 void Oscillator::setGreaseVelocity(float GreaseVelocity) {
-    m_greaseVelocity = GreaseVelocity < 0.f ? 0.f : GreaseVelocity > 1.f ? 1.f : GreaseVelocity;
+    m_greaseVelocity = GreaseVelocity < -1.f ? -1.f : GreaseVelocity > 1.f ? 1.f : GreaseVelocity;
+}
+
+void Oscillator::setGreaseKeyboard(float GreaseKeyboard) {
+    m_greaseKeyboard = GreaseKeyboard < -1.f ? -1.f : GreaseKeyboard > 1.f ? 1.f : GreaseKeyboard;
 }
 
 void Oscillator::setGravyVelocity(float GravyVelocity) {
@@ -338,9 +343,12 @@ float Oscillator::process() {
     m_feedback = 0.0f;
     
     //m_mod = (m_mod + m_greaseVelocity*(m_note_velocity/127.0f))/2;
-
+   
     
-    float m_mod_g = (m_mod + m_greaseVelocity*m_note_velocity*m_mod)/2;
+    float m_mod_g = (m_mod + m_greaseVelocity*m_note_velocity*m_mod + m_greaseKeyboard*midi_note_number/127)/3;
+    if(m_mod_g < 0.001){
+        m_mod_g = 0.001;
+    }
     //float m_mod_g = m_modAmount*mod_envValue*m_mod;
     float m_sharp_g = (m_sharp + m_gravyVelocity*m_note_velocity*m_mod)/2;
     
@@ -359,7 +367,7 @@ float Oscillator::process() {
             
             //            if (m_sharp > 0.68){m_sharp = 0.68;}
             //            m_feedback = (m_sharp+0.4) - (0.0004*m_freq);
-            m_feedback = (m_sharp_g + m_note_velocity/5) - (0.0005*m_freq);
+            m_feedback = (m_sharp_g - (0.0005*m_freq));
             
             //m_feedback = 0.5;
             //vadimFilter.setResonance(m_mod*2);
@@ -702,7 +710,7 @@ float Oscillator::process() {
             bandlimOsc.SetWaveform(daisysp::BlOsc::WAVE_SQUARE);
             bandlimOsc.SetFreq(m_freq);
             bandlimOsc.SetAmp(0.8 + (0.19*midi_note_number/127));
-            bandlimOsc.SetPw(m_mod);
+            bandlimOsc.SetPw(m_mod_g);
             value = bandlimOsc.Process();
 
 

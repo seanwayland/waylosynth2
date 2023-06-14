@@ -137,6 +137,10 @@ void MySynthesiserVoice::setGreaseVelocityParameter(float GreaseVelocity) {
     oscillator.setGreaseVelocity(GreaseVelocity);
 }
 
+void MySynthesiserVoice::setGreaseKeyboardParameter(float GreaseKeyboard) {
+    oscillator.setGreaseKeyboard(GreaseKeyboard);
+}
+
 void MySynthesiserVoice::setGravyVelocityParameter(float GravyVelocity) {
     oscillator.setGravyVelocity(GravyVelocity);
 }
@@ -254,6 +258,11 @@ void MySynthesiser::setFilterVelocityParameter(float filterVelocity) {
 void MySynthesiser::setGreaseVelocityParameter(float GreaseVelocity) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setGreaseVelocityParameter(GreaseVelocity);
+}
+
+void MySynthesiser::setGreaseKeyboardParameter(float GreaseKeyboard) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setGreaseKeyboardParameter(GreaseKeyboard);
 }
 
 
@@ -585,11 +594,11 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
                                                      0.3f, filtReleaseSliderValueToText, filtReleaseSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("greaseVelocity"), String("greaseVelocity"), String(),
-                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     NormalisableRange<float>(-1.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("greaseKeyboard"), String("greaseKeyboard"), String(),
-                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     NormalisableRange<float>(-1.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
     parameters.push_back(std::make_unique<Parameter>(String("gravyVelocity"), String("gravyVelocity"), String(),
@@ -1227,6 +1236,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setAttackShapeParameter(*attackShapeParameter);
     synthesiser.setFilterVelocityParameter(*filtVelocityParameter);
     synthesiser.setGreaseVelocityParameter(*greaseVelocityParameter);
+    synthesiser.setGreaseKeyboardParameter(*greaseKeyboardParameter);
     synthesiser.setFilterAmountParameter(*filtAmountParameter);
     synthesiser.setFilterAttackParameter(*filtAttackParameter);
     synthesiser.setFilterFMParameter(*filtFMParameter);
