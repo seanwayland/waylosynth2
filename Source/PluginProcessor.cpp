@@ -847,139 +847,142 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     
-    
-    
-//
-//     //waylosynth code
-//
-//    MidiMessage m;
-//    MidiBuffer processedMidi;
-//    int time;
-//
-//    {
-//            buffer.clear();
-//
-//
-//            MidiBuffer processedMidi;
-//            int time;
-//            MidiMessage m;
-//
-//            for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
-//            {
-//                if (m.isNoteOn() && m.getNoteNumber() < 60 )
-//
-//
-//                    {
-//                        waylotrans = m.getNoteNumber() - 48;
-//                        m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
-//
-//                    }
-//
-//
-//                else if (m.isNoteOff() && m.getNoteNumber() < 60)
-//
-//
-//                    {
-//                        waylotrans = 0;
-//                        m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
-//                    }
-//
-//                else if (m.isNoteOn() && m.getNoteNumber() >= 60)
-//
-//                    {
-//                        int NewNote = m.getNoteNumber() + waylotrans -12;
-//                        playing[m.getNoteNumber()]= NewNote;
-//                        m = MidiMessage::noteOn(m.getChannel(), NewNote , m.getVelocity());
-//
-//                    }
-//                else if (m.isNoteOff() && m.getNoteNumber() >= 60)
-//
-//                {
-//                    int NewNote = playing[m.getNoteNumber()];
-//                     playing[m.getNoteNumber()] = NULL;
-//                    m = MidiMessage::noteOff(m.getChannel(), NewNote , m.getVelocity());
-//
-//                }
-//
-//
-//                else if (m.isAftertouch())
-//                {
-//                }
-//                else if (m.isPitchWheel())
-//                {
-//                }
-//
-//                processedMidi.addEvent (m, time);
-//            }
-//
-//            midiMessages.swapWith (processedMidi);
-//        }
-//
+    if((int)*spaceParameter == 1){
+        
+        //
+        //     //waylosynth code
+        //
+            MidiMessage m;
+            MidiBuffer processedMidi;
+            int time;
+        
+            {
+                    buffer.clear();
+        
+        
+                    MidiBuffer processedMidi;
+                    int time;
+                    MidiMessage m;
+        
+                    for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
+                    {
+                        if (m.isNoteOn() && m.getNoteNumber() < 60 )
+        
+        
+                            {
+                                waylotrans = m.getNoteNumber() - 48;
+                                m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
+        
+                            }
+        
+        
+                        else if (m.isNoteOff() && m.getNoteNumber() < 60)
+        
+        
+                            {
+                                waylotrans = 0;
+                                m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
+                            }
+        
+                        else if (m.isNoteOn() && m.getNoteNumber() >= 60)
+        
+                            {
+                                int NewNote = m.getNoteNumber() + waylotrans -12;
+                                playing[m.getNoteNumber()]= NewNote;
+                                m = MidiMessage::noteOn(m.getChannel(), NewNote , m.getVelocity());
+        
+                            }
+                        else if (m.isNoteOff() && m.getNoteNumber() >= 60)
+        
+                        {
+                            int NewNote = playing[m.getNoteNumber()];
+                             playing[m.getNoteNumber()] = NULL;
+                            m = MidiMessage::noteOff(m.getChannel(), NewNote , m.getVelocity());
+        
+                        }
+        
+        
+                        else if (m.isAftertouch())
+                        {
+                        }
+                        else if (m.isPitchWheel())
+                        {
+                        }
+        
+                        processedMidi.addEvent (m, time);
+                    }
+        
+                    midiMessages.swapWith (processedMidi);
+                }
+        
+    }
     
     // end waylosynth code
     
     
     // zawinul reverse
-    
-//    MidiMessage m;
-//        MidiMessage n;
-//        buffer.clear();
-//
-//
-//
-//        MidiBuffer processedMidi;
-//        int time;
-//        for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
-//        {
-//            if (m.isNoteOn())
-//            {
-//
-//
-//                int note = m.getNoteNumber();
-//                if (note<60)
-//                {
-//                    n = MidiMessage::noteOn(m.getChannel(), 60 + ( 60 - note ) , m.getVelocity());
-//                    processedMidi.addEvent(n, time);
-//
-//                }
-//                else
-//                {
-//                    n = MidiMessage::noteOn(m.getChannel(), 60 - ( note - 60) , m.getVelocity());
-//                    processedMidi.addEvent(n, time);
-//
-//                }
-//
-//           }
-//           else if (m.isNoteOff()) {
-//
-//
-//                int note = m.getNoteNumber();
-//                if (note<60)
-//                {
-//                    n = MidiMessage::noteOff(m.getChannel(), 60 + ( 60 - note ), m.getVelocity());
-//                    processedMidi.addEvent(n, time);
-//
-//                }
-//                else
-//                {
-//                    n = MidiMessage::noteOff(m.getChannel(), 60 - ( note - 60) , m.getVelocity());
-//                    processedMidi.addEvent(n, time);
-//
-//                }
-//
-//
-//            }
-//
-//           else if (m.isAftertouch())
-//            {
-//            }
-//            else if (m.isPitchWheel())
-//            {
-//            }
-//
-//        }
-//
-//        midiMessages.swapWith  (processedMidi) ;
+    if((int)*spaceParameter == 3){
+        
+            MidiMessage m;
+                MidiMessage n;
+                buffer.clear();
+        
+        
+        
+                MidiBuffer processedMidi;
+                int time;
+                for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
+                {
+                    if (m.isNoteOn())
+                    {
+        
+        
+                        int note = m.getNoteNumber();
+                        if (note<60)
+                        {
+                            n = MidiMessage::noteOn(m.getChannel(), 60 + ( 60 - note ) , m.getVelocity());
+                            processedMidi.addEvent(n, time);
+        
+                        }
+                        else
+                        {
+                            n = MidiMessage::noteOn(m.getChannel(), 60 - ( note - 60) , m.getVelocity());
+                            processedMidi.addEvent(n, time);
+        
+                        }
+        
+                   }
+                   else if (m.isNoteOff()) {
+        
+        
+                        int note = m.getNoteNumber();
+                        if (note<60)
+                        {
+                            n = MidiMessage::noteOff(m.getChannel(), 60 + ( 60 - note ), m.getVelocity());
+                            processedMidi.addEvent(n, time);
+        
+                        }
+                        else
+                        {
+                            n = MidiMessage::noteOff(m.getChannel(), 60 - ( note - 60) , m.getVelocity());
+                            processedMidi.addEvent(n, time);
+        
+                        }
+        
+        
+                    }
+        
+                   else if (m.isAftertouch())
+                    {
+                    }
+                    else if (m.isPitchWheel())
+                    {
+                    }
+        
+                }
+        
+                midiMessages.swapWith  (processedMidi) ;
+    }
     
     
     //// end of zawinul reverse
@@ -989,55 +992,53 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     
 //    //midi latch function
     
-    
-    
-    
-//    MidiMessage m;
-//        MidiMessage n;
 //
+//    if((int)*spaceParameter == 4){
 //
-//
-//        MidiBuffer processedMidi;
-//        int time;
-//        for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
-//        {
-//            if (m.isNoteOn())
-//            {
-//                // note off for any playing notes
-//                for ( int j = 0 ; j < 127; j++)
-//                { if (playing[j] == 1) {
-//                    n = MidiMessage::noteOff(m.getChannel(), j);
-//                    processedMidi.addEvent(n, time);
-//                    playing[j] = 0;
-//                }
-//                }
-//            }
-//            else if (m.isNoteOff()) {
-//
-//                int note = m.getNoteNumber();
-//                // if a note is not playing send a note on and set it to "playing"
-//                if (playing[note] == 0){
-//                    if (m.getNoteNumber() != 84){
-//                        n = MidiMessage::noteOn(m.getChannel(), note, 127.0f);
-//                        processedMidi.addEvent(n, time);
-//                        playing[note] = 1;
-//
+//            MidiMessage m;
+//                MidiMessage n;
+//                MidiBuffer processedMidi;
+//                int time;
+//                for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
+//                {
+//                    if (m.isNoteOn())
+//                    {
+//                        // note off for any playing notes
+//                        for ( int j = 0 ; j < 127; j++)
+//                        { if (playing[j] == 1) {
+//                            n = MidiMessage::noteOff(m.getChannel(), j);
+//                            processedMidi.addEvent(n, time);
+//                            playing[j] = 0;
+//                        }
+//                        }
 //                    }
-//                    else{
-//                        playing[84] = 0;
+//                    else if (m.isNoteOff()) {
+//
+//                        int note = m.getNoteNumber();
+//                        // if a note is not playing send a note on and set it to "playing"
+//                        if (playing[note] == 0){
+//                            if (m.getNoteNumber() != 84){
+//                                n = MidiMessage::noteOn(m.getChannel(), note, 127.0f);
+//                                processedMidi.addEvent(n, time);
+//                                playing[note] = 1;
+//
+//                            }
+//                            else{
+//                                playing[84] = 0;
+//                            }
+//                        }
 //                    }
+//
+//                    else if (m.isAftertouch())
+//                    {
+//                    }
+//                    else if (m.isPitchWheel())
+//                    {
+//                    }
+//
 //                }
-//            }
-//
-//            else if (m.isAftertouch())
-//            {
-//            }
-//            else if (m.isPitchWheel())
-//            {
-//            }
-//
-//        }
-//        midiMessages.swapWith  (processedMidi) ;
+//                midiMessages.swapWith  (processedMidi) ;
+//    }
     
     
      //end of midi latch function
@@ -1081,80 +1082,81 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     
     // WAYLO CHILI FUNCTION
 //
-//    MidiMessage m;
-//
-//        {
-//
-//
-//            MidiBuffer processedMidi;
-//            int time;
-//            MidiMessage m;
-//
-//            for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
-//            {
-//
-//
-//                if (waylochili > 80)
-//                {
-//                    waylochili = 48;
-//                }
-//
-//                if (waylochili < 30)
-//                {
-//                    waylochili = 48;
-//                }
-//
-//
-//                if (m.isNoteOn() && m.getNoteNumber() < 37 )
-//
-//
-//                {
-//                    waylochili = m.getNoteNumber() + 24 ;
-//                    m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
-//
-//                }
-//
-//
-//                else if (m.isNoteOff() && m.getNoteNumber() < 37  )
-//
-//
-//                {
-//                    waylotrans = 0;
-//                    m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
-//                }
-//
-//                else if (m.isNoteOn() && m.getNoteNumber() >= 37)
-//
-//                {
-//                    waylochili = waylochili + m.getNoteNumber() - 60;
-//                    int NewNote = waylochili + waylotrans ;
-//                    playing[m.getNoteNumber()]= NewNote;
-//
-//                    m = MidiMessage::noteOn(m.getChannel(), NewNote , m.getVelocity());
-//
-//                }
-//                else if (m.isNoteOff() && m.getNoteNumber() >= 37)
-//
-//                {
-//                    int NewNote = playing[m.getNoteNumber()];
-//                    playing[m.getNoteNumber()] = NULL;
-//                    m = MidiMessage::noteOff(m.getChannel(), NewNote , m.getVelocity());
-//
-//                }
-//
-//
-//                else if (m.isAftertouch())
-//                {
-//                }
-//                else if (m.isPitchWheel())
-//                {
-//                }
-//
-//                processedMidi.addEvent (m, time);
-//            }
-//
-//            midiMessages.swapWith (processedMidi);
-//        }
+    if((int)*spaceParameter == 2){
+            MidiMessage m;
+        
+                {
+        
+                    MidiBuffer processedMidi;
+                    int time;
+                    MidiMessage m;
+        
+                    for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
+                    {
+        
+        
+                        if (waylochili > 80)
+                        {
+                            waylochili = 48;
+                        }
+        
+                        if (waylochili < 30)
+                        {
+                            waylochili = 48;
+                        }
+        
+        
+                        if (m.isNoteOn() && m.getNoteNumber() < 37 )
+        
+        
+                        {
+                            waylochili = m.getNoteNumber() + 24 ;
+                            m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
+        
+                        }
+        
+        
+                        else if (m.isNoteOff() && m.getNoteNumber() < 37  )
+        
+        
+                        {
+                            waylotrans = 0;
+                            m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
+                        }
+        
+                        else if (m.isNoteOn() && m.getNoteNumber() >= 37)
+        
+                        {
+                            waylochili = waylochili + m.getNoteNumber() - 60;
+                            int NewNote = waylochili + waylotrans ;
+                            playing[m.getNoteNumber()]= NewNote;
+        
+                            m = MidiMessage::noteOn(m.getChannel(), NewNote , m.getVelocity());
+        
+                        }
+                        else if (m.isNoteOff() && m.getNoteNumber() >= 37)
+        
+                        {
+                            int NewNote = playing[m.getNoteNumber()];
+                            playing[m.getNoteNumber()] = NULL;
+                            m = MidiMessage::noteOff(m.getChannel(), NewNote , m.getVelocity());
+        
+                        }
+        
+        
+                        else if (m.isAftertouch())
+                        {
+                        }
+                        else if (m.isPitchWheel())
+                        {
+                        }
+        
+                        processedMidi.addEvent (m, time);
+                    }
+        
+                    midiMessages.swapWith (processedMidi);
+                }
+    }
     
     
     // WAYLO CHILI END
@@ -1244,6 +1246,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
 
     synthesiser.setEnvelopeParameters(ADSR::Parameters {*attackParameter, *decayParameter, *sustainParameter, *releaseParameter});
     synthesiser.setWavetypeParameter((int)*typeParameter);
+    //synthesiser.setSpacetypeParameter((int)*spaceParameter);
     synthesiser.setSharpParameter(*sharpParameter);
     synthesiser.setModParameter(*modParameter);
     synthesiser.setAttackRateParameter(*attackRateParameter);

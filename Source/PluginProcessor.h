@@ -75,6 +75,7 @@ class MySynthesiser : public Synthesiser
 public:
     void setEnvelopeParameters(ADSR::Parameters params);
     void setWavetypeParameter(int type);
+    void setSpacetypeParameter(int type);
     void setSharpParameter(float sharp);
     void setModParameter(float mod);
     void setAttackRateParameter(float attackRate);
