@@ -29,6 +29,7 @@ class Oscillator {
         void setFilterVelocity(float filterVelocity);
         void setGreaseVelocity(float GreaseVelocity);
         void setGreaseKeyboard(float GreaseKeyboard);
+        void setGravyKeyboard(float GravyKeyboard);
         void setGravyVelocity(float GravyVelocity);
         void setFilterAmount(float filteramount);
         void setFilterFM(float filterFM);
@@ -155,6 +156,7 @@ class Oscillator {
         float m_greaseVelocity;
         float m_greaseKeyboard;
         float m_gravyVelocity;
+        float m_gravyKeyboard;
         float m_filterAmount;
         float m_filterAttack;
         float m_filterAttackShape;

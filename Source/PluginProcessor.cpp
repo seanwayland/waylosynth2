@@ -141,6 +141,10 @@ void MySynthesiserVoice::setGreaseKeyboardParameter(float GreaseKeyboard) {
     oscillator.setGreaseKeyboard(GreaseKeyboard);
 }
 
+void MySynthesiserVoice::setGravyKeyboardParameter(float GravyKeyboard) {
+    oscillator.setGravyKeyboard(GravyKeyboard);
+}
+
 void MySynthesiserVoice::setGravyVelocityParameter(float GravyVelocity) {
     oscillator.setGravyVelocity(GravyVelocity);
 }
@@ -260,9 +264,19 @@ void MySynthesiser::setGreaseVelocityParameter(float GreaseVelocity) {
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setGreaseVelocityParameter(GreaseVelocity);
 }
 
+void MySynthesiser::setGravyVelocityParameter(float GravyVelocity) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setGravyVelocityParameter(GravyVelocity);
+}
+
 void MySynthesiser::setGreaseKeyboardParameter(float GreaseKeyboard) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setGreaseKeyboardParameter(GreaseKeyboard);
+}
+
+void MySynthesiser::setGravyKeyboardParameter(float GravyKeyboard) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setGravyKeyboardParameter(GravyKeyboard);
 }
 
 
@@ -1237,6 +1251,8 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setFilterVelocityParameter(*filtVelocityParameter);
     synthesiser.setGreaseVelocityParameter(*greaseVelocityParameter);
     synthesiser.setGreaseKeyboardParameter(*greaseKeyboardParameter);
+    synthesiser.setGravyVelocityParameter(*gravyVelocityParameter);
+    synthesiser.setGravyKeyboardParameter(*gravyKeyboardParameter);
     synthesiser.setFilterAmountParameter(*filtAmountParameter);
     synthesiser.setFilterAttackParameter(*filtAttackParameter);
     synthesiser.setFilterFMParameter(*filtFMParameter);

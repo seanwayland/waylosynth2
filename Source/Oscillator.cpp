@@ -78,6 +78,7 @@ void Oscillator::setup(float sampleRate) {
     m_greaseVelocity = 0.0f;
     m_greaseKeyboard = 0.0f;
     m_cutoffKeyboard = 0.0f;
+    m_gravyKeyboard = 0.0f;
     
 
         // vadimFilter
@@ -232,8 +233,12 @@ void Oscillator::setGreaseKeyboard(float GreaseKeyboard) {
     m_greaseKeyboard = GreaseKeyboard < -1.f ? -1.f : GreaseKeyboard > 1.f ? 1.f : GreaseKeyboard;
 }
 
+void Oscillator::setGravyKeyboard(float GravyKeyboard) {
+    m_gravyKeyboard = GravyKeyboard < -1.f ? -1.f : GravyKeyboard > 1.f ? 1.f : GravyKeyboard;
+}
+
 void Oscillator::setGravyVelocity(float GravyVelocity) {
-    m_gravyVelocity = GravyVelocity < 0.f ? 0.f : GravyVelocity > 1.f ? 1.f : GravyVelocity;
+    m_gravyVelocity = GravyVelocity < -1.f ? -1.f : GravyVelocity > 1.f ? 1.f : GravyVelocity;
 }
 
 void Oscillator::setFilterFMVelocity(float FilterFMVelocity) {
@@ -350,7 +355,10 @@ float Oscillator::process() {
         m_mod_g = 0.001;
     }
     //float m_mod_g = m_modAmount*mod_envValue*m_mod;
-    float m_sharp_g = (m_sharp + m_gravyVelocity*m_note_velocity*m_mod)/2;
+    float m_sharp_g = (m_sharp + m_gravyVelocity*m_note_velocity*m_mod + m_gravyKeyboard*midi_note_number/127)/3;
+    if(m_sharp_g < 0.001){
+        m_sharp_g = 0.001;
+    }
     
     
     
