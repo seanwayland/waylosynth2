@@ -152,8 +152,7 @@ public:
     
     //juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
     
-    //juce::dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilterLeft ;
-    //juce::dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilterRight ;
+
 
 
     
@@ -213,9 +212,7 @@ private:
     float lastGain = 0.f;
     float lastSample[2] = { 0.0, 0.0};
     
-    //dsp::ProcessorDuplicator<dsp::IIR::Filter <float>, dsp::IIR::Coefficients <float>> lowPassFilter;
-    //dsp::ProcessorDuplicator<juce::dsp::LadderFilter<float>, dsp::IIR::Coefficients <float>> ladderFilter;
-    //juce::dsp::LadderFilter<float> ladderFilter;
+
     
     
 
@@ -223,24 +220,3 @@ private:
 };
 
 
-
-
-//for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
-//    {
-//        //input data
-//        const float* inputData = buffer.getReadPointer(channel);
-//
-//        float* outputData = buffer.getWritePointer(channel);
-//        
-//        //place audio samples into buffer
-//        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
-//        {
-//            //get current value from read pointer
-//            float inputSample = inputData[sample];
-//
-//
-//                outputData[sample] = filter[channel].simpleIIRLowPass(inputSample, 10000.0f);
-//
-//            outputData[sample] = outputData[sample] * Decibels::decibelsToGain(1.0);
-//        }
-//    }

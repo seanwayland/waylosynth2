@@ -23,28 +23,17 @@ void MySynthesiserVoice::startNote(int midiNoteNumber, float velocity,
                                    SynthesiserSound *, int currentPitchWheelPosition) {
     oscillator.reset(getSampleRate());
     oscillator.setSampleRate(getSampleRate());
-    float sr = getSampleRate();
     level = velocity * 0.15;
     envelope.noteOn();
     auto m_freq = (MidiMessage::getMidiNoteInHertz (midiNoteNumber));
     
-    // random pitch slop
-//    int max;
-//    max = 200; //set the upper bound to generate the random number
-//    srand(time(0));
-//    int pitchchange = rand()%max;
-//    float pp = float(pitchchange)/100000.f;
-//    float rand_detune = 0.0005 + pp;
-//    m_freq = m_freq*(1-rand_detune);
-    
-    
+
     oscillator.set_midi_note_number(midiNoteNumber);
     oscillator.setFreq(m_freq);
     oscillator.set_note_velocity(velocity);
     
     oscillator.open_filter_env();
     
-    //
 
     
 }
@@ -65,18 +54,14 @@ void MySynthesiserVoice::pitchWheelMoved(int value){
 
 
 
-
 void MySynthesiserVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) {
     while (--numSamples >= 0) {
         
         oscillator.setSampleRate(getSampleRate());
-        //oscillator.setPitchBend(MidiMessage::getPitchWheelValue());
         auto envAmp = envelope.getNextSample();
         auto thisSample = oscillator.process();
         auto currentSample = thisSample * level * envAmp;
-        //vadimFilter.setCutoffFrequency(500);
-        //vadimFilter.setCutoffFrequency(2000 + currentSample*1000);
-        //currentSample = vadimFilter.processSample(1, currentSample);
+
 
         for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
             outputBuffer.addSample(i, startSample, currentSample);
@@ -106,24 +91,12 @@ void MySynthesiserVoice::setFilterTypeParameter(int filterType) {
 
 void MySynthesiserVoice::setSharpParameter(float sharp) {
     
-    // random  slop
-//    int mm;
-//    mm = 500; //set the upper bound to generate the random number
-//    srand(time(0));
-//    int rr = rand()%mm;
-//    float pp = float(rr)/100000.f;
     oscillator.setSharp(sharp);
 }
 
 void MySynthesiserVoice::setModParameter(float mod) {
     
     
-    // random  slop
-//    int mmm;
-//    mmm = 500; //set the upper bound to generate the random number
-//    srand(time(0));
-//    int rrr = rand()%mmm;
-//    float ppp = float(rrr)/100000.f;
     oscillator.setMod(mod);
 }
 
@@ -198,21 +171,6 @@ void MySynthesiserVoice::setCutoffKeyboardParameter(float CutoffKeyboard) {
 
 void MySynthesiserVoice::setCutoffParameter(float cutoff) {
     
-    
-    // random pitch slop
-//    int max;
-//    max = 200; //set the upper bound to generate the random number
-//    srand(time(0));
-//    int pitchchange = rand()%max;
-//    float pp = float(pitchchange)/100000.f;
-//    float rand_detune = 0.0005 + pp;
-//    m_freq = m_freq*(1-rand_detune);
-    
-//    int mmmm;
-//    mmmm = 500; //set the upper bound to generate the random number
-//    srand(time(0));
-//    int rrrr = rand()%mmmm;
-//    float pppp = float(rrrr)/100000.f;
     
     oscillator.setCutoff(cutoff);
 }
@@ -408,13 +366,6 @@ static float resonanceSliderTextToValue(const String& text) {
     return text.getFloatValue();
 }
 
-static String bassoffSliderValueToText(float value) {
-    return String(value, 4) + String(" x");
-}
-
-static float bassoffSliderTextToValue(const String& text) {
-    return text.getFloatValue();
-}
 
 
 static String detuneSliderValueToText(float value) {
@@ -673,10 +624,7 @@ waylosynth2::waylosynth2()
                        ), tree(*this, nullptr),
 parameters (*this, nullptr, Identifier(JucePlugin_Name), createParameterLayout())
 //lowPassFilter(dsp::IIR::Coefficients<float>::makeLowPass(96000, 7000.0f, 0.1))
-     
 
-// lowPassFilterLeft  (juce::dsp::IIR::Coefficients<float>::makeLowPass  (getSampleRate(), 17000.0f)),
-// lowPassFilterRight (juce::dsp::IIR::Coefficients<float>::makeLowPass  (getSampleRate(), 17000.0f)),
 
 #endif
 //lowPassFilter(*this, nullptr, dsp::IIR::Coefficients<float>::makeLowPass(96000, 10000.0f, 0.1f))
@@ -824,8 +772,7 @@ void waylosynth2::prepareToPlay (double sampleRate, int samplesPerBlock)
 //    ladderFilter.prepare(spec);
 //    ladderFilter.setEnabled(true);
 
-    
-    
+
     
 
 }
@@ -1255,6 +1202,70 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
 //            midiMessages.swapWith (processedMidi);
 //        }
 //
+    
+    // RETRANSPOSE END
+    
+    // WAYLO CHILI END
+    
+    
+    
+     //octave transpose keyboard
+    if((int)*spaceParameter == 4){
+        
+        MidiMessage m;
+        MidiMessage n;
+        
+        {
+            
+            MidiBuffer processedMidi;
+            int time;
+            MidiMessage m;
+            MidiMessage n;
+            
+            for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
+            {
+                
+                
+                if (m.isNoteOn())
+                    
+                    
+                {
+                    n = MidiMessage::noteOn(m.getChannel(), m.getNoteNumber(), m.getVelocity());
+                    m = MidiMessage::noteOn(m.getChannel(), m.getNoteNumber() - 7, m.getVelocity());
+                    playing[m.getNoteNumber() -7 ] = 1;
+                    playing[m.getNoteNumber()] = 1;
+                    
+                    
+                }
+                
+                
+                else if (m.isNoteOff() )
+                    
+                    
+                {
+                    n = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber() , m.getVelocity());
+                    m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber() -7 , m.getVelocity());
+                    playing[m.getNoteNumber() -7 ] = 0;
+                    playing[m.getNoteNumber()] = 0;
+                }
+                
+                
+                
+                else if (m.isAftertouch())
+                {
+                }
+                else if (m.isPitchWheel())
+                {
+                }
+                
+                processedMidi.addEvent (m, time);
+                processedMidi.addEvent (n, time);
+            }
+            
+            midiMessages.swapWith (processedMidi);
+        }
+    }
+
     
     // RETRANSPOSE END
     

@@ -131,7 +131,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&spaceLabel);
     
     spaceCombo.setLookAndFeel(&plugexLookAndFeel);
-    spaceCombo.addItemList({"Normal", "WayloSpace", "SpicySpace", "JoeSpace", "LatchSpace"}, 1);
+    spaceCombo.addItemList({"Normal", "WayloSpace", "SpicySpace", "JoeSpace", "5thBelow"}, 1);
     spaceCombo.setSelectedId(1);
     addAndMakeVisible(&spaceCombo);
     spaceAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "space", spaceCombo));
