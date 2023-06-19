@@ -113,91 +113,91 @@ float Filters::Apply4Pole(float sample,float g)
     }
 
 
-float Filters::Apply3Pole(float sample,float g)
-    {
-            float g1 = (float)tan(g *sampleRateInv * M_PI);
-            g = g1;
+//float Filters::Apply3Pole(float sample,float g)
+//    {
+//            float g1 = (float)tan(g *sampleRateInv * M_PI);
+//            g = g1;
+//
+//
+//            
+//            float lpc = g / (1 + g);
+//            float y0 = NR24(sample,g,lpc);
+//            //first low pass in cascade
+//            double v = (y0 - s1) * lpc;
+//            double res = v + s1;
+//            s1 = res + v;
+//            //damping
+//            s1 =atan(s1*rcor24)*rcor24Inv;
+//            float y1= res;
+//            float y3 = tptpc(s3,y1,g);
+//            float y4 = tptpc(s4,y3,g);
+//
+//
+//            float mc;
+//            switch(mmch)
+//            {
+//            case 0:
+//                mc = ((1 - mmt) * y4 + (mmt) * y3);
+//                break;
+//            case 1:
+//                //mc = ((1 - mmt) * y3 + (mmt) * y2);
+//                break;
+//            case 2:
+//               // mc = ((1 - mmt) * y2 + (mmt) * y1);
+//                break;
+//            case 3:
+//                mc = y1;
+//                break;
+//            default:
+//                mc=0;
+//                break;
+//            }
+//            //half volume comp
+//            return mc * (1 + R24 * 0.45);
+//    }
 
-
-            
-            float lpc = g / (1 + g);
-            float y0 = NR24(sample,g,lpc);
-            //first low pass in cascade
-            double v = (y0 - s1) * lpc;
-            double res = v + s1;
-            s1 = res + v;
-            //damping
-            s1 =atan(s1*rcor24)*rcor24Inv;
-            float y1= res;
-            float y3 = tptpc(s3,y1,g);
-            float y4 = tptpc(s4,y3,g);
-
-
-            float mc;
-            switch(mmch)
-            {
-            case 0:
-                mc = ((1 - mmt) * y4 + (mmt) * y3);
-                break;
-            case 1:
-                //mc = ((1 - mmt) * y3 + (mmt) * y2);
-                break;
-            case 2:
-               // mc = ((1 - mmt) * y2 + (mmt) * y1);
-                break;
-            case 3:
-                mc = y1;
-                break;
-            default:
-                mc=0;
-                break;
-            }
-            //half volume comp
-            return mc * (1 + R24 * 0.45);
-    }
-
-
-float Filters::Apply2Pole(float sample,float g)
-    {
-            float g1 = (float)tan(g *sampleRateInv * M_PI);
-            g = g1;
-
-
-            
-            float lpc = g / (1 + g);
-            float y0 = NR24(sample,g,lpc);
-            //first low pass in cascade
-            double v = (y0 - s1) * lpc;
-            double res = v + s1;
-            s1 = res + v;
-            //damping
-            s1 =atan(s1*rcor24)*rcor24Inv;
-
-            float y1= res;
-            float y3 = tptpc(s2,y1,g);
-            float y4 = y3;
-            float mc;
-            switch(mmch)
-            {
-            case 0:
-                mc = ((1 - mmt) * y4 + (mmt) * y3);
-                break;
-            case 1:
-                //mc = ((1 - mmt) * y3 + (mmt) * y2);
-                break;
-            case 2:
-               // mc = ((1 - mmt) * y2 + (mmt) * y1);
-                break;
-            case 3:
-                mc = y1;
-                break;
-            default:
-                mc=0;
-                break;
-            }
-            //half volume comp
-            return mc * (1 + R24 * 0.45);
-    }
+//
+//float Filters::Apply2Pole(float sample,float g)
+//    {
+//            float g1 = (float)tan(g *sampleRateInv * M_PI);
+//            g = g1;
+//
+//
+//            
+//            float lpc = g / (1 + g);
+//            float y0 = NR24(sample,g,lpc);
+//            //first low pass in cascade
+//            double v = (y0 - s1) * lpc;
+//            double res = v + s1;
+//            s1 = res + v;
+//            //damping
+//            s1 =atan(s1*rcor24)*rcor24Inv;
+//
+//            float y1= res;
+//            float y3 = tptpc(s2,y1,g);
+//            float y4 = y3;
+//            float mc;
+//            switch(mmch)
+//            {
+//            case 0:
+//                mc = ((1 - mmt) * y4 + (mmt) * y3);
+//                break;
+//            case 1:
+//                //mc = ((1 - mmt) * y3 + (mmt) * y2);
+//                break;
+//            case 2:
+//               // mc = ((1 - mmt) * y2 + (mmt) * y1);
+//                break;
+//            case 3:
+//                mc = y1;
+//                break;
+//            default:
+//                mc=0;
+//                break;
+//            }
+//            //half volume comp
+//            return mc * (1 + R24 * 0.45);
+//    }
 
 void Filters::setMultimode(float m)
 {

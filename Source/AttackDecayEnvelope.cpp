@@ -22,7 +22,7 @@ Attack_decay_envelope::Attack_decay_envelope(){
     amp_envelope_position = 0;
     amp_envelope_rate = 1;
     amp_samplerate = 96000;
-    float last_value = 0.0;
+
 }
 
 Attack_decay_envelope::~Attack_decay_envelope(){

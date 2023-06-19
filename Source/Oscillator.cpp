@@ -21,7 +21,7 @@ Oscillator::Oscillator() {
     m_attackRate = 0.1f;
     m_attackShape = 0.75f;
     m_resonance = 0.01f;
-    m_bassoff = 0.f;
+    //m_bassoff = 0.f;
     m_detune = 1.0f;
     //m_cutoff = 0.f;
     srand((unsigned int)time(0));
@@ -29,7 +29,7 @@ Oscillator::Oscillator() {
     m_sah_current_value = (rand() / (float)RAND_MAX) * 2.f - 1.f;
     m_pitchbend = 1;
     env.reset();
-    mod_env.reset();
+    //mod_env.reset();
     m_filter_decay = 0.0f;
     
 
@@ -62,9 +62,9 @@ void Oscillator::setup(float sampleRate) {
     varisaw.Init(m_sampleRate);
     bandlimOsc.Init(m_sampleRate);
     setDetune(1.0f);
-    lfo1.init(m_sampleRate);
-    lfo1.setDepth(1.0f);
-    lfo1.setRate(0.4f);
+    //lfo1.init(m_sampleRate);
+    //lfo1.setDepth(1.0f);
+    //lfo1.setRate(0.4f);
     m_lfo_value = 0.0f;
     m_attackRate = 0.1f;
     m_attackShape = 0.75f;
@@ -82,13 +82,13 @@ void Oscillator::setup(float sampleRate) {
     
 
         // vadimFilter
-    juce::dsp::ProcessSpec spec;
-    spec.maximumBlockSize = 512;
-    spec.sampleRate = sampleRate;
-    spec.numChannels = 1;
-    vadimFilter.prepare(spec);
-    vadimFilter.reset();
-    vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+//    juce::dsp::ProcessSpec spec;
+//    spec.maximumBlockSize = 512;
+//    spec.sampleRate = sampleRate;
+//    spec.numChannels = 1;
+//    vadimFilter.prepare(spec);
+//    vadimFilter.reset();
+//    vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
     //lowPassFilter2.state = juce::dsp::IIR::Coefficients<float>::makeLowPass (sampleRate, 440.0);
     //lowPassFilter2.prepare (spec);
 
@@ -97,12 +97,12 @@ void Oscillator::setup(float sampleRate) {
 
     
     
-    int max;
-    max = 100; //set the upper bound to generate the random number
-    srand(time(0));
-    pitchchange = rand()%max;
-    float pp = float(pitchchange)/10000.f;
-    rand_detune = 0.005 + pp;
+//    int max;
+//    max = 100; //set the upper bound to generate the random number
+//    srand(time(0));
+//    pitchchange = rand()%max;
+//    float pp = float(pitchchange)/10000.f;
+//    rand_detune = 0.005 + pp;
 
 }
 
@@ -114,20 +114,20 @@ void Oscillator::reset() {
     m_detune = 1.0f;
     amp_env.reset();
     filter_amp_env.reset();
-    lfo1.setDepth(1.0f);
-    lfo1.setRate(1.0f);
+    //lfo1.setDepth(1.0f);
+   // lfo1.setRate(1.0f);
     m_lfo_value = 0.0f;
     m_attackRate = 0.1f;
     m_attackShape = 0.75f;
     m_filterFM = 0.1f;
     m_filterFMVelocity = 0.1f;
     
-    int max;
-    max = 100; //set the upper bound to generate the random number
-    srand(time(0));
-    pitchchange = rand()%max;
-    float pp = float(pitchchange)/10000.f;
-    rand_detune = 0.005 + pp;
+//    int max;
+//    max = 100; //set the upper bound to generate the random number
+//    srand(time(0));
+//    pitchchange = rand()%max;
+//    float pp = float(pitchchange)/10000.f;
+//    rand_detune = 0.005 + pp;
 
 
 }
@@ -139,12 +139,12 @@ void Oscillator::set_midi_note_number(int midi_note){
 
 void Oscillator::gate_filter_env(){
     env.gate(false);
-    mod_env.gate(false);
+    //mod_env.gate(false);
 }
 
 void Oscillator::open_filter_env(){
     env.gate(true);
-    mod_env.gate(true);
+    //mod_env.gate(true);
     filter_amp_env.reset();
 }
 
@@ -301,9 +301,9 @@ void Oscillator::setRes(float resonance) {
     m_resonance = resonance < 0.f ? 0.f : resonance > 1.f ? 1.f : resonance;
 }
 
-void Oscillator::setBassoff(float bassoff) {
-    m_bassoff = bassoff < 0.f ? 0.f : bassoff > 1.f ? 1.f : bassoff;
-}
+//void Oscillator::setBassoff(float bassoff) {
+//    m_bassoff = bassoff < 0.f ? 0.f : bassoff > 1.f ? 1.f : bassoff;
+//}
 
 void Oscillator::setDetune(float detune) {
     m_detune = detune < 0.5f ? 0.5f : detune > 2.f ? 2.f : detune;
@@ -341,10 +341,10 @@ void Oscillator::setPitchBend(float pitchWheelPos){
 }
    
 float Oscillator::process() {
-    float v1 = 0.f, v2 = 0.f, pointer = 0.f, numh = 0.f, pos = 0.f;
-    float inc2 = 0.f, fade = 0.f, value = 0.f, maxHarms = 0.f;
-    float oldvalue = old_x_value = old_y_value = 0.0;
-    float key_adjust = 0.0f;
+    float  numh = 0.f, pos = 0.f;
+    float  value = 0.f, maxHarms = 0.f;
+    float old_x_value = old_y_value = 0.0;
+    //float key_adjust = 0.0f;
     m_feedback = 0.0f;
     
     //m_mod = (m_mod + m_greaseVelocity*(m_note_velocity/127.0f))/2;
@@ -449,10 +449,10 @@ float Oscillator::process() {
             m_feedback_y = 8.0;
             float x = m_twopi * m_pointer_pos;
             float y = m_twopi * m_pointer_pos;
-            float A1 = 1.0;
-            float f1 = 1.0;
+            //float A1 = 1.0;
+            //float f1 = 1.0;
             float A2 = m_mod*10;
-            float f2 = 1.0;
+            //float f2 = 1.0;
             value = sin(y + A2 * sin(x + m_feedback*old_x_value) + old_y_value);
             old_x_value = sin(x);
             old_y_value = sin(y);
@@ -553,7 +553,7 @@ float Oscillator::process() {
             float x = m_twopi * m_pointer_pos;
             float A1 = 1.0;
             float f1 = 1.0;
-            float A2 = 3.5;
+            //float A2 = 3.5;
             float f2 = 1.0;
             value = A1 * sin(f1*x + 10*m_mod * sin(f2*x) + (old_value*m_sharp))  ;
             old_value = value;
@@ -616,15 +616,15 @@ float Oscillator::process() {
                         // 4 -> 3 -> 1
                         // 2 -> 1
                         // operators 1 and 3 are mixed in the output
-                        float op1_level = 117/127;
-                        float op2_level = 101/127;
-                        float op3_level = 84/127;
-                        float op4_level = 96/127;
-                        
-                        float op1_fdbk = 48*2/127;
-                        float op2_fdbk = 33*2/127;
-                        float op3_fdbk = 46*2/127;
-                        float op4_fdbk = 25*2/127;
+//                        float op1_level = 117/127;
+//                        float op2_level = 101/127;
+//                        float op3_level = 84/127;
+//                        float op4_level = 96/127;
+//                        
+//                        float op1_fdbk = 48*2/127;
+//                        float op2_fdbk = 33*2/127;
+//                        float op3_fdbk = 46*2/127;
+//                        float op4_fdbk = 25*2/127;
                         
                         
                         
@@ -739,15 +739,15 @@ float Oscillator::process() {
             // 4 -> 3 -> 1
             // 2 -> 1
             // operators 1 and 3 are mixed in the output
-            float op1_level = 127/127;
-            float op2_level = 83/127;
-            float op3_level = 19/127;
-            float op4_level = 19/127;
-            
-            float op1_fdbk = 48*2/127;
-            float op2_fdbk = 33*2/127;
-            float op3_fdbk = 46*2/127;
-            float op4_fdbk = 25*2/127;
+//            float op1_level = 127/127;
+//            float op2_level = 83/127;
+//            float op3_level = 19/127;
+//            float op4_level = 19/127;
+//            
+//            float op1_fdbk = 48*2/127;
+//            float op2_fdbk = 33*2/127;
+//            float op3_fdbk = 46*2/127;
+//            float op4_fdbk = 25*2/127;
             
             
             // operator 3 is 2 all others are 1
@@ -806,15 +806,15 @@ float Oscillator::process() {
                         // 4 -> 3 -> 1
                         // 2 -> 1
                         // operators 1 and 3 are mixed in the output
-                        float op1_level = 117/127;
-                        float op2_level = 101/127;
-                        float op3_level = 84/127;
-                        float op4_level = 96/127;
-                        
-                        float op1_fdbk = 48*2/127;
-                        float op2_fdbk = 33*2/127;
-                        float op3_fdbk = 46*2/127;
-                        float op4_fdbk = 25*2/127;
+//                        float op1_level = 117/127;
+//                        float op2_level = 101/127;
+//                        float op3_level = 84/127;
+//                        float op4_level = 96/127;
+//
+//                        float op1_fdbk = 48*2/127;
+//                        float op2_fdbk = 33*2/127;
+//                        float op3_fdbk = 46*2/127;
+//                        float op4_fdbk = 25*2/127;
                         
                         
                         
@@ -901,6 +901,7 @@ float Oscillator::process() {
         
         amp_env.Set_amp_envelope_rate(m_attackRate*100);
         value = value*amp_env.process(m_attackShape,0.75,"attack_env");
+        
         if (m_cutoff < 0.99){
             float filter_cutoff = m_cutoff*20000;
             
@@ -956,21 +957,18 @@ float Oscillator::process() {
             
         
             
-            
-            
         }
         
-        if ((m_freq > 0)  && (m_bassoff > 0.1)){
-             
-             float bass_adjust = m_bassoff*10.0f;
-             vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-             vadimFilter.setCutoffFrequency(0.9f);
-             vadimFilter.setCutoffFrequency(m_freq - m_freq/bass_adjust);
-             value = vadimFilter.processSample(1, value);}
-        
-        
-        
-    
+//        if ((m_freq > 0)  && (m_bassoff > 0.1)){
+//             
+//             float bass_adjust = m_bassoff*10.0f;
+//             vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+//             vadimFilter.setCutoffFrequency(0.9f);
+//             vadimFilter.setCutoffFrequency(m_freq - m_freq/bass_adjust);
+//             value = vadimFilter.processSample(1, value);}
+//        
+//    
+//    
     }
 
     return value;

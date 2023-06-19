@@ -53,7 +53,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setCutoffParameter(float cutoff);
     void setCutoffKeyboardParameter(float cutoffKeyboard);
     void setResParameter(float resonance);
-    void setBassoffParameter(float bassoff);
+    //void setBassoffParameter(float bassoff);
     void setDetuneParameter(float detune);
     
    
@@ -97,7 +97,7 @@ public:
     void setCutoffParameter(float cutoff);
     void setCutoffKeyboardParameter(float cutoffKeyboard);
     void setResParameter(float resonance);
-    void setBassoffParameter(float bassoff);
+    //void setBassoffParameter(float bassoff);
     void setDetuneParameter(float detune);
 };
 
@@ -148,7 +148,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
+    //juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
     
     //juce::dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilterLeft ;
     //juce::dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilterRight ;
@@ -211,9 +211,9 @@ private:
     float lastGain = 0.f;
     float lastSample[2] = { 0.0, 0.0};
     
-    dsp::ProcessorDuplicator<dsp::IIR::Filter <float>, dsp::IIR::Coefficients <float>> lowPassFilter;
+    //dsp::ProcessorDuplicator<dsp::IIR::Filter <float>, dsp::IIR::Coefficients <float>> lowPassFilter;
     //dsp::ProcessorDuplicator<juce::dsp::LadderFilter<float>, dsp::IIR::Coefficients <float>> ladderFilter;
-    juce::dsp::LadderFilter<float> ladderFilter;
+    //juce::dsp::LadderFilter<float> ladderFilter;
     
     
 

@@ -27,13 +27,13 @@ void MySynthesiserVoice::startNote(int midiNoteNumber, float velocity,
     auto m_freq = (MidiMessage::getMidiNoteInHertz (midiNoteNumber));
     
     // random pitch slop
-    int max;
-    max = 200; //set the upper bound to generate the random number
-    srand(time(0));
-    int pitchchange = rand()%max;
-    float pp = float(pitchchange)/100000.f;
-    float rand_detune = 0.0005 + pp;
-    m_freq = m_freq*(1-rand_detune);
+//    int max;
+//    max = 200; //set the upper bound to generate the random number
+//    srand(time(0));
+//    int pitchchange = rand()%max;
+//    float pp = float(pitchchange)/100000.f;
+//    float rand_detune = 0.0005 + pp;
+//    m_freq = m_freq*(1-rand_detune);
     
     
     oscillator.set_midi_note_number(midiNoteNumber);
@@ -215,9 +215,9 @@ void MySynthesiserVoice::setResParameter(float resonance) {
     oscillator.setRes(resonance);
 }
 
-void MySynthesiserVoice::setBassoffParameter(float bassoff) {
-    oscillator.setBassoff(bassoff);
-}
+//void MySynthesiserVoice::setBassoffParameter(float bassoff) {
+//    oscillator.setBassoff(bassoff);
+//}
 
 void MySynthesiserVoice::setDetuneParameter(float detune) {
     oscillator.setDetune(detune);
@@ -333,10 +333,10 @@ void MySynthesiser::setResParameter(float resonance) {
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setResParameter(resonance);
 }
 
-void MySynthesiser::setBassoffParameter(float bassoff) {
-    for (int i = 0; i < getNumVoices(); i++)
-       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setBassoffParameter(bassoff);
-}
+//void MySynthesiser::setBassoffParameter(float bassoff) {
+//    for (int i = 0; i < getNumVoices(); i++)
+//       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setBassoffParameter(bassoff);
+//}
 
 void MySynthesiser::setDetuneParameter(float detune) {
     for (int i = 0; i < getNumVoices(); i++)
@@ -397,13 +397,13 @@ static float resonanceSliderTextToValue(const String& text) {
     return text.getFloatValue();
 }
 
-static String bassoffSliderValueToText(float value) {
-    return String(value, 4) + String(" x");
-}
+//static String bassoffSliderValueToText(float value) {
+//    return String(value, 4) + String(" x");
+//}
 
-static float bassoffSliderTextToValue(const String& text) {
-    return text.getFloatValue();
-}
+//static float bassoffSliderTextToValue(const String& text) {
+//    return text.getFloatValue();
+//}
 
 
 static String detuneSliderValueToText(float value) {
@@ -546,7 +546,7 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
     
     parameters.push_back(std::make_unique<Parameter>(ParameterID(String("bassoff"),1), String("Bassoff"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
-                                                     0.05f, bassoffSliderValueToText, bassoffSliderTextToValue));
+                                                     0.05f, resonanceSliderValueToText, resonanceSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(ParameterID(String("gain"),1), String("Gain"), String(),
                                                      NormalisableRange<float>(0.001f, 7.94f, 0.001f, 0.3f),
@@ -655,8 +655,9 @@ waylosynth2::waylosynth2()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       ), parameters (*this, nullptr, Identifier(JucePlugin_Name), createParameterLayout()),
-     tree(*this, nullptr), lowPassFilter(dsp::IIR::Coefficients<float>::makeLowPass(96000, 7000.0f, 0.1))
+                       ), tree(*this, nullptr),
+parameters (*this, nullptr, Identifier(JucePlugin_Name), createParameterLayout())
+//lowPassFilter(dsp::IIR::Coefficients<float>::makeLowPass(96000, 7000.0f, 0.1))
      
 
 // lowPassFilterLeft  (juce::dsp::IIR::Coefficients<float>::makeLowPass  (getSampleRate(), 17000.0f)),
@@ -797,12 +798,12 @@ void waylosynth2::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = getTotalNumOutputChannels();
     
-    lowPassFilter.prepare(spec);
-    lowPassFilter.reset();
-
-    ladderFilter.reset();
-    ladderFilter.prepare(spec);
-    ladderFilter.setEnabled(true);
+//    lowPassFilter.prepare(spec);
+//    lowPassFilter.reset();
+//
+//    ladderFilter.reset();
+//    ladderFilter.prepare(spec);
+//    ladderFilter.setEnabled(true);
 
     
     
@@ -847,6 +848,9 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        buffer.clear (i, 0, buffer.getNumSamples());
+    
     if((int)*spaceParameter == 1){
         
         //
@@ -854,7 +858,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
         //
             MidiMessage m;
             MidiBuffer processedMidi;
-            int time;
+            //int time;
         
             {
                     buffer.clear();
@@ -1268,7 +1272,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setCutoffParameter(*cutoffParameter);
     synthesiser.setCutoffKeyboardParameter(*cutoffKeyboardParameter);
     synthesiser.setResParameter(*resonanceParameter);
-    synthesiser.setBassoffParameter(*bassoffParameter);
+    //synthesiser.setBassoffParameter(*bassoffParameter);
     synthesiser.setDetuneParameter(*detuneParameter);
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
@@ -1276,10 +1280,10 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     
     
     // IIR filter set at 10000
-    dsp::AudioBlock<float> block (buffer);
+    //dsp::AudioBlock<float> block (buffer);
     
 
-    lowPassFilter.process(dsp::ProcessContextReplacing<float> (block));
+    //lowPassFilter.process(dsp::ProcessContextReplacing<float> (block));
    
     //ladderFilter.process(dsp::ProcessContextReplacing<float> (block));
     

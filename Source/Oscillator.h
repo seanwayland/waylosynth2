@@ -85,7 +85,7 @@ class Oscillator {
 
     
     
-    juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
+    //juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
     juce::dsp::StateVariableTPTFilter<float> vadimFilter2 ;
     
     
@@ -106,13 +106,13 @@ class Oscillator {
     Attack_decay_envelope amp_env;
     Attack_decay_envelope filter_amp_env;
     Filters filter;
-    Filters bass_off;
+    //Filters bass_off;
     ADSR2 env;
-    ADSR2 mod_env;
+    //ADSR2 mod_env;
     daisysp::VariableShapeOscillator variosc;
     daisysp::VariableSawOscillator varisaw;
     daisysp::BlOsc bandlimOsc;
-    CheapLFO lfo1;
+    //CheapLFO lfo1;
     
     
       // obxd filter
@@ -169,7 +169,7 @@ class Oscillator {
         float m_filterFMVelocity;
         float m_filterFM;
         float m_resonance;
-        float m_bassoff;
+        //float m_bassoff;
         float m_detune;
         float m_pointer_pos;
         float fm_phase_1;
