@@ -21,7 +21,9 @@ bool MySynthesiserVoice::canPlaySound(SynthesiserSound *sound) {
 
 void MySynthesiserVoice::startNote(int midiNoteNumber, float velocity,
                                    SynthesiserSound *, int currentPitchWheelPosition) {
-    oscillator.reset();
+    oscillator.reset(getSampleRate());
+    oscillator.setSampleRate(getSampleRate());
+    float sr = getSampleRate();
     level = velocity * 0.15;
     envelope.noteOn();
     auto m_freq = (MidiMessage::getMidiNoteInHertz (midiNoteNumber));
@@ -67,7 +69,7 @@ void MySynthesiserVoice::pitchWheelMoved(int value){
 void MySynthesiserVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) {
     while (--numSamples >= 0) {
         
-        
+        oscillator.setSampleRate(getSampleRate());
         //oscillator.setPitchBend(MidiMessage::getPitchWheelValue());
         auto envAmp = envelope.getNextSample();
         auto thisSample = oscillator.process();
@@ -786,7 +788,10 @@ void waylosynth2::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    
+
     keyboardState.reset();
+    
     synthesiser.setCurrentPlaybackSampleRate(sampleRate);
     
     for ( int j = 0 ; j < 127; j++){

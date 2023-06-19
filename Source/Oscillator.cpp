@@ -40,10 +40,10 @@ Oscillator::Oscillator() {
 
 void Oscillator::setup(float sampleRate) {
     m_sampleRate = sampleRate;
-    m_sampleRate = 96000;
-    amp_env.SetSampleRate(96000);
+    //m_sampleRate = 96000;
+    amp_env.SetSampleRate(m_sampleRate);
     amp_env.reset();
-    filter_amp_env.SetSampleRate(96000);
+    filter_amp_env.SetSampleRate(m_sampleRate);
     filter_amp_env.reset();
     m_oneOverSr = 1.f / m_sampleRate;
     m_increment = m_runningPhase = 0.0f;
@@ -108,7 +108,13 @@ void Oscillator::setup(float sampleRate) {
 
 Oscillator::~Oscillator() {}
 
-void Oscillator::reset() {
+
+void Oscillator::setSampleRate(float sampleRate){
+    m_sampleRate = sampleRate;
+}
+
+void Oscillator::reset(float sampleRate) {
+    m_sampleRate = sampleRate;
     m_pointer_pos = fm_phase_1 = fm_phase_2 = fm_phase_3 = fm_phase_4 = m_sah_pointer_pos = 0.f;
     m_pitchbend = 1;
     m_detune = 1.0f;
@@ -121,6 +127,7 @@ void Oscillator::reset() {
     m_attackShape = 0.75f;
     m_filterFM = 0.1f;
     m_filterFMVelocity = 0.1f;
+    m_oneOverSr = 1.f / m_sampleRate;
     
 //    int max;
 //    max = 100; //set the upper bound to generate the random number
@@ -912,9 +919,9 @@ float Oscillator::process() {
             
             
             
-            env.setAttackRate(20*m_filterAttack*96000);  // .1 second
-            env.setDecayRate(50*m_filterDecay*4 * 96000);
-            env.setReleaseRate(m_filterRelease * 96000);
+            env.setAttackRate(20*m_filterAttack*m_sampleRate);  // .1 second
+            env.setDecayRate(50*m_filterDecay*4 * m_sampleRate);
+            env.setReleaseRate(m_filterRelease * m_sampleRate);
             env.setSustainLevel(m_filterSustain);
             env.setTargetRatioA(m_filterAttackShape/10.0f);
             env.setTargetRatioDR(m_filterDecayShape*100);

@@ -18,6 +18,7 @@ class Oscillator {
     public:
         Oscillator();
         ~Oscillator();
+        void setSampleRate(float sampleRate);
         void setup(float sampleRate);
         void setWavetype(int type);
         void setFreq(float freq);
@@ -54,7 +55,7 @@ class Oscillator {
         void setDetune(float detune);
         void setPhase(float phase);
         void setPitchBend(float pitchbend);
-        void reset();
+        void reset(float sampleRate);
         float process();
         void set_midi_note_number(int midi_note);
         void set_note_velocity(float note_velocity);
