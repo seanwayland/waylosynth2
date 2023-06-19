@@ -14,10 +14,10 @@
  #define JucePlugin_Build_VST              0
 #endif
 #ifndef  JucePlugin_Build_VST3
- #define JucePlugin_Build_VST3             0
+ #define JucePlugin_Build_VST3             1
 #endif
 #ifndef  JucePlugin_Build_AU
- #define JucePlugin_Build_AU               0
+ #define JucePlugin_Build_AU               1
 #endif
 #ifndef  JucePlugin_Build_AUv3
  #define JucePlugin_Build_AUv3             0
@@ -41,25 +41,25 @@
  #define JucePlugin_Enable_ARA             0
 #endif
 #ifndef  JucePlugin_Name
- #define JucePlugin_Name                   "waylosynth2"
+ #define JucePlugin_Name                   "waylosynth55"
 #endif
 #ifndef  JucePlugin_Desc
- #define JucePlugin_Desc                   "waylosynth2"
+ #define JucePlugin_Desc                   "waylosynth55"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "belangeo"
+ #define JucePlugin_Manufacturer           "www.SEanwayland.com"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
- #define JucePlugin_ManufacturerWebsite    "www.belangeo.com"
+ #define JucePlugin_ManufacturerWebsite    "www.Seanwayland.com"
 #endif
 #ifndef  JucePlugin_ManufacturerEmail
  #define JucePlugin_ManufacturerEmail      ""
 #endif
 #ifndef  JucePlugin_ManufacturerCode
- #define JucePlugin_ManufacturerCode       0x4d616e75
+ #define JucePlugin_ManufacturerCode       0x53577377
 #endif
 #ifndef  JucePlugin_PluginCode
- #define JucePlugin_PluginCode             0x5373796d
+ #define JucePlugin_PluginCode             0x53577773
 #endif
 #ifndef  JucePlugin_IsSynth
  #define JucePlugin_IsSynth                1
@@ -101,19 +101,19 @@
  #define JucePlugin_AUSubType              JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_AUExportPrefix
- #define JucePlugin_AUExportPrefix         waylosynth2AU
+ #define JucePlugin_AUExportPrefix         waylosynth55AU
 #endif
 #ifndef  JucePlugin_AUExportPrefixQuoted
- #define JucePlugin_AUExportPrefixQuoted   "waylosynth2AU"
+ #define JucePlugin_AUExportPrefixQuoted   "waylosynth55AU"
 #endif
 #ifndef  JucePlugin_AUManufacturerCode
  #define JucePlugin_AUManufacturerCode     JucePlugin_ManufacturerCode
 #endif
 #ifndef  JucePlugin_CFBundleIdentifier
- #define JucePlugin_CFBundleIdentifier     com.belangeo.waylosynth2
+ #define JucePlugin_CFBundleIdentifier     com.www_SEanwayland_com.waylosynth55
 #endif
 #ifndef  JucePlugin_AAXIdentifier
- #define JucePlugin_AAXIdentifier          com.belangeo.waylosynth2
+ #define JucePlugin_AAXIdentifier          com.www_SEanwayland_com.waylosynth55
 #endif
 #ifndef  JucePlugin_AAXManufacturerCode
  #define JucePlugin_AAXManufacturerCode    JucePlugin_ManufacturerCode
@@ -137,7 +137,7 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "belangeo: waylosynth2"
+ #define JucePlugin_IAAName                "www.SEanwayland.com: waylosynth55"
 #endif
 #ifndef  JucePlugin_VSTNumMidiInputs
  #define JucePlugin_VSTNumMidiInputs       16
@@ -152,10 +152,10 @@
  #define JucePlugin_ARATransformationFlags  0
 #endif
 #ifndef  JucePlugin_ARAFactoryID
- #define JucePlugin_ARAFactoryID           "com.belangeo.waylosynth2.factory"
+ #define JucePlugin_ARAFactoryID           "com.www_SEanwayland_com.waylosynth55.factory"
 #endif
 #ifndef  JucePlugin_ARADocumentArchiveID
- #define JucePlugin_ARADocumentArchiveID   "com.belangeo.waylosynth2.aradocumentarchive.1.0.0"
+ #define JucePlugin_ARADocumentArchiveID   "com.www_SEanwayland_com.waylosynth55.aradocumentarchive.1.0.0"
 #endif
 #ifndef  JucePlugin_ARACompatibleArchiveIDs
  #define JucePlugin_ARACompatibleArchiveIDs  ""

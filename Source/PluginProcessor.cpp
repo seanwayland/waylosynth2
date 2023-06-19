@@ -483,160 +483,160 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
 
     std::vector<std::unique_ptr<Parameter>> parameters;
 
-    parameters.push_back(std::make_unique<Parameter>(String("attack"), String("Attack"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("attack"),1), String("Attack"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.5f),
                                                      0.005f, secondSliderValueToText, secondSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("attackRate"), String("AttackRate"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("attackRate"),1), String("AttackRate"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.0001f, 0.5f),
                                                      0.01f, secondSliderValueToText, secondSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("attackShape"), String("AttackShape"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("attackShape"),1), String("AttackShape"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.0001f, 0.5f),
                                                      0.75f, secondSliderValueToText, secondSliderTextToValue));
 
-    parameters.push_back(std::make_unique<Parameter>(String("decay"), String("Decay"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("decay"),1), String("Decay"), String(),
                                                      NormalisableRange<float>(0.001f, 10.f, 0.001f, 0.5f),
                                                      0.2f, secondSliderValueToText, secondSliderTextToValue));
 
-    parameters.push_back(std::make_unique<Parameter>(String("sustain"), String("Sustain"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("sustain"),1), String("Sustain"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.3f),
                                                      0.708f, gainSliderValueToText, gainSliderTextToValue));
 
-    parameters.push_back(std::make_unique<Parameter>(String("release"), String("Release"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("release"),1), String("Release"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.5f),
                                                      1.0f, secondSliderValueToText, secondSliderTextToValue));
     
     
-    parameters.push_back(std::make_unique<Parameter>(String("detune"), String("Detune"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("detune"),1), String("Detune"), String(),
                                                      NormalisableRange<float>(0.5f, 2.f, 0.0001f, 1.0f),
                                                      1.0f, detuneSliderValueToText, detuneSliderTextToValue));
 
-    parameters.push_back(std::make_unique<Parameter>(String("type"), String("Type"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("type"),1), String("Type"), String(),
                                                      NormalisableRange<float>(0.0f, 19.0f, 1.f, 1.0f),
                                                      0.0f, nullptr, nullptr));
     
-    parameters.push_back(std::make_unique<Parameter>(String("space"), String("Space"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("space"),1), String("Space"), String(),
                                                      NormalisableRange<float>(0.0f, 4.0f, 1.f, 1.0f),
                                                      0.0f, nullptr, nullptr));
 
-    parameters.push_back(std::make_unique<Parameter>(String("sharp"), String("Sharp"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("sharp"),1), String("Sharp"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.1f, sharpSliderValueToText, sharpSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("mod"), String("Mod"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("mod"),1), String("Mod"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.1f, modSliderValueToText, modSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("greaseMod"), String("GreaseMod"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("greaseMod"),1), String("GreaseMod"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.1f, modSliderValueToText, modSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("cutoff"), String("Cutoff"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("cutoff"),1), String("Cutoff"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, cutoffSliderValueToText, cutoffSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("cutoffMod"), String("CutoffMod"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("cutoffMod"),1), String("CutoffMod"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, modSliderValueToText, modSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("resonance"), String("Resonance"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("resonance"),1), String("Resonance"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.05f, resonanceSliderValueToText, resonanceSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("bassoff"), String("Bassoff"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("bassoff"),1), String("Bassoff"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.05f, bassoffSliderValueToText, bassoffSliderTextToValue));
 
-    parameters.push_back(std::make_unique<Parameter>(String("gain"), String("Gain"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("gain"),1), String("Gain"), String(),
                                                      NormalisableRange<float>(0.001f, 7.94f, 0.001f, 0.3f),
                                                      1.0f, gainSliderValueToText, gainSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("filtVelocity"), String("FilterVelocity"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtVelocity"),1), String("FilterVelocity"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("filtAmount"), String("FilterAmount"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtAmount"),1), String("FilterAmount"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("filtAttack"), String("FilterAttack"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtAttack"),1), String("FilterAttack"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
-    parameters.push_back(std::make_unique<Parameter>(String("filtSustain"), String("FilterSustain"), String(),
-                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
-                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
-    
-    parameters.push_back(std::make_unique<Parameter>(String("filtAttackShape"), String("FilterAttackShape"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtSustain"),1), String("FilterSustain"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("filtDecay"), String("FilterDecay"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtAttackShape"),1), String("FilterAttackShape"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("filtDecayShape"), String("FilterDecayShape"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtDecay"),1), String("FilterDecay"), String(),
+                                                     NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
+                                                     0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
+    
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtDecayShape"),1), String("FilterDecayShape"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtDecaySliderValueToText, filtDecaySliderTextToValue));
     
     
-    parameters.push_back(std::make_unique<Parameter>(String("filtRelease"), String("FilterRelease"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtRelease"),1), String("FilterRelease"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtReleaseSliderValueToText, filtReleaseSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("greaseAttack"), String("GreaseAttack"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("greaseAttack"),1), String("GreaseAttack"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("greaseAttackShape"), String("greaseAttackShape"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("greaseAttackShape"),1), String("greaseAttackShape"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
 
-    parameters.push_back(std::make_unique<Parameter>(String("greaseDecay"), String("greaseDecay"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("greaseDecay"),1), String("greaseDecay"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
-    parameters.push_back(std::make_unique<Parameter>(String("greaseDecayShape"), String("greaseDecayShape"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("greaseDecayShape"),1), String("greaseDecayShape"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtDecaySliderValueToText, filtDecaySliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("greaseSustain"), String("greaseSustain"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("greaseSustain"),1), String("greaseSustain"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtSustainSliderValueToText, filtSustainSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("greaseRelease"), String("greaseRelease"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("greaseRelease"),1), String("greaseRelease"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtReleaseSliderValueToText, filtReleaseSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("greaseVelocity"), String("greaseVelocity"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("greaseVelocity"),1), String("greaseVelocity"), String(),
                                                      NormalisableRange<float>(-1.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("greaseKeyboard"), String("greaseKeyboard"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("greaseKeyboard"),1), String("greaseKeyboard"), String(),
                                                      NormalisableRange<float>(-1.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("gravyVelocity"), String("gravyVelocity"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("gravyVelocity"),1), String("gravyVelocity"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("gravyKeyboard"), String("gravyKeyboard"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("gravyKeyboard"),1), String("gravyKeyboard"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("cutoffVelocity"), String("cutoffVelocity"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("cutoffVelocity"),1), String("cutoffVelocity"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
     
-    parameters.push_back(std::make_unique<Parameter>(String("cutoffKeyboard"), String("cutoffKeyboard"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("cutoffKeyboard"),1), String("cutoffKeyboard"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("filtFMVelocity"), String("filtFMVelocity"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtFMVelocity"),1), String("filtFMVelocity"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
-    parameters.push_back(std::make_unique<Parameter>(String("filtFM"), String("filtFM"), String(),
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filtFM"),1), String("filtFM"), String(),
                                                      NormalisableRange<float>(0.f, 1.f, 0.0001f, 0.5f),
                                                      0.3f, filtAttackSliderValueToText, filtAttackSliderTextToValue));
     
