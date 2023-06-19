@@ -32,6 +32,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
 
     void setEnvelopeParameters(ADSR::Parameters params);
     void setWavetypeParameter(int type);
+    void setFilterTypeParameter(int filterType);
     void setSharpParameter(float sharp);
     void setModParameter(float mod);
     void setAttackRateParameter(float attackRate);
@@ -53,7 +54,7 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setCutoffParameter(float cutoff);
     void setCutoffKeyboardParameter(float cutoffKeyboard);
     void setResParameter(float resonance);
-    //void setBassoffParameter(float bassoff);
+    void setBassoffParameter(float bassoff);
     void setDetuneParameter(float detune);
     
    
@@ -75,6 +76,7 @@ class MySynthesiser : public Synthesiser
 public:
     void setEnvelopeParameters(ADSR::Parameters params);
     void setWavetypeParameter(int type);
+    void setFilterTypeParameter(int filterType);
     void setSpacetypeParameter(int type);
     void setSharpParameter(float sharp);
     void setModParameter(float mod);
@@ -97,7 +99,7 @@ public:
     void setCutoffParameter(float cutoff);
     void setCutoffKeyboardParameter(float cutoffKeyboard);
     void setResParameter(float resonance);
-    //void setBassoffParameter(float bassoff);
+    void setBassoffParameter(float bassoff);
     void setDetuneParameter(float detune);
 };
 
@@ -172,7 +174,7 @@ private:
     std::atomic<float> *sustainParameter = nullptr;
     std::atomic<float> *releaseParameter = nullptr;
     std::atomic<float> *detuneParameter = nullptr;
-
+    std::atomic<float> *filterTypeParameter = nullptr;
     std::atomic<float> *typeParameter = nullptr;
     std::atomic<float> *spaceParameter = nullptr;
     std::atomic<float> *sharpParameter = nullptr;

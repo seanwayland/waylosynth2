@@ -114,6 +114,17 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
 
     typeAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "type", typeCombo));
     
+    filterTypeCombo.setLookAndFeel(&plugexLookAndFeel);
+    filterTypeCombo.addItemList({"Funky Obxd", "Smooth Vadim", "none" }, 1);
+    filterTypeCombo.setSelectedId(1);
+    addAndMakeVisible(&filterTypeCombo);
+    
+    filterTypeLabel.setText("Filter Type", NotificationType::dontSendNotification);
+    filterTypeLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&filterTypeLabel);
+
+    filterTypeAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "filterType", filterTypeCombo));
+    
     
     spaceLabel.setText("Hyperspace", NotificationType::dontSendNotification);
     spaceLabel.setJustificationType(Justification::horizontallyCentred);
@@ -714,6 +725,12 @@ void waylosynth2AudioProcessorEditor::resized()
     auto spaceArea = area7.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
     spaceLabel.setBounds(spaceArea.removeFromTop(25));
     spaceCombo.setBounds(spaceArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
+    
+    auto filterTypeArea = area7.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+    filterTypeLabel.setBounds(filterTypeArea.removeFromTop(25));
+    filterTypeCombo.setBounds(filterTypeArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
+    
+
     
 
     

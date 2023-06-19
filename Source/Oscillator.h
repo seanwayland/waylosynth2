@@ -21,6 +21,7 @@ class Oscillator {
         void setSampleRate(float sampleRate);
         void setup(float sampleRate);
         void setWavetype(int type);
+        void setFiltertype(int filterType);
         void setFreq(float freq);
         float hipass(float input);
         void setSharp(float sharp);
@@ -86,7 +87,7 @@ class Oscillator {
 
     
     
-    //juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
+    juce::dsp::StateVariableTPTFilter<float> vadimFilter ;
     juce::dsp::StateVariableTPTFilter<float> vadimFilter2 ;
     
     
@@ -107,7 +108,7 @@ class Oscillator {
     Attack_decay_envelope amp_env;
     Attack_decay_envelope filter_amp_env;
     Filters filter;
-    //Filters bass_off;
+    Filters bass_off;
     ADSR2 env;
     //ADSR2 mod_env;
     daisysp::VariableShapeOscillator variosc;
@@ -147,6 +148,7 @@ class Oscillator {
         float m_srOverTwo;
 
         int m_wavetype;
+        int m_filterType;
         float m_freq;
         float m_pitchbend;
         float m_sharp;
@@ -170,7 +172,7 @@ class Oscillator {
         float m_filterFMVelocity;
         float m_filterFM;
         float m_resonance;
-        //float m_bassoff;
+        float m_bassoff;
         float m_detune;
         float m_pointer_pos;
         float fm_phase_1;

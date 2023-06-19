@@ -56,6 +56,10 @@ private:
     ComboBox typeCombo;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> typeAttachment;
     
+    Label filterTypeLabel;
+    ComboBox filterTypeCombo;
+    std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeAttachment;
+    
     Label spaceLabel;
     ComboBox spaceCombo;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> spaceAttachment;

@@ -15,13 +15,14 @@
 
 Oscillator::Oscillator() {
     m_wavetype = 2;
+    m_filterType = 1;
     m_freq = 1.f;
     midi_note_number = 0;
     m_sharp = 0.f;
     m_attackRate = 0.1f;
     m_attackShape = 0.75f;
     m_resonance = 0.01f;
-    //m_bassoff = 0.f;
+    m_bassoff = 0.f;
     m_detune = 1.0f;
     //m_cutoff = 0.f;
     srand((unsigned int)time(0));
@@ -215,6 +216,13 @@ void Oscillator::setWavetype(int type) {
     }
 }
 
+void Oscillator::setFiltertype(int type) {
+    if (type != m_filterType) {
+        type = type < 0 ? 0 : type > 19 ? 19 : type;
+        m_filterType = type;
+    }
+}
+
 void Oscillator::setFreq(float freq) {
     m_freq = freq < 0.00001f ? 0.00001f : freq > m_srOverFour ? m_srOverFour : freq;
     m_increment = m_freq / m_sampleRate;
@@ -308,9 +316,9 @@ void Oscillator::setRes(float resonance) {
     m_resonance = resonance < 0.f ? 0.f : resonance > 1.f ? 1.f : resonance;
 }
 
-//void Oscillator::setBassoff(float bassoff) {
-//    m_bassoff = bassoff < 0.f ? 0.f : bassoff > 1.f ? 1.f : bassoff;
-//}
+void Oscillator::setBassoff(float bassoff) {
+    m_bassoff = bassoff < 0.f ? 0.f : bassoff > 1.f ? 1.f : bassoff;
+}
 
 void Oscillator::setDetune(float detune) {
     m_detune = detune < 0.5f ? 0.5f : detune > 2.f ? 2.f : detune;
@@ -939,22 +947,26 @@ float Oscillator::process() {
             
 
             // obxd filter
-            float filter_resonance = m_resonance;
-            filter.setMultimode(1.0);
-            filter.setResonance(filter_resonance);
-            filter_cutoff = filter_cutoff + m_filterFM*value*5000 + m_filterFMVelocity*m_note_velocity*value*5000;
-            value = filter.Apply4Pole(value,filter_cutoff);
+            
+            if(m_filterType == 0){
+                float filter_resonance = m_resonance;
+                filter.setMultimode(1.0);
+                filter.setResonance(filter_resonance);
+                filter_cutoff = filter_cutoff + m_filterFM*value*filter_cutoff + m_filterFMVelocity*m_note_velocity*value*filter_cutoff;
+                value = filter.Apply4Pole(value,filter_cutoff);}
             
             
-//            //vadim filter
-//            vadimFilter2.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
-//            vadimFilter2.setCutoffFrequency(filter_cutoff);
-//            if(m_resonance < 0.01){m_resonance = 0.01;}
-//            vadimFilter2.setResonance(m_resonance);
-//
-//            vadimFilter2.setCutoffFrequency(filter_cutoff + value*5000*m_filterAttackShape);
-//            //value = vadimFilter.processSample(1, value);
-//            value = vadimFilter2.processSample(1, value);
+            if(m_filterType == 1){
+                vadimFilter2.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+                vadimFilter2.setCutoffFrequency(filter_cutoff);
+                if(m_resonance < 0.01){m_resonance = 0.01;}
+                vadimFilter2.setResonance(m_resonance);
+                filter_cutoff = filter_cutoff + m_filterFM*value*filter_cutoff + m_filterFMVelocity*m_note_velocity*value*filter_cutoff;
+                vadimFilter2.setCutoffFrequency(filter_cutoff);
+                //value = vadimFilter.processSample(1, value);
+                value = vadimFilter2.processSample(1, value);}
+            
+            
             
             
 //            ladderFilter.setCutoffFrequencyHz(filter_cutoff);
@@ -966,16 +978,16 @@ float Oscillator::process() {
             
         }
         
-//        if ((m_freq > 0)  && (m_bassoff > 0.1)){
-//             
-//             float bass_adjust = m_bassoff*10.0f;
-//             vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-//             vadimFilter.setCutoffFrequency(0.9f);
-//             vadimFilter.setCutoffFrequency(m_freq - m_freq/bass_adjust);
-//             value = vadimFilter.processSample(1, value);}
-//        
-//    
-//    
+        if ((m_freq > 0)  && (m_bassoff > 0.1)){
+
+             float bass_adjust = m_bassoff*10.0f;
+             vadimFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+             vadimFilter.setCutoffFrequency(0.9f);
+             vadimFilter.setCutoffFrequency(m_freq - m_freq/bass_adjust);
+             value = vadimFilter.processSample(1, value);}
+//
+//
+//
     }
 
     return value;

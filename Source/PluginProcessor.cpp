@@ -100,6 +100,10 @@ void MySynthesiserVoice::setWavetypeParameter(int type) {
     oscillator.setWavetype(type);
 }
 
+void MySynthesiserVoice::setFilterTypeParameter(int filterType) {
+    oscillator.setFiltertype(filterType);
+}
+
 void MySynthesiserVoice::setSharpParameter(float sharp) {
     
     // random  slop
@@ -217,9 +221,9 @@ void MySynthesiserVoice::setResParameter(float resonance) {
     oscillator.setRes(resonance);
 }
 
-//void MySynthesiserVoice::setBassoffParameter(float bassoff) {
-//    oscillator.setBassoff(bassoff);
-//}
+void MySynthesiserVoice::setBassoffParameter(float bassoff) {
+    oscillator.setBassoff(bassoff);
+}
 
 void MySynthesiserVoice::setDetuneParameter(float detune) {
     oscillator.setDetune(detune);
@@ -234,6 +238,11 @@ void MySynthesiser::setEnvelopeParameters(ADSR::Parameters params) {
 void MySynthesiser::setWavetypeParameter(int type) {
     for (int i = 0; i < getNumVoices(); i++)
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setWavetypeParameter(type);
+}
+
+void MySynthesiser::setFilterTypeParameter(int type) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setFilterTypeParameter(type);
 }
 
 void MySynthesiser::setSharpParameter(float sharp) {
@@ -335,10 +344,10 @@ void MySynthesiser::setResParameter(float resonance) {
        dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setResParameter(resonance);
 }
 
-//void MySynthesiser::setBassoffParameter(float bassoff) {
-//    for (int i = 0; i < getNumVoices(); i++)
-//       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setBassoffParameter(bassoff);
-//}
+void MySynthesiser::setBassoffParameter(float bassoff) {
+    for (int i = 0; i < getNumVoices(); i++)
+       dynamic_cast<MySynthesiserVoice *> (getVoice(i))->setBassoffParameter(bassoff);
+}
 
 void MySynthesiser::setDetuneParameter(float detune) {
     for (int i = 0; i < getNumVoices(); i++)
@@ -399,13 +408,13 @@ static float resonanceSliderTextToValue(const String& text) {
     return text.getFloatValue();
 }
 
-//static String bassoffSliderValueToText(float value) {
-//    return String(value, 4) + String(" x");
-//}
+static String bassoffSliderValueToText(float value) {
+    return String(value, 4) + String(" x");
+}
 
-//static float bassoffSliderTextToValue(const String& text) {
-//    return text.getFloatValue();
-//}
+static float bassoffSliderTextToValue(const String& text) {
+    return text.getFloatValue();
+}
 
 
 static String detuneSliderValueToText(float value) {
@@ -516,6 +525,10 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout() {
 
     parameters.push_back(std::make_unique<Parameter>(ParameterID(String("type"),1), String("Type"), String(),
                                                      NormalisableRange<float>(0.0f, 19.0f, 1.f, 1.0f),
+                                                     0.0f, nullptr, nullptr));
+    
+    parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filterType"),1), String("FilterType"), String(),
+                                                     NormalisableRange<float>(0.0f, 2.0f, 1.f, 1.0f),
                                                      0.0f, nullptr, nullptr));
     
     parameters.push_back(std::make_unique<Parameter>(ParameterID(String("space"),1), String("Space"), String(),
@@ -681,6 +694,7 @@ parameters (*this, nullptr, Identifier(JucePlugin_Name), createParameterLayout()
     sustainParameter = parameters.getRawParameterValue("sustain");
     releaseParameter = parameters.getRawParameterValue("release");
     typeParameter = parameters.getRawParameterValue("type");
+    filterTypeParameter = parameters.getRawParameterValue("filterType");
     spaceParameter = parameters.getRawParameterValue("space");
     sharpParameter = parameters.getRawParameterValue("sharp");
     modParameter = parameters.getRawParameterValue("mod");
@@ -1255,6 +1269,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
 
     synthesiser.setEnvelopeParameters(ADSR::Parameters {*attackParameter, *decayParameter, *sustainParameter, *releaseParameter});
     synthesiser.setWavetypeParameter((int)*typeParameter);
+    synthesiser.setFilterTypeParameter((int)*filterTypeParameter);
     //synthesiser.setSpacetypeParameter((int)*spaceParameter);
     synthesiser.setSharpParameter(*sharpParameter);
     synthesiser.setModParameter(*modParameter);
@@ -1277,7 +1292,7 @@ void waylosynth2::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMess
     synthesiser.setCutoffParameter(*cutoffParameter);
     synthesiser.setCutoffKeyboardParameter(*cutoffKeyboardParameter);
     synthesiser.setResParameter(*resonanceParameter);
-    //synthesiser.setBassoffParameter(*bassoffParameter);
+    synthesiser.setBassoffParameter(*bassoffParameter);
     synthesiser.setDetuneParameter(*detuneParameter);
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
