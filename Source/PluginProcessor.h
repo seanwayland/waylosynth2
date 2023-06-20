@@ -21,15 +21,11 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void pitchWheelMoved (int value) override;
     void handleSustainPedal(int midiChannel,bool isDown);
     void controllerMoved (int, int) override {}
-
     bool canPlaySound (SynthesiserSound *sound) override;
-
     void startNote (int midiNoteNumber, float velocity,
                     SynthesiserSound *, int /*currentPitchWheelPosition*/) override;
     void stopNote (float /*velocity*/, bool allowTailOff) override;
-
     void renderNextBlock (AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override;
-
     void setEnvelopeParameters(ADSR::Parameters params);
     void setWavetypeParameter(int type);
     void setFilterTypeParameter(int filterType);
@@ -58,7 +54,6 @@ struct MySynthesiserVoice   : public SynthesiserVoice
     void setDetuneParameter(float detune);
     
    
-    
     
 private:
     Oscillator oscillator;
@@ -154,10 +149,6 @@ public:
     
 
 
-
-    
-    
-
     MidiKeyboardState keyboardState;
 
 private:
@@ -198,7 +189,6 @@ private:
     std::atomic<float> *greaseDecayShapeParameter = nullptr;
     std::atomic<float> *greaseSustainParameter = nullptr;
     std::atomic<float> *greaseReleaseParameter = nullptr;
-    
     std::atomic<float> *greaseVelocityParameter = nullptr;
     std::atomic<float> *greaseKeyboardParameter = nullptr;
     std::atomic<float> *gravyVelocityParameter = nullptr;
@@ -213,8 +203,6 @@ private:
     float lastSample[2] = { 0.0, 0.0};
     
 
-    
-    
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (waylosynth2)
 };

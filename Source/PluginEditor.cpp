@@ -3,19 +3,16 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p,
-                                                                                                  AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor (&p), processor (p), valueTreeState (vts),
-      keyboardComponent (p.keyboardState, MidiKeyboardComponent::horizontalKeyboard)
+waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor(waylosynth2 &p,
+                                                                 AudioProcessorValueTreeState &vts)
+    : AudioProcessorEditor(&p), processor(p), valueTreeState(vts),
+      keyboardComponent(p.keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
-    setSize (1200, 900);
-    setResizable (true, true);
-    
-    
+    setSize(1200, 900);
+    setResizable(true, true);
 
     setLookAndFeel(&plugexLookAndFeel);
     plugexLookAndFeel.setTheme("yellow");
-    
 
     title.setText("Waylosynth", NotificationType::dontSendNotification);
     title.setFont(title.getFont().withPointHeight(title.getFont().getHeightInPoints() + 4));
@@ -32,9 +29,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&attackKnob);
 
     attackAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "attack", attackKnob));
-    
-    
-    
+
     attackRateLabel.setText("exp Att Rate", NotificationType::dontSendNotification);
     attackRateLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&attackRateLabel);
@@ -45,8 +40,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&attackRateKnob);
 
     attackRateAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "attackRate", attackRateKnob));
-    
-    
+
     attackShapeLabel.setText("exp Att Shape", NotificationType::dontSendNotification);
     attackShapeLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&attackShapeLabel);
@@ -90,8 +84,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&releaseKnob);
 
     releaseAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "release", releaseKnob));
-    
-    
+
     detuneLabel.setText("Detune", NotificationType::dontSendNotification);
     detuneLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&detuneLabel);
@@ -108,28 +101,27 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&typeLabel);
 
     typeCombo.setLookAndFeel(&plugexLookAndFeel);
-    typeCombo.addItemList({"FM Feedback", "Pulse Wave", "2 OP FM", "Sawtooth", "Fixed Pulse", "Pulse Up", "2 OP version2", "Tan of Sin", "Pulse Wave 2", "Face DX", "Vari Osc", "Vari Saw", "Sin w Feedbk", "Saw 2", "Pulse Wave 3", "empty", "empty","organ","empty","empty"}, 1);
+    typeCombo.addItemList({"FM Feedback", "Pulse Wave", "2 OP FM", "Sawtooth", "Fixed Pulse", "Pulse Up", "2 OP version2", "Tan of Sin", "Pulse Wave 2", "Face DX", "Vari Osc", "Vari Saw", "Sin w Feedbk", "Saw 2", "Pulse Wave 3", "empty", "empty", "organ", "empty", "empty"}, 1);
     typeCombo.setSelectedId(1);
     addAndMakeVisible(&typeCombo);
 
     typeAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "type", typeCombo));
-    
+
     filterTypeCombo.setLookAndFeel(&plugexLookAndFeel);
-    filterTypeCombo.addItemList({"Funky Obxd", "Smooth Vadim", "none" }, 1);
+    filterTypeCombo.addItemList({"Funky Obxd", "Smooth Vadim", "none"}, 1);
     filterTypeCombo.setSelectedId(1);
     addAndMakeVisible(&filterTypeCombo);
-    
+
     filterTypeLabel.setText("Filter Type", NotificationType::dontSendNotification);
     filterTypeLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filterTypeLabel);
 
     filterTypeAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "filterType", filterTypeCombo));
-    
-    
+
     spaceLabel.setText("Hyperspace", NotificationType::dontSendNotification);
     spaceLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&spaceLabel);
-    
+
     spaceCombo.setLookAndFeel(&plugexLookAndFeel);
     spaceCombo.addItemList({"Normal", "WayloSpace", "SpicySpace", "JoeSpace", "5thBelow"}, 1);
     spaceCombo.setSelectedId(1);
@@ -146,72 +138,72 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&sharpKnob);
 
     sharpAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "sharp", sharpKnob));
-    
+
     modLabel.setText("Osc Grease", NotificationType::dontSendNotification);
     modLabel.setJustificationType(Justification::horizontallyCentred);
-    addAndMakeVisible(& modLabel);
+    addAndMakeVisible(&modLabel);
 
     modKnob.setLookAndFeel(&plugexLookAndFeel);
     modKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     modKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
-    addAndMakeVisible(& modKnob);
+    addAndMakeVisible(&modKnob);
 
-    modAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "mod",  modKnob));
-    
+    modAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "mod", modKnob));
+
     greaseModLabel.setText("grease mod", NotificationType::dontSendNotification);
     greaseModLabel.setJustificationType(Justification::horizontallyCentred);
-    addAndMakeVisible(& greaseModLabel);
+    addAndMakeVisible(&greaseModLabel);
 
     greaseModKnob.setLookAndFeel(&plugexLookAndFeel);
     greaseModKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     greaseModKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
-    addAndMakeVisible(& greaseModKnob);
-    
-    greaseModAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseMod",  greaseModKnob));
-    
+    addAndMakeVisible(&greaseModKnob);
+
+    greaseModAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseMod", greaseModKnob));
+
     cutoffLabel.setText("Cutoff", NotificationType::dontSendNotification);
     cutoffLabel.setJustificationType(Justification::horizontallyCentred);
-    addAndMakeVisible(& cutoffLabel);
+    addAndMakeVisible(&cutoffLabel);
 
     cutoffKnob.setLookAndFeel(&plugexLookAndFeel);
     cutoffKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     cutoffKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
-    addAndMakeVisible(& cutoffKnob);
-    
-    cutoffAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoff",  cutoffKnob));
-    
+    addAndMakeVisible(&cutoffKnob);
+
+    cutoffAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoff", cutoffKnob));
+
     cutoffModLabel.setText("GravyMod", NotificationType::dontSendNotification);
     cutoffModLabel.setJustificationType(Justification::horizontallyCentred);
-    addAndMakeVisible(& cutoffModLabel);
+    addAndMakeVisible(&cutoffModLabel);
 
     cutoffModKnob.setLookAndFeel(&plugexLookAndFeel);
     cutoffModKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     cutoffModKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
-    addAndMakeVisible(& cutoffModKnob);
-    
-    cutoffModAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoffMod",  cutoffModKnob));
-    
+    addAndMakeVisible(&cutoffModKnob);
+
+    cutoffModAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoffMod", cutoffModKnob));
+
     resonanceLabel.setText("Resonance", NotificationType::dontSendNotification);
     resonanceLabel.setJustificationType(Justification::horizontallyCentred);
-    addAndMakeVisible(& resonanceLabel);
+    addAndMakeVisible(&resonanceLabel);
 
     ResonanceKnob.setLookAndFeel(&plugexLookAndFeel);
     ResonanceKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     ResonanceKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
-    addAndMakeVisible(& ResonanceKnob);
+    addAndMakeVisible(&ResonanceKnob);
 
-    resonanceAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "resonance",  ResonanceKnob));
-    
+    resonanceAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "resonance", ResonanceKnob));
+
     bassoffLabel.setText("Bassoff", NotificationType::dontSendNotification);
     bassoffLabel.setJustificationType(Justification::horizontallyCentred);
-    addAndMakeVisible(& bassoffLabel);
+    addAndMakeVisible(&bassoffLabel);
 
     bassoffKnob.setLookAndFeel(&plugexLookAndFeel);
     bassoffKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     bassoffKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
-    addAndMakeVisible(& bassoffKnob);
+    addAndMakeVisible(&bassoffKnob);
 
-    bassoffAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "bassoff",  bassoffKnob));
+    bassoffAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "bassoff", bassoffKnob));
 
     gainLabel.setText("Gain", NotificationType::dontSendNotification);
     gainLabel.setJustificationType(Justification::horizontallyCentred);
@@ -223,7 +215,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&gainKnob);
 
     gainAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "gain", gainKnob));
-    
+
     filtVelocityLabel.setText("Filter Velocity", NotificationType::dontSendNotification);
     filtVelocityLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtVelocityLabel);
@@ -232,10 +224,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     filtVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     filtVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&filtVelocityKnob);
-    
+
     filtVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtVelocity", filtVelocityKnob));
-    
-    
+
     filtAmountLabel.setText("Filter Amount", NotificationType::dontSendNotification);
     filtAmountLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtAmountLabel);
@@ -244,10 +235,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     filtAmountKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     filtAmountKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&filtAmountKnob);
-    
+
     filtAmountAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtAmount", filtAmountKnob));
-    
-    
+
     filtAttackLabel.setText("Filter Attack", NotificationType::dontSendNotification);
     filtAttackLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtAttackLabel);
@@ -258,7 +248,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&filtAttackKnob);
 
     filtAttackAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtAttack", filtAttackKnob));
-    
+
     filtAttackShapeLabel.setText("Flt Att Shape", NotificationType::dontSendNotification);
     filtAttackShapeLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtAttackShapeLabel);
@@ -269,7 +259,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&filtAttackShapeKnob);
 
     filtAttackShapeAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtAttackShape", filtAttackShapeKnob));
-    
+
     filtDecayLabel.setText("Filter Decay", NotificationType::dontSendNotification);
     filtDecayLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtDecayLabel);
@@ -280,7 +270,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&filtDecayKnob);
 
     filtDecayAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtDecay", filtDecayKnob));
-    
+
     filtDecayShapeLabel.setText("Filt Decay Shp", NotificationType::dontSendNotification);
     filtDecayShapeLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtDecayShapeLabel);
@@ -291,7 +281,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&filtDecayShapeKnob);
 
     filtDecayShapeAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtDecayShape", filtDecayShapeKnob));
-    
+
     filtSustainLabel.setText("Filter Sustain", NotificationType::dontSendNotification);
     filtSustainLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtSustainLabel);
@@ -302,7 +292,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&filtSustainKnob);
 
     filtSustainAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtSustain", filtSustainKnob));
-    
+
     filtReleaseLabel.setText("Filter Release", NotificationType::dontSendNotification);
     filtReleaseLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtReleaseLabel);
@@ -311,9 +301,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     filtReleaseKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     filtReleaseKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&filtReleaseKnob);
-    
+
     filtReleaseAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtRelease", filtReleaseKnob));
-    
+
     greaseAttackLabel.setText("mod Atk", NotificationType::dontSendNotification);
     greaseAttackLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseAttackLabel);
@@ -324,7 +314,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&greaseAttackKnob);
 
     greaseAttackAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseAttack", greaseAttackKnob));
-        
+
     greaseAttackShapeLabel.setText("mod Att Shp", NotificationType::dontSendNotification);
     greaseAttackShapeLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseAttackShapeLabel);
@@ -335,7 +325,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&greaseAttackShapeKnob);
 
     greaseAttackShapeAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseAttackShape", greaseAttackShapeKnob));
-        
+
     greaseDecayLabel.setText("mod Decay", NotificationType::dontSendNotification);
     greaseDecayLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseDecayLabel);
@@ -346,7 +336,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&greaseDecayKnob);
 
     greaseDecayAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseDecay", greaseDecayKnob));
-        
+
     greaseDecayShapeLabel.setText("mod Dcy Shp", NotificationType::dontSendNotification);
     greaseDecayShapeLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseDecayShapeLabel);
@@ -357,7 +347,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&greaseDecayShapeKnob);
 
     greaseDecayShapeAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseDecayShape", greaseDecayShapeKnob));
-        
+
     greaseSustainLabel.setText("mod Sustain", NotificationType::dontSendNotification);
     greaseSustainLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseSustainLabel);
@@ -368,7 +358,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     addAndMakeVisible(&greaseSustainKnob);
 
     greaseSustainAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseSustain", greaseSustainKnob));
-        
+
     greaseReleaseLabel.setText("mod Release", NotificationType::dontSendNotification);
     greaseReleaseLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseReleaseLabel);
@@ -377,9 +367,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     greaseReleaseKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     greaseReleaseKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&greaseReleaseKnob);
-        
+
     greaseReleaseAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseRelease", greaseReleaseKnob));
-    
+
     greaseVelocityLabel.setText("grease Velocity", NotificationType::dontSendNotification);
     greaseVelocityLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseVelocityLabel);
@@ -388,9 +378,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     greaseVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     greaseVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&greaseVelocityKnob);
-        
+
     greaseVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseVelocity", greaseVelocityKnob));
-    
+
     greaseKeyboardLabel.setText("grease Kboard", NotificationType::dontSendNotification);
     greaseKeyboardLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&greaseKeyboardLabel);
@@ -399,9 +389,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     greaseKeyboardKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     greaseKeyboardKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&greaseKeyboardKnob);
-        
+
     greaseKeyboardAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "greaseKeyboard", greaseKeyboardKnob));
-    
+
     gravyVelocityLabel.setText("gravy Velocity", NotificationType::dontSendNotification);
     gravyVelocityLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&gravyVelocityLabel);
@@ -410,9 +400,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     gravyVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     gravyVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&gravyVelocityKnob);
-        
+
     gravyVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "gravyVelocity", gravyVelocityKnob));
-    
+
     gravyKeyboardLabel.setText("gravy Keyboard", NotificationType::dontSendNotification);
     gravyKeyboardLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&gravyKeyboardLabel);
@@ -421,9 +411,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     gravyKeyboardKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     gravyKeyboardKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&gravyKeyboardKnob);
-        
+
     gravyKeyboardAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "gravyKeyboard", gravyKeyboardKnob));
-    
+
     cutoffVelocityLabel.setText("cutoff Velocity", NotificationType::dontSendNotification);
     cutoffVelocityLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&cutoffVelocityLabel);
@@ -432,10 +422,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     cutoffVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     cutoffVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&cutoffVelocityKnob);
-        
+
     cutoffVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoffVelocity", cutoffVelocityKnob));
-    
-    
+
     cutoffKeyboardLabel.setText("cutoff Keyboard", NotificationType::dontSendNotification);
     cutoffKeyboardLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&cutoffKeyboardLabel);
@@ -444,9 +433,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     cutoffKeyboardKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     cutoffKeyboardKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&cutoffKeyboardKnob);
-        
+
     cutoffKeyboardAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "cutoffKeyboard", cutoffKeyboardKnob));
-    
+
     filtFMVelocityLabel.setText("filterFM Velocity", NotificationType::dontSendNotification);
     filtFMVelocityLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtFMVelocityLabel);
@@ -455,10 +444,9 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     filtFMVelocityKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     filtFMVelocityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&filtFMVelocityKnob);
-        
+
     filtFMVelocityAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtFMVelocity", filtFMVelocityKnob));
-    
-    
+
     filtFMLabel.setText("filterFM", NotificationType::dontSendNotification);
     filtFMLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible(&filtFMLabel);
@@ -467,9 +455,8 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor (waylosynth2& p
     filtFMKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     filtFMKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
     addAndMakeVisible(&filtFMKnob);
-        
+
     filtFMAttachment.reset(new AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "filtFM", filtFMKnob));
-    
 
     addAndMakeVisible(keyboardComponent);
 }
@@ -507,35 +494,25 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     greaseDecayShapeKnob.setLookAndFeel(nullptr);
     greaseSustainKnob.setLookAndFeel(nullptr);
     greaseReleaseKnob.setLookAndFeel(nullptr);
-    
+
     greaseKeyboardKnob.setLookAndFeel(nullptr);
     greaseVelocityKnob.setLookAndFeel(nullptr);
     gravyKeyboardKnob.setLookAndFeel(nullptr);
     gravyVelocityKnob.setLookAndFeel(nullptr);
     cutoffVelocityKnob.setLookAndFeel(nullptr);
     cutoffKeyboardKnob.setLookAndFeel(nullptr);
-    
+
     filtFMVelocityKnob.setLookAndFeel(nullptr);
     filtFMKnob.setLookAndFeel(nullptr);
-    
 }
 
 //==============================================================================
-void waylosynth2AudioProcessorEditor::paint (Graphics& g)
+void waylosynth2AudioProcessorEditor::paint(Graphics &g)
 {
-    
-    //g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-    //g.fillAll(Colour(47,48,47));
-    g.fillAll(Colour(51,51,51));
-    //g.drawImage (myimage, 0, 0, 50, 50,0, 0, 50, 50, false);
+
+    g.fillAll(Colour(51, 51, 51));
     auto myImage = juce::ImageCache::getFromMemory(BinaryData::logocolor_png, BinaryData::logocolor_pngSize);
-    
-    //g.drawImage (myImage, getLocalBounds().toFloat());
-    
     g.drawImageAt(myImage, 0, 320);
-    //g.drawImage (myImage, 0, 500, 500, 500,500, 0, 0, 800, false);
-    //drawImage (const Image &imageToDraw, int destX, int destY, int destWidth, int destHeight, int sourceX, int sourceY, int //sourceWidth, int sourceHeight, bool fillAlphaChannelWithCurrentBrush=false)
-    
 }
 
 void waylosynth2AudioProcessorEditor::resized()
@@ -543,205 +520,147 @@ void waylosynth2AudioProcessorEditor::resized()
     auto area = getLocalBounds().reduced(12, 12);
     float width = area.getWidth();
 
-    //title.setBounds(area.removeFromTop(40));
-    //area.removeFromTop(14);
-
     auto area1 = area.removeFromTop(130);
-    
-    auto sharpArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto sharpArea = area1.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     sharpLabel.setBounds(sharpArea.removeFromTop(20));
     sharpKnob.setBounds(sharpArea);
 
-    auto ModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+    auto ModArea = area1.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     modLabel.setBounds(ModArea.removeFromTop(20));
     modKnob.setBounds(ModArea);
-    
-//    auto GreaseModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
-//    greaseModLabel.setBounds(GreaseModArea.removeFromTop(20));
-//    greaseModKnob.setBounds(GreaseModArea);
-    
-    auto CutoffArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto CutoffArea = area1.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     cutoffLabel.setBounds(CutoffArea.removeFromTop(20));
     cutoffKnob.setBounds(CutoffArea);
-    
-//    auto CutoffModArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
-//    cutoffModLabel.setBounds(CutoffModArea.removeFromTop(20));
-//    cutoffModKnob.setBounds(CutoffModArea);
-    
-    auto ResonanceArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto ResonanceArea = area1.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     resonanceLabel.setBounds(ResonanceArea.removeFromTop(20));
     ResonanceKnob.setBounds(ResonanceArea);
-    
-    auto BassoffArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto BassoffArea = area1.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     bassoffLabel.setBounds(BassoffArea.removeFromTop(20));
     bassoffKnob.setBounds(BassoffArea);
 
-    auto gainArea = area1.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+    auto gainArea = area1.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     gainLabel.setBounds(gainArea.removeFromTop(20));
     gainKnob.setBounds(gainArea);
-   
-
-    
-
 
     auto area2 = area.removeFromTop(100);
-    
-    auto attackArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto attackArea = area2.removeFromLeft(width / 6.0f).withSizeKeepingCentre(80, 100);
     attackLabel.setBounds(attackArea.removeFromTop(20));
     attackKnob.setBounds(attackArea);
-    
-    auto attackRateArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto attackRateArea = area2.removeFromLeft(width / 6.0f).withSizeKeepingCentre(80, 100);
     attackRateLabel.setBounds(attackRateArea.removeFromTop(20));
     attackRateKnob.setBounds(attackRateArea);
-    
-    auto attackShapeArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto attackShapeArea = area2.removeFromLeft(width / 6.0f).withSizeKeepingCentre(80, 100);
     attackShapeLabel.setBounds(attackShapeArea.removeFromTop(20));
     attackShapeKnob.setBounds(attackShapeArea);
 
-    auto decayArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto decayArea = area2.removeFromLeft(width / 6.0f).withSizeKeepingCentre(80, 100);
     decayLabel.setBounds(decayArea.removeFromTop(20));
     decayKnob.setBounds(decayArea);
 
-    auto sustainArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto sustainArea = area2.removeFromLeft(width / 6.0f).withSizeKeepingCentre(80, 100);
     sustainLabel.setBounds(sustainArea.removeFromTop(20));
     sustainKnob.setBounds(sustainArea);
 
-    auto releaseArea = area2.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
+    auto releaseArea = area2.removeFromLeft(width / 6.0f).withSizeKeepingCentre(80, 100);
     releaseLabel.setBounds(releaseArea.removeFromTop(20));
     releaseKnob.setBounds(releaseArea);
 
-
-    
     auto area3 = area.removeFromTop(110);
-    
-    
-    auto filtAttackArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filtAttackArea = area3.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtAttackLabel.setBounds(filtAttackArea.removeFromTop(20));
     filtAttackKnob.setBounds(filtAttackArea);
-    
-    auto filtVelocityArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filtVelocityArea = area3.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtVelocityLabel.setBounds(filtVelocityArea.removeFromTop(20));
     filtVelocityKnob.setBounds(filtVelocityArea);
-    
-    auto filtAmountArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filtAmountArea = area3.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtAmountLabel.setBounds(filtAmountArea.removeFromTop(20));
     filtAmountKnob.setBounds(filtAmountArea);
-    
-    auto filtAttackShapeArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filtAttackShapeArea = area3.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtAttackShapeLabel.setBounds(filtAttackShapeArea.removeFromTop(20));
     filtAttackShapeKnob.setBounds(filtAttackShapeArea);
-    
-    auto filtDecayArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filtDecayArea = area3.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtDecayLabel.setBounds(filtDecayArea.removeFromTop(20));
     filtDecayKnob.setBounds(filtDecayArea);
-    
-    auto filtDecayShapeArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filtDecayShapeArea = area3.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtDecayShapeLabel.setBounds(filtDecayShapeArea.removeFromTop(20));
     filtDecayShapeKnob.setBounds(filtDecayShapeArea);
-    
-    auto filtSustainArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filtSustainArea = area3.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtSustainLabel.setBounds(filtSustainArea.removeFromTop(20));
     filtSustainKnob.setBounds(filtSustainArea);
-    
-    auto filtReleaseArea = area3.removeFromLeft(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filtReleaseArea = area3.removeFromLeft(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtReleaseLabel.setBounds(filtReleaseArea.removeFromTop(20));
     filtReleaseKnob.setBounds(filtReleaseArea);
-    
-//    auto area4 = area.removeFromTop(110);
-//
-//    auto greaseAttackArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-//    greaseAttackLabel.setBounds(greaseAttackArea.removeFromTop(20));
-//    greaseAttackKnob.setBounds(greaseAttackArea);
-//
-//    auto greaseAttackShapeArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-//    greaseAttackShapeLabel.setBounds(greaseAttackShapeArea.removeFromTop(20));
-//    greaseAttackShapeKnob.setBounds(greaseAttackShapeArea);
-//
-//    auto greaseDecayArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-//    greaseDecayLabel.setBounds(greaseDecayArea.removeFromTop(20));
-//    greaseDecayKnob.setBounds(greaseDecayArea);
-//
-//    auto greaseDecayShapeArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-//    greaseDecayShapeLabel.setBounds(greaseDecayShapeArea.removeFromTop(20));
-//    greaseDecayShapeKnob.setBounds(greaseDecayShapeArea);
-//
-//    auto greaseSustainArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-//    greaseSustainLabel.setBounds(greaseSustainArea.removeFromTop(20));
-//    greaseSustainKnob.setBounds(greaseSustainArea);
-//
-//    auto greaseReleaseArea = area4.removeFromLeft(width/6.0f).withSizeKeepingCentre(80, 100);
-//    greaseReleaseLabel.setBounds(greaseReleaseArea.removeFromTop(20));
-//    greaseReleaseKnob.setBounds(greaseReleaseArea);
-    
+
     auto area5 = area.removeFromTop(110);
-    
-    auto gravyVelocityArea = area5.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto gravyVelocityArea = area5.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
     gravyVelocityLabel.setBounds(gravyVelocityArea.removeFromTop(20));
     gravyVelocityKnob.setBounds(gravyVelocityArea);
-    
-    auto gravyKeyboardArea = area5.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto gravyKeyboardArea = area5.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
     gravyKeyboardLabel.setBounds(gravyKeyboardArea.removeFromTop(20));
     gravyKeyboardKnob.setBounds(gravyKeyboardArea);
-    
-    auto cutoffVelocityArea = area5.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto cutoffVelocityArea = area5.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
     cutoffVelocityLabel.setBounds(cutoffVelocityArea.removeFromTop(20));
     cutoffVelocityKnob.setBounds(cutoffVelocityArea);
-    
-    auto cutoffKeyboardArea = area5.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto cutoffKeyboardArea = area5.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
     cutoffKeyboardLabel.setBounds(cutoffKeyboardArea.removeFromTop(20));
     cutoffKeyboardKnob.setBounds(cutoffKeyboardArea);
-    
-    
+
     auto area6 = area.removeFromTop(110);
-    
-    auto greaseVelocityArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto greaseVelocityArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
     greaseVelocityLabel.setBounds(greaseVelocityArea.removeFromTop(20));
     greaseVelocityKnob.setBounds(greaseVelocityArea);
-    
-    auto greaseKeyboardArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto greaseKeyboardArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
     greaseKeyboardLabel.setBounds(greaseKeyboardArea.removeFromTop(20));
     greaseKeyboardKnob.setBounds(greaseKeyboardArea);
-    
-    auto filterFMVelocityArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filterFMVelocityArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtFMVelocityLabel.setBounds(filterFMVelocityArea.removeFromTop(20));
     filtFMVelocityKnob.setBounds(filterFMVelocityArea);
-    
-    auto filterFMArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto filterFMArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
     filtFMLabel.setBounds(filterFMArea.removeFromTop(20));
     filtFMKnob.setBounds(filterFMArea);
-    
-    auto detuneArea = area6.removeFromRight(width/8.0f).withSizeKeepingCentre(80, 100);
+
+    auto detuneArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
     detuneLabel.setBounds(detuneArea.removeFromTop(20));
     detuneKnob.setBounds(detuneArea);
-    
 
-    
     auto area7 = area.removeFromTop(100);
-    
-    auto typeArea = area7.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto typeArea = area7.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
     typeLabel.setBounds(typeArea.removeFromTop(25));
     typeCombo.setBounds(typeArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
-    
-    auto spaceArea = area7.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto spaceArea = area7.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
     spaceLabel.setBounds(spaceArea.removeFromTop(25));
     spaceCombo.setBounds(spaceArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
-    
-    auto filterTypeArea = area7.removeFromRight(width/6.0f).withSizeKeepingCentre(80, 100);
+
+    auto filterTypeArea = area7.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
     filterTypeLabel.setBounds(filterTypeArea.removeFromTop(25));
     filterTypeCombo.setBounds(filterTypeArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
-    
 
-    
-
-    
     area.removeFromTop(12);
 
     keyboardComponent.setBounds(area.removeFromBottom(90));
 }
-
-
-
-
-
-
-
