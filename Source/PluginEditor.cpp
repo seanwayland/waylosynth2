@@ -634,13 +634,13 @@ void waylosynth2AudioProcessorEditor::resized()
     greaseKeyboardLabel.setBounds(greaseKeyboardArea.removeFromTop(20));
     greaseKeyboardKnob.setBounds(greaseKeyboardArea);
 
-    auto filterFMVelocityArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
-    filtFMVelocityLabel.setBounds(filterFMVelocityArea.removeFromTop(20));
-    filtFMVelocityKnob.setBounds(filterFMVelocityArea);
-
-    auto filterFMArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
-    filtFMLabel.setBounds(filterFMArea.removeFromTop(20));
-    filtFMKnob.setBounds(filterFMArea);
+//    auto filterFMVelocityArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
+//    filtFMVelocityLabel.setBounds(filterFMVelocityArea.removeFromTop(20));
+//    filtFMVelocityKnob.setBounds(filterFMVelocityArea);
+//
+//    auto filterFMArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
+//    filtFMLabel.setBounds(filterFMArea.removeFromTop(20));
+//    filtFMKnob.setBounds(filterFMArea);
 
     auto detuneArea = area6.removeFromRight(width / 8.0f).withSizeKeepingCentre(80, 100);
     detuneLabel.setBounds(detuneArea.removeFromTop(20));

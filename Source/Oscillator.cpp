@@ -118,6 +118,9 @@ void Oscillator::reset(float sampleRate)
     m_filterFM = 0.1f;
     m_filterFMVelocity = 0.1f;
     m_oneOverSr = 1.f / m_sampleRate;
+    variosc.Init(m_sampleRate);
+    varisaw.Init(m_sampleRate);
+    bandlimOsc.Init(m_sampleRate);
 
     //    int max;
     //    max = 100; //set the upper bound to generate the random number
@@ -491,7 +494,7 @@ float Oscillator::process()
         value2 = -(pos - tanhf(numh * pos) / tanhf(numh));
 
         value = value1 - (m_sharp_g * value2);
-        // value = hipass(value);
+        value = 0.8*value;
 
         break;
     }
@@ -542,6 +545,7 @@ float Oscillator::process()
     case 4:
 
     {
+        
         if (m_mod_g < 0.001)
         {
             m_mod_g = 0.001;
@@ -565,6 +569,9 @@ float Oscillator::process()
         {
             fixed_pulse_counter = 0.0f;
         }
+//
+//        value = value/2.0f;
+        //value = 0;
 
         break;
     }
@@ -573,19 +580,19 @@ float Oscillator::process()
 
     {
 
-        //            //m_feedback = 0.93 - (0.0004*m_freq);
-        //            if(m_sharp<0.3){
-        //                m_sharp = 0.3;
-        //            }
-        //
-        //            m_feedback = m_sharp*0.95 - (0.0004*m_freq);
-        //            if (m_feedback > 1.0 || m_feedback < 0.1){
-        //                m_feedback = 0.6;
-        //            }
-        //
-        //            value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
-        //            old_value = value;
-        //            //value = hipass(value);
+//                    //m_feedback = 0.93 - (0.0004*m_freq);
+//                    if(m_sharp<0.3){
+//                        m_sharp = 0.3;
+//                    }
+//
+//                    m_feedback = m_sharp*0.95 - (0.0004*m_freq);
+//                    if (m_feedback > 1.0 || m_feedback < 0.1){
+//                        m_feedback = 0.6;
+//                    }
+//
+//                    value = sinf(m_twopi * m_pointer_pos + (old_value*m_feedback));
+//                    old_value = value;
+                    //value = hipass(value);
 
         float f = 2 + m_mod_g * 20;
         if (f > 20)
@@ -639,6 +646,8 @@ float Oscillator::process()
         {
             value = 0;
         }
+       
+        value = 0.9*value;
 
         break;
     }
@@ -647,6 +656,8 @@ float Oscillator::process()
     case 8:
 
     {
+        value = 0;
+        if (m_cutoff >= 0.75) { m_cutoff = 0.75;}
 
         if (m_mod_g > 0.8)
         {
@@ -657,8 +668,8 @@ float Oscillator::process()
             m_mod_g = 0.2f;
         }
         float a = 0.15 - (m_sharp_g / 10.0);
-        float w = m_mod_g + (m_note_velocity / 10);
-        value = r1(m_pointer_pos, a, w);
+        float w = m_mod_g;
+        value = 0.9*r1(m_pointer_pos, a, w);
 
         //
         //            env.setAttackRate(m_sampleRate/20);
@@ -746,6 +757,7 @@ float Oscillator::process()
         variosc.SetWaveshape(m_sharp_g);
         variosc.SetPW(m_mod_g);
         value = variosc.Process();
+        value = 0.9*value;
 
         break;
     }
@@ -756,6 +768,7 @@ float Oscillator::process()
         varisaw.SetPW(m_mod_g);
         varisaw.SetFreq(m_freq * m_pitchbend * m_detune);
         value = varisaw.Process();
+        value = 0.9*value;
 
         break;
     }
@@ -785,7 +798,7 @@ float Oscillator::process()
     {
         bandlimOsc.SetWaveform(daisysp::BlOsc::WAVE_SAW);
         bandlimOsc.SetFreq(m_freq);
-        bandlimOsc.SetAmp(1.0);
+        bandlimOsc.SetAmp(0.9);
 
         value = bandlimOsc.Process();
 
@@ -796,7 +809,7 @@ float Oscillator::process()
 
         bandlimOsc.SetWaveform(daisysp::BlOsc::WAVE_SQUARE);
         bandlimOsc.SetFreq(m_freq);
-        bandlimOsc.SetAmp(0.8 + (0.19 * midi_note_number / 127));
+        bandlimOsc.SetAmp(0.9);
         bandlimOsc.SetPw(m_mod_g);
         value = bandlimOsc.Process();
 
@@ -1009,7 +1022,7 @@ float Oscillator::process()
             }
 
             // higher notes louder
-            value = (value + 3 * (midi_note_number / 127) * value) / 4;
+           // value = (value + 3 * (midi_note_number / 127) * value) / 4;
 
             // obxd filter
 
@@ -1018,7 +1031,7 @@ float Oscillator::process()
                 float filter_resonance = m_resonance;
                 filter.setMultimode(1.0);
                 filter.setResonance(filter_resonance);
-                filter_cutoff = filter_cutoff + m_filterFM * value * filter_cutoff + m_filterFMVelocity * m_note_velocity * value * filter_cutoff;
+               // filter_cutoff = filter_cutoff + 0.5*(m_filterFM * value * filter_cutoff) + 0.5*(m_filterFMVelocity * m_note_velocity * value * //filter_cutoff);
                 value = filter.Apply4Pole(value, filter_cutoff);
             }
 
@@ -1031,7 +1044,7 @@ float Oscillator::process()
                     m_resonance = 0.01;
                 }
                 vadimFilter2.setResonance(m_resonance);
-                filter_cutoff = filter_cutoff + m_filterFM * value * filter_cutoff + m_filterFMVelocity * m_note_velocity * value * filter_cutoff;
+             //   filter_cutoff = filter_cutoff + 0.5*(m_filterFM * value * filter_cutoff) + 0.5*(m_filterFMVelocity * m_note_velocity * value * //filter_cutoff);
                 vadimFilter2.setCutoffFrequency(filter_cutoff);
                 // value = vadimFilter.processSample(1, value);
                 value = vadimFilter2.processSample(1, value);
@@ -1056,6 +1069,9 @@ float Oscillator::process()
         //
         //
     }
-
+    //jassert (value > -1.0 && value < 1.0);
+//    if (value > 1.0) { value = 1.0;}
+//    if (value < -1.0) { value = -1.0;}
+//    jassert (value >= -1.0 && value <= 1.0);
     return value;
 }
