@@ -412,6 +412,16 @@ void Oscillator::setPitchBend(float pitchWheelPos)
 
 float Oscillator::process()
 {
+    
+    env.setAttackRate(20 * m_filterAttack * m_sampleRate); // .1 second
+    env.setDecayRate(50 * m_filterDecay * 4 * m_sampleRate);
+    env.setReleaseRate(m_filterRelease * m_sampleRate);
+    env.setSustainLevel(m_filterSustain);
+    env.setTargetRatioA(m_filterAttackShape / 10.0f);
+    env.setTargetRatioDR(m_filterDecayShape * 100);
+    m_envValue = env.process();
+    
+
     float numh = 0.f, pos = 0.f;
     float value = 0.f, maxHarms = 0.f;
     float old_x_value = old_y_value = 0.0;
@@ -892,13 +902,13 @@ float Oscillator::process()
     case 16:
     {
 
-        env.setAttackRate(m_sampleRate * 3);
-        env.setDecayRate(m_sampleRate * 4);
-        env.setReleaseRate(m_sampleRate * 4);
-        env.setSustainLevel(0.2);
-        env.setTargetRatioA(0.5);
-        env.setTargetRatioDR(1.0);
-        float env_value = env.getOutput(); // reface DX
+//        env.setAttackRate(m_sampleRate * 3);
+//        env.setDecayRate(m_sampleRate * 4);
+//        env.setReleaseRate(m_sampleRate * 4);
+//        env.setSustainLevel(0.2);
+//        env.setTargetRatioA(0.5);
+//        env.setTargetRatioDR(1.0);
+//        float env_value = env.getOutput(); // reface DX
         // operator 3 is 2 all others are 1
         // 4 -> 3 -> 1
         // 2 -> 1
@@ -944,7 +954,7 @@ float Oscillator::process()
         // value = fm_value_2;
 
         // operator 1
-        float fm_value_1 = sinf(m_twopi * fm_phase_2 + m_feedback * old_value_1 + env_value * (m_note_velocity * 0.8) * m_mod_g * 10 * fm_value_2 + (m_note_velocity * 0.8) * m_mod_g * 10 * fm_value_3);
+        float fm_value_1 = sinf(m_twopi * fm_phase_2 + m_feedback * old_value_1 + (m_note_velocity * 0.8) * m_mod_g * 10 * fm_value_2 + (m_note_velocity * 0.8) * m_mod_g * 10 * fm_value_3);
         old_value_1 = fm_value_1;
         // value = (fm_value_1 + old_value)/2;
         value = fm_value_1 + fm_value_3;
@@ -977,12 +987,116 @@ float Oscillator::process()
     }
     case 18:
     {
-        value = 0;
+//        env.setAttackRate(m_sampleRate * 3);
+//        env.setDecayRate(m_sampleRate * 4);
+//        env.setReleaseRate(m_sampleRate * 4);
+//        env.setSustainLevel(0.2);
+//        env.setTargetRatioA(0.5);
+//        env.setTargetRatioDR(1.0);
+//        float env_value = env.getOutput(); // reface DX
+        // operator 3 is 2 all others are 1
+        // 4 -> 3 -> 1
+        // 2 -> 1
+        // operators 1 and 3 are mixed in the output
+        //                        float op1_level = 117/127;
+        //                        float op2_level = 101/127;
+        //                        float op3_level = 84/127;
+        //                        float op4_level = 96/127;
+        //
+        //                        float op1_fdbk = 48*2/127;
+        //                        float op2_fdbk = 33*2/127;
+        //                        float op3_fdbk = 46*2/127;
+        //                        float op4_fdbk = 25*2/127;
+
+        // if(m_sharp > 0.65){m_sharp = 0.65;}
+        m_feedback = (m_sharp_g + 0.4) - (0.0004 * m_freq);
+        if (m_feedback > 1.0)
+        {
+            m_feedback = 0.9;
+        }
+        if (m_feedback < 0.1)
+        {
+            m_feedback = 0.1;
+        }
+
+        if (midi_note_number > 0 && !(isnan(midi_note_number)))
+        {
+            m_mod_g = m_mod_g + 1 / midi_note_number;
+        };
+
+        // operator 4
+        float fm_value_4 = sinf(m_twopi * fm_phase_2 + m_feedback * old_value_4);
+        old_value_4 = 0.7 * fm_value_4;
+
+        // operator 3
+        float fm_value_3 = sinf(m_twopi * fm_phase_3 + m_feedback * old_value_3 + (m_note_velocity)*m_mod_g * 10 * fm_value_4);
+        old_value_3 = 0.6 * fm_value_3;
+
+        // operator 2
+        float fm_value_2 = sinf(m_twopi * fm_phase_2 + m_feedback * old_value_2);
+        old_value_2 = 0.8 * fm_value_2;
+        // value = (fm_value_1 + old_value)/2;
+        // value = fm_value_2;
+
+        // operator 1
+        float fm_value_1 = sinf(m_twopi * fm_phase_2 + m_feedback * old_value_1 + (m_note_velocity * 0.8) * m_mod_g * 10 * fm_value_2 + (m_note_velocity * 0.8) * m_mod * 10 * fm_value_3);
+        old_value_1 = fm_value_1;
+        // value = (fm_value_1 + old_value)/2;
+        value = fm_value_1 + fm_value_3;
+        fm_phase_2 += m_pitchbend * m_freq * m_oneOverSr;
+        fm_phase_2 = _clip(m_pointer_pos);
+        fm_phase_3 += m_pitchbend * m_freq * 2 * m_oneOverSr;
+        fm_phase_3 = _clip(m_pointer_pos);
+
         break;
     }
     case 19:
     {
-        value = 0;
+                env.setAttackRate(m_sampleRate * 0.04);
+                env.setDecayRate(m_sampleRate * 0.03);
+                env.setReleaseRate(m_sampleRate * 0.1);
+                env.setSustainLevel(0.05);
+                env.setTargetRatioA(0.5);
+                env.setTargetRatioDR(1.0);
+                float env_value = env.getOutput(); // reface DX
+        m_feedback = (m_sharp_g + 0.4) - (0.0004 * m_freq);
+        if (m_feedback > 1.0)
+        {
+            m_feedback = 0.9;
+        }
+        if (m_feedback < 0.1)
+        {
+            m_feedback = 0.1;
+        }
+
+        if (midi_note_number > 0 && !(isnan(midi_note_number)))
+        {
+            m_mod_g = m_mod_g + 1 / midi_note_number;
+        };
+
+        // operator 4
+        float fm_value_4 = 0.3*(sinf(m_twopi * fm_phase_2 + m_feedback * old_value_4));
+        old_value_4 = 0.7 * fm_value_4;
+
+        // operator 3
+        float fm_value_3 = 0.4*(sinf(m_twopi * fm_phase_3 + m_feedback * old_value_3 + (m_note_velocity)*m_mod_g * 10 * fm_value_4));
+        old_value_3 = 0.6 * fm_value_3;
+
+        // operator 2
+        float fm_value_2 = (sinf(m_twopi * m_pointer_pos + m_feedback * old_value_2));
+        old_value_2 = 0.8 * fm_value_2;
+        // value = (fm_value_1 + old_value)/2;
+        // value = fm_value_2;
+
+        // operator 1
+        float fm_value_1 = sinf(m_twopi * m_pointer_pos + m_feedback * old_value_1 + (m_note_velocity * 0.8) * m_mod_g * 10 * fm_value_2 + (m_note_velocity * 0.8) * m_mod * 10 * fm_value_2);
+        old_value_1 = fm_value_1;
+        // value = (fm_value_1 + old_value)/2;
+        value = fm_value_1+ 3*env_value*fm_value_3;
+        fm_phase_2 += m_pitchbend * 4* m_freq * m_oneOverSr;
+        fm_phase_2 = _clip(m_pointer_pos);
+        fm_phase_3 += m_pitchbend * 15* m_freq * 2 * m_oneOverSr;
+        fm_phase_3 = _clip(m_pointer_pos);
         break;
     }
     }
@@ -993,7 +1107,7 @@ float Oscillator::process()
         m_pointer_pos += m_detune * m_pitchbend * m_freq * m_oneOverSr * m_detune; //*(1-rand_detune)
         m_pointer_pos = _clip(m_pointer_pos);
         fixed_pulse_counter += 11000 * m_oneOverSr;
-        env.process();
+        //env.process();
 
         amp_env.Set_amp_envelope_rate(m_attackRate * 100);
         value = value * amp_env.process(m_attackShape, 0.75, "attack_env");
@@ -1005,13 +1119,9 @@ float Oscillator::process()
             // Adjust the curves of the Attack, or Decay and Release segments,
             // from the initial default values (small number such as 0.0001 to 0.01 for mostly-exponential, large numbers like 100 for //       virtually linear):
 
-            env.setAttackRate(20 * m_filterAttack * m_sampleRate); // .1 second
-            env.setDecayRate(50 * m_filterDecay * 4 * m_sampleRate);
-            env.setReleaseRate(m_filterRelease * m_sampleRate);
-            env.setSustainLevel(m_filterSustain);
-            env.setTargetRatioA(m_filterAttackShape / 10.0f);
-            env.setTargetRatioDR(m_filterDecayShape * 100);
-            m_envValue = env.process();
+
+            
+            
             //            m_envValue = m_envValue + 2*(m_note_velocity/127.0f);
             filter_cutoff = filter_cutoff + 10 * m_filterAmount * (filter_cutoff * m_envValue) + 10 * m_note_velocity * m_filterVelocity * m_envValue * filter_cutoff;
             // filter_cutoff = 3*m_envValue*filter_cutoff;
