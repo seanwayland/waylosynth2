@@ -101,7 +101,7 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor(waylosynth2 &p,
     addAndMakeVisible(&typeLabel);
 
     typeCombo.setLookAndFeel(&plugexLookAndFeel);
-    typeCombo.addItemList({"FM 1", "Pulse Wave", "FM 2", "Sawtooth", "Fixed Pulse", "Pulse Up", "2 OP version2", "Tan of Sin", "Pulse Wave 2", "FM3", "Vari Osc", "Vari Saw", "Sin w Feedbk", "Saw 2", "Pulse Wave 3", "FM4", "FM5", "organ", "FM6", "fM7"}, 1);
+    typeCombo.addItemList({"FM 1", "Pulse Wave", "FM 2", "Sawtooth", "Fixed Pulse", "Pulse Up", "2 OP version2", "Tan of Sin", "Pulse Wave 2", "FM3", "Vari Osc", "Vari Saw", "Sin w Feedbk", "Saw 2", "sin wave", "FM4", "FM5", "organ", "FM6", "fM7"}, 1);
     typeCombo.setSelectedId(1);
     addAndMakeVisible(&typeCombo);
 

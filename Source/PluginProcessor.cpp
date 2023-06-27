@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 
-static const int numberOfVoices = 10;
+static const int numberOfVoices = 8;
 
 //==============================================================================
 MySynthesiserVoice::MySynthesiserVoice()
@@ -49,7 +49,7 @@ void MySynthesiserVoice::renderNextBlock(AudioSampleBuffer &outputBuffer, int st
     while (--numSamples >= 0)
     {
 
-        oscillator.setSampleRate(getSampleRate());
+        //oscillator.setSampleRate(getSampleRate());
         auto envAmp = envelope.getNextSample();
         auto thisSample = oscillator.process();
         auto currentSample = thisSample * level * envAmp;
@@ -526,7 +526,7 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
 
     parameters.push_back(std::make_unique<Parameter>(ParameterID(String("type"), 1), String("Type"), String(),
                                                      NormalisableRange<float>(0.0f, 19.0f, 1.f, 1.0f),
-                                                     19.0f, nullptr, nullptr));
+                                                     14.0f, nullptr, nullptr));
 
     parameters.push_back(std::make_unique<Parameter>(ParameterID(String("filterType"), 1), String("FilterType"), String(),
                                                      NormalisableRange<float>(0.0f, 2.0f, 1.f, 1.0f),
@@ -803,6 +803,8 @@ void waylosynth2::prepareToPlay(double sampleRate, int samplesPerBlock)
     {
         playing[j] = 0;
     }
+    
+    
 
 }
 
@@ -841,10 +843,27 @@ void waylosynth2::processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiMessa
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-
+    
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
+    
+    int tt;
+    MidiMessage p;
 
+    for (MidiBuffer::Iterator i(midiMessages); i.getNextEvent(p, tt);){
+        if (p.isNoteOn()){
+            int midival = p.getNoteNumber();}
+        
+    }
+    
+    
+
+
+    
+
+//
+//
+//
     if ((int)*spaceParameter == 1)
     {
 
@@ -863,6 +882,7 @@ void waylosynth2::processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiMessa
             MidiMessage m;
 
             for (MidiBuffer::Iterator i(midiMessages); i.getNextEvent(m, time);)
+
             {
                 if (m.isNoteOn() && m.getNoteNumber() < 60)
                 {
@@ -876,6 +896,7 @@ void waylosynth2::processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiMessa
                 }
                 else if (m.isNoteOn() && m.getNoteNumber() >= 60)
                 {
+                    cout << "The midi note is " << m.getNoteNumber() << endl;
                     int NewNote = m.getNoteNumber() + waylotrans - 12;
                     playing[m.getNoteNumber()] = NewNote;
                     m = MidiMessage::noteOn(m.getChannel(), NewNote, m.getVelocity());
@@ -1114,8 +1135,8 @@ void waylosynth2::processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiMessa
 
     keyboardState.processNextMidiBuffer(midiMessages, 0, buffer.getNumSamples(), true);
 
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear(i, 0, buffer.getNumSamples());
+    //for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    //    buffer.clear(i, 0, buffer.getNumSamples());
 
     synthesiser.setEnvelopeParameters(ADSR::Parameters{*attackParameter, *decayParameter, *sustainParameter, *releaseParameter});
     synthesiser.setWavetypeParameter((int)*typeParameter);
@@ -1144,9 +1165,18 @@ void waylosynth2::processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiMessa
     synthesiser.setResParameter(*resonanceParameter);
     synthesiser.setBassoffParameter(*bassoffParameter);
     synthesiser.setDetuneParameter(*detuneParameter);
+    
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        buffer.clear(i, 0, buffer.getNumSamples());
+    
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        buffer.clear(i, 0, buffer.getNumSamples());
+    
     synthesiser.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
     buffer.applyGainRamp(0, buffer.getNumSamples(), lastGain, *gainParameter);
+    
+    midiMessages.clear();
 
     // average value with last sampling anti aliasing
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
@@ -1166,8 +1196,10 @@ void waylosynth2::processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiMessa
             lastSample[channel] = returnval;
         }
     }
+    
 
     lastGain = *gainParameter;
+ 
 }
 
 //==============================================================================

@@ -202,10 +202,10 @@ class Oscillator {
     
     
         float old_value;
-        float old_value_1;
-        float old_value_2;
-        float old_value_3;
-        float old_value_4;
+        float old_value_1  = 0.0f;
+        float old_value_2 = 0.0f;
+        float old_value_3 = 0.0f;
+        float old_value_4 = 0.0f;
         float old_x_value;
         float old_y_value;
         float m_feedback;
