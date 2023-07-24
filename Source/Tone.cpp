@@ -1,4 +1,4 @@
-#include "tone.h"
+#include "Tone.h"
 #include <math.h>
 #include "dsp.h"
 

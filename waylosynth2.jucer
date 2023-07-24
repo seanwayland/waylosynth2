@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="SSymjl" name="waylosynth55" projectType="audioplug" headerPath="../../../common&#10;"
-              pluginManufacturer="www.SEanwayland.com" companyName="www.SEanwayland.com"
+              pluginManufacturer="https://seanwayland.com" companyName="https://seanwayland.com"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              displaySplashScreen="1" jucerFormatVersion="1" companyWebsite="www.Seanwayland.com"
+              displaySplashScreen="1" jucerFormatVersion="1" companyWebsite="https://seanwayland.com"
               pluginManufacturerCode="SWsw" pluginCode="SWws" pluginFormats="buildLV2">
   <MAINGROUP id="IAfKTv" name="waylosynth55">
     <GROUP id="{6DFBD621-25B8-2BB1-AE51-57E407873211}" name="Source">
       <GROUP id="{B1FB8EAC-1FAE-8E39-F970-1FEBA5AF57D6}" name="assets">
-        <FILE id="AWlkuI" name="a.txt" compile="0" resource="1" file="Source/assets/a.txt"/>
         <FILE id="EtdeJ0" name="logo-color.pdf" compile="0" resource="1" file="Source/assets/logo-color.pdf"/>
         <FILE id="GVn2IC" name="logo-color.png" compile="0" resource="1" file="Source/assets/logo-color.png"/>
         <FILE id="oMQKqp" name="logo-colour.png" compile="0" resource="1" file="Source/assets/logo-colour.png"/>
@@ -32,7 +31,7 @@
       <FILE id="N6xHH8" name="Oscillator.cpp" compile="1" resource="0" file="Source/Oscillator.cpp"/>
       <FILE id="ZfhOPF" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
       <FILE id="HuAENQ" name="Svf.h" compile="0" resource="0" file="Source/Svf.h"/>
-      <FILE id="vk6xX7" name="Svh.cpp" compile="1" resource="0" file="Source/Svh.cpp"/>
+      <FILE id="vk6xX7" name="Svf.cpp" compile="1" resource="0" file="Source/Svf.cpp"/>
       <FILE id="ib7nvf" name="Tone.cpp" compile="1" resource="0" file="Source/Tone.cpp"/>
       <FILE id="QGNMmz" name="Tone.h" compile="0" resource="0" file="Source/Tone.h"/>
       <FILE id="TGT6sJ" name="VariableSawOsc.cpp" compile="1" resource="0"
