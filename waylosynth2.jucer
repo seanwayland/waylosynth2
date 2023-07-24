@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="SSymjl" name="waylosynth55" projectType="audioplug" headerPath="../../../common&#10;"
-              pluginManufacturer="https://seanwayland.com" companyName="https://seanwayland.com"
+              pluginManufacturer="seanwayland.com" companyName="seanwayland.com"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               displaySplashScreen="1" jucerFormatVersion="1" companyWebsite="https://seanwayland.com"
               pluginManufacturerCode="SWsw" pluginCode="SWws" pluginFormats="buildLV2">
