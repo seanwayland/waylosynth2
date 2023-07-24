@@ -1,5 +1,5 @@
 #include <math.h>
-#include "svf.h"
+#include "Svf.h"
 #include "dsp.h"
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 

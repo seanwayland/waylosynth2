@@ -47,10 +47,10 @@
  #define JucePlugin_Desc                   "waylosynth55"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "www.SEanwayland.com"
+ #define JucePlugin_Manufacturer           "seanwayland.com"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
- #define JucePlugin_ManufacturerWebsite    "www.Seanwayland.com"
+ #define JucePlugin_ManufacturerWebsite    "seanwayland.com"
 #endif
 #ifndef  JucePlugin_ManufacturerEmail
  #define JucePlugin_ManufacturerEmail      ""
@@ -110,10 +110,10 @@
  #define JucePlugin_AUManufacturerCode     JucePlugin_ManufacturerCode
 #endif
 #ifndef  JucePlugin_CFBundleIdentifier
- #define JucePlugin_CFBundleIdentifier     com.www_SEanwayland_com.waylosynth55
+ #define JucePlugin_CFBundleIdentifier     com.seanwayland_com.waylosynth55
 #endif
 #ifndef  JucePlugin_AAXIdentifier
- #define JucePlugin_AAXIdentifier          com.www_SEanwayland_com.waylosynth55
+ #define JucePlugin_AAXIdentifier          com.seanwayland_com.waylosynth55
 #endif
 #ifndef  JucePlugin_AAXManufacturerCode
  #define JucePlugin_AAXManufacturerCode    JucePlugin_ManufacturerCode
@@ -137,7 +137,7 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "www.SEanwayland.com: waylosynth55"
+ #define JucePlugin_IAAName                "seanwayland.com: waylosynth55"
 #endif
 #ifndef  JucePlugin_VSTNumMidiInputs
  #define JucePlugin_VSTNumMidiInputs       16
@@ -152,10 +152,10 @@
  #define JucePlugin_ARATransformationFlags  0
 #endif
 #ifndef  JucePlugin_ARAFactoryID
- #define JucePlugin_ARAFactoryID           "com.www_SEanwayland_com.waylosynth55.factory"
+ #define JucePlugin_ARAFactoryID           "com.seanwayland_com.waylosynth55.factory"
 #endif
 #ifndef  JucePlugin_ARADocumentArchiveID
- #define JucePlugin_ARADocumentArchiveID   "com.www_SEanwayland_com.waylosynth55.aradocumentarchive.1.0.0"
+ #define JucePlugin_ARADocumentArchiveID   "com.seanwayland_com.waylosynth55.aradocumentarchive.1.0.0"
 #endif
 #ifndef  JucePlugin_ARACompatibleArchiveIDs
  #define JucePlugin_ARACompatibleArchiveIDs  ""

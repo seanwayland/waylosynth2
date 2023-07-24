@@ -1,6 +1,9 @@
 # Automatically generated makefile, created by the Projucer
 # Don't edit this file! Your changes will be overwritten when you re-save the Projucer project!
 
+
+JUCE_DIR := /usr/local/include/JUCE-7.0.5
+
 # build with "V=1" for verbose builds
 ifeq ($(V), 1)
 V_AT =
@@ -39,7 +42,7 @@ ifeq ($(CONFIG),Debug)
     TARGET_ARCH := 
   endif
 
-  JUCE_CPPFLAGS := $(DEPFLAGS) "-DLINUX=1" "-DDEBUG=1" "-D_DEBUG=1" "-DJUCER_LINUX_MAKE_6D53C8B4=1" "-DJUCE_APP_VERSION=1.0.0" "-DJUCE_APP_VERSION_HEX=0x10000" $(shell $(PKG_CONFIG) --cflags alsa freetype2 libcurl webkit2gtk-4.0 gtk+-x11-3.0) -pthread -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lilv/src -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lilv -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sratom -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sord/src -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sord -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/serd -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2 -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/ -I../../JuceLibraryCode -I$(HOME)/JUCE/modules -I../../../common $(CPPFLAGS)
+  JUCE_CPPFLAGS := $(DEPFLAGS) "-DLINUX=1" "-DDEBUG=1" "-D_DEBUG=1" "-DJUCER_LINUX_MAKE_6D53C8B4=1" "-DJUCE_APP_VERSION=1.0.0" "-DJUCE_APP_VERSION_HEX=0x10000" $(shell $(PKG_CONFIG) --cflags alsa freetype2 libcurl webkit2gtk-4.0 gtk+-x11-3.0) -pthread -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/lilv/src -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/lilv -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/sratom -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/sord/src -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/sord -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/serd -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/lv2 -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/ -I../../JuceLibraryCode -I$(JUCE_DIR)/modules -I../../../common $(CPPFLAGS)
 
   JUCE_CPPFLAGS_LV2_PLUGIN :=  "-DJucePlugin_Build_VST=0" "-DJucePlugin_Build_VST3=0" "-DJucePlugin_Build_AU=0" "-DJucePlugin_Build_AUv3=0" "-DJucePlugin_Build_AAX=0" "-DJucePlugin_Build_Standalone=0" "-DJucePlugin_Build_Unity=0" "-DJucePlugin_Build_LV2=1"
   JUCE_CFLAGS_LV2_PLUGIN := -fPIC -fvisibility=hidden
@@ -73,7 +76,7 @@ ifeq ($(CONFIG),Release)
     TARGET_ARCH := 
   endif
 
-  JUCE_CPPFLAGS := $(DEPFLAGS) "-DLINUX=1" "-DNDEBUG=1" "-DJUCER_LINUX_MAKE_6D53C8B4=1" "-DJUCE_APP_VERSION=1.0.0" "-DJUCE_APP_VERSION_HEX=0x10000" $(shell $(PKG_CONFIG) --cflags alsa freetype2 libcurl webkit2gtk-4.0 gtk+-x11-3.0) -pthread -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lilv/src -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lilv -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sratom -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sord/src -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sord -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/serd -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2 -I$(HOME)/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/ -I../../JuceLibraryCode -I$(HOME)/JUCE/modules -I../../../common $(CPPFLAGS)
+  JUCE_CPPFLAGS := $(DEPFLAGS) "-DLINUX=1" "-DNDEBUG=1" "-DJUCER_LINUX_MAKE_6D53C8B4=1" "-DJUCE_APP_VERSION=1.0.0" "-DJUCE_APP_VERSION_HEX=0x10000" $(shell $(PKG_CONFIG) --cflags alsa freetype2 libcurl webkit2gtk-4.0 gtk+-x11-3.0) -pthread -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/lilv/src -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/lilv -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/sratom -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/sord/src -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/sord -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/serd -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/lv2 -I$(JUCE_DIR)/modules/juce_audio_processors/format_types/LV2_SDK/ -I../../JuceLibraryCode -I$(JUCE_DIR)/modules -I../../../common $(CPPFLAGS)
 
   JUCE_CPPFLAGS_LV2_PLUGIN :=  "-DJucePlugin_Build_VST=0" "-DJucePlugin_Build_VST3=0" "-DJucePlugin_Build_AU=0" "-DJucePlugin_Build_AUv3=0" "-DJucePlugin_Build_AAX=0" "-DJucePlugin_Build_Standalone=0" "-DJucePlugin_Build_Unity=0" "-DJucePlugin_Build_LV2=1"
   JUCE_CFLAGS_LV2_PLUGIN := -fPIC -fvisibility=hidden
@@ -110,7 +113,7 @@ OBJECTS_SHARED_CODE := \
   $(JUCE_OBJDIR)/DcBlock_5185b8af.o \
   $(JUCE_OBJDIR)/Filters_d0567edc.o \
   $(JUCE_OBJDIR)/Oscillator_8a6cfe29.o \
-  $(JUCE_OBJDIR)/Svh_a7ce0a46.o \
+  $(JUCE_OBJDIR)/Svf_a7ce0a46.o \
   $(JUCE_OBJDIR)/Tone_54b4a4fb.o \
   $(JUCE_OBJDIR)/VariableSawOsc_e4503a7b.o \
   $(JUCE_OBJDIR)/VariableShapeOsc_e7422bc3.o \
@@ -218,7 +221,7 @@ $(JUCE_OBJDIR)/Oscillator_8a6cfe29.o: ../../Source/Oscillator.cpp
 	@echo "Compiling Oscillator.cpp"
 	$(V_AT)$(CXX) $(JUCE_CXXFLAGS) $(JUCE_CPPFLAGS_SHARED_CODE) $(JUCE_CFLAGS_SHARED_CODE) -o "$@" -c "$<"
 
-$(JUCE_OBJDIR)/Svh_a7ce0a46.o: ../../Source/Svh.cpp
+$(JUCE_OBJDIR)/Svf_a7ce0a46.o: ../../Source/Svf.cpp
 	-$(V_AT)mkdir -p $(JUCE_OBJDIR)
 	@echo "Compiling Svh.cpp"
 	$(V_AT)$(CXX) $(JUCE_CXXFLAGS) $(JUCE_CPPFLAGS_SHARED_CODE) $(JUCE_CFLAGS_SHARED_CODE) -o "$@" -c "$<"
@@ -348,7 +351,7 @@ $(JUCE_OBJDIR)/include_juce_opengl_a8a032b.o: ../../JuceLibraryCode/include_juce
 	@echo "Compiling include_juce_opengl.cpp"
 	$(V_AT)$(CXX) $(JUCE_CXXFLAGS) $(JUCE_CPPFLAGS_SHARED_CODE) $(JUCE_CFLAGS_SHARED_CODE) -o "$@" -c "$<"
 
-$(JUCE_OBJDIR)/juce_LV2TurtleDumpProgram_9e040352.o: ~/JUCE/modules/juce_audio_plugin_client/LV2/juce_LV2TurtleDumpProgram.cpp
+$(JUCE_OBJDIR)/juce_LV2TurtleDumpProgram_9e040352.o: $(JUCE_DIR)/modules/juce_audio_plugin_client/LV2/juce_LV2TurtleDumpProgram.cpp
 	-$(V_AT)mkdir -p $(JUCE_OBJDIR)
 	@echo "Compiling juce_LV2TurtleDumpProgram.cpp"
 	$(V_AT)$(CXX) $(JUCE_CXXFLAGS) $(JUCE_CPPFLAGS_LV2_MANIFEST_HELPER) $(JUCE_CFLAGS_LV2_MANIFEST_HELPER) -o "$@" -c "$<"

@@ -10,7 +10,7 @@
 
 
 #include <math.h>
-#include "crossfade.h"
+#include "Crossfade.h"
 #include "dsp.h"
 
 #define REALLYSMALLFLOAT 0.000001f

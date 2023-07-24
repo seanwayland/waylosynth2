@@ -1,5 +1,5 @@
 #include <math.h>
-#include "dcblock.h"
+#include "DcBlock.h"
 
 using namespace daisysp;
 
