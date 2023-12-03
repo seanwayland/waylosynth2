@@ -117,6 +117,20 @@ waylosynth2AudioProcessorEditor::waylosynth2AudioProcessorEditor(waylosynth2 &p,
     addAndMakeVisible(&filterTypeLabel);
 
     filterTypeAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "filterType", filterTypeCombo));
+    
+    
+    presetTypeCombo.setLookAndFeel(&plugexLookAndFeel);
+    presetTypeCombo.addItemList({"waylo lead", "Waylo piano", "Waylo chilli ", "Waylo transpo", "Zawinul midi", "waylo clav", "waylo clav 2 ", "waylo 5ths "}, 1);
+    presetTypeCombo.setSelectedId(1);
+    addAndMakeVisible(&presetTypeCombo);
+
+    presetTypeLabel.setText("preset Type", NotificationType::dontSendNotification);
+    presetTypeLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible(&presetTypeLabel);
+
+    presetTypeAttachment.reset(new AudioProcessorValueTreeState::ComboBoxAttachment(valueTreeState, "presetType", presetTypeCombo));
+    
+    
 
     spaceLabel.setText("Hyperspace", NotificationType::dontSendNotification);
     spaceLabel.setJustificationType(Justification::horizontallyCentred);
@@ -470,6 +484,8 @@ waylosynth2AudioProcessorEditor::~waylosynth2AudioProcessorEditor()
     sustainKnob.setLookAndFeel(nullptr);
     releaseKnob.setLookAndFeel(nullptr);
     typeCombo.setLookAndFeel(nullptr);
+    presetTypeCombo.setLookAndFeel(nullptr);
+    filterTypeCombo.setLookAndFeel(nullptr);
     spaceCombo.setLookAndFeel(nullptr);
     sharpKnob.setLookAndFeel(nullptr);
     modKnob.setLookAndFeel(nullptr);
@@ -655,12 +671,62 @@ void waylosynth2AudioProcessorEditor::resized()
     auto spaceArea = area7.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
     spaceLabel.setBounds(spaceArea.removeFromTop(25));
     spaceCombo.setBounds(spaceArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
-
+    
     auto filterTypeArea = area7.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
     filterTypeLabel.setBounds(filterTypeArea.removeFromTop(25));
     filterTypeCombo.setBounds(filterTypeArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
 
+    auto presetTypeArea = area7.removeFromRight(width / 6.0f).withSizeKeepingCentre(80, 100);
+    presetTypeLabel.setBounds(presetTypeArea.removeFromTop(25));
+    presetTypeCombo.setBounds(presetTypeArea.removeFromTop(20).withSizeKeepingCentre(170, 30));
+    
+    presetTypeCombo.onChange = [this] { getPreset(); };
+    
+    
+
     area.removeFromTop(12);
 
     keyboardComponent.setBounds(area.removeFromBottom(90));
+    
+    
+}
+
+void waylosynth2AudioProcessorEditor::getPreset(){
+    auto& params = processor.getParameters();
+    int preset = presetTypeCombo.getSelectedId();
+    
+
+      sharpKnob.setValue(settingsArray[preset][0]);
+      modKnob.setValue(settingsArray[preset][1]);
+      cutoffKnob.setValue(settingsArray[preset][2]);
+      ResonanceKnob.setValue(settingsArray[preset][3]);
+      bassoffKnob.setValue(settingsArray[preset][4]);
+      gainKnob.setValue(settingsArray[preset][5]);
+      attackKnob.setValue(settingsArray[preset][6]);
+      attackRateKnob.setValue(settingsArray[preset][7]);
+      attackShapeKnob.setValue(settingsArray[preset][8]);
+      decayKnob.setValue(settingsArray[preset][9]);
+      sustainKnob.setValue(settingsArray[preset][10]);
+      releaseKnob.setValue(settingsArray[preset][11]);
+      filtAttackKnob.setValue(settingsArray[preset][12]);
+      filtVelocityKnob.setValue(settingsArray[preset][13]);
+      filtAmountKnob.setValue(settingsArray[preset][14]);
+      filtAttackShapeKnob.setValue(settingsArray[preset][15]);
+      filtDecayKnob.setValue(settingsArray[preset][16]);
+      filtDecayShapeKnob.setValue(settingsArray[preset][17]);
+      filtSustainKnob.setValue(settingsArray[preset][18]);
+      filtReleaseKnob.setValue(settingsArray[preset][19]);
+      cutoffKeyboardKnob.setValue(settingsArray[preset][20]);
+      cutoffVelocityKnob.setValue(settingsArray[preset][21]);
+      gravyKeyboardKnob.setValue(settingsArray[preset][22]);
+      gravyVelocityKnob.setValue(settingsArray[preset][23]);
+      detuneKnob.setValue(settingsArray[preset][24]);
+      greaseKeyboardKnob.setValue(settingsArray[preset][25]);
+      greaseVelocityKnob.setValue(settingsArray[preset][26]);
+      filterTypeCombo.setSelectedItemIndex(settingsArray[preset][27]);
+      spaceCombo.setSelectedItemIndex(settingsArray[preset][28]);
+      typeCombo.setSelectedItemIndex(settingsArray[preset][29]);
+    
+
+    
 }

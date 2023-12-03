@@ -514,7 +514,7 @@ AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
 
     parameters.push_back(std::make_unique<Parameter>(ParameterID(String("sustain"), 1), String("Sustain"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.3f),
-                                                     0.708f, gainSliderValueToText, gainSliderTextToValue));
+                                                     0.708f, secondSliderValueToText, secondSliderTextToValue));
 
     parameters.push_back(std::make_unique<Parameter>(ParameterID(String("release"), 1), String("Release"), String(),
                                                      NormalisableRange<float>(0.001f, 1.f, 0.001f, 0.5f),
